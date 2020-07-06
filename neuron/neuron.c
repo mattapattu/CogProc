@@ -159,6 +159,7 @@ void neuron_do_timestep_update( // EXPORTED
     // Prepare recording for the next timestep
     neuron_recording_setup_for_next_recording();
 
+    // update each neuron individually
     for (index_t neuron_index = 0; neuron_index < n_neurons; neuron_index++) {
 
         // Get external bias from any source of intrinsic plasticity
@@ -166,7 +167,7 @@ void neuron_do_timestep_update( // EXPORTED
                 synapse_dynamics_get_intrinsic_bias(time, neuron_index);
 
         // call the implementation function (boolean for spike)
-        bool spike = neuron_impl_do_timestep_update(time, neuron_index, external_bias);
+        bool spike = neuron_impl_do_timestep_update(neuron_index, external_bias);
 
         // If the neuron has spiked
         if (spike) {
@@ -176,7 +177,6 @@ void neuron_do_timestep_update( // EXPORTED
             synapse_dynamics_process_post_synaptic_event(time, neuron_index);
 
             if (use_key) {
-
                 // Wait until the expected time to send
                 while ((ticks == timer_count) &&
                         (tc[T1_COUNT] > expected_time)) {
@@ -192,12 +192,10 @@ void neuron_do_timestep_update( // EXPORTED
             }
         } else {
             log_debug("the neuron %d has been determined to not spike",
-                    neuron_index);
-        }
-        
-
+                      neuron_index);
+         }
     }
-		
+
     // Disable interrupts to avoid possible concurrent access
     uint cpsr = spin1_int_disable();
 

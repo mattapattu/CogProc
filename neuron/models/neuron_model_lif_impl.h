@@ -50,7 +50,6 @@ typedef struct neuron_t {
 
     //! refractory time of neuron [timesteps]
     int32_t  T_refract;
-
 } neuron_t;
 
 //! LIF global parameters

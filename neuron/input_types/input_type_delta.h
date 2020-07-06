@@ -59,7 +59,7 @@ static inline void input_type_convert_excitatory_input_to_current(
         state_t membrane_voltage) {
     use(membrane_voltage);
     for (int i=0; i < NUM_EXCITATORY_RECEPTORS; i++) {
-        exc_input[i] = exc_input[i];
+        exc_input[i] = exc_input[i] * input_type->scale_factor;
     }
 }
 

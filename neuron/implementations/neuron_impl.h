@@ -48,7 +48,8 @@ static void neuron_impl_load_neuron_parameters(
 //! \param[in] neuron_index: The index of the neuron to update
 //! \param[in] external_bias: External input to be applied to the neuron
 //! \return True if a spike has occurred
-static bool neuron_impl_do_timestep_update(uint32_t time,index_t neuron_index, input_t external_bias);
+static bool neuron_impl_do_timestep_update(
+        index_t neuron_index, input_t external_bias);
 
 //! \brief Stores neuron parameters back into SDRAM
 //! \param[out] address: the address in SDRAM to start the store
@@ -60,8 +61,8 @@ static void neuron_impl_store_neuron_parameters(
 #if LOG_LEVEL >= LOG_DEBUG
 //! \brief Print the inputs to the neurons
 //! \param[in] n_neurons: The number of neurons
-static inline void neuron_impl_print_inputs(uint32_t n_neurons);
-//#if LOG_LEVEL >= LOG_DEBUG
+void neuron_impl_print_inputs(uint32_t n_neurons);
+
 //! \brief Print the synapse parameters of the neurons
 //! \param[in] n_neurons: The number of neurons
 void neuron_impl_print_synapse_parameters(uint32_t n_neurons);

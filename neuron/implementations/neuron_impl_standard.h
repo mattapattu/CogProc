@@ -232,10 +232,6 @@ static void neuron_impl_load_neuron_parameters(
 
     neuron_model_set_global_neuron_params(global_parameters);
 
-    for (index_t n = 0; n < n_neurons; n++) {
-        neuron_model_print_parameters(&neuron_array[n]);
-    }
-
 #if LOG_LEVEL >= LOG_DEBUG
     log_debug("-------------------------------------\n");
     for (index_t n = 0; n < n_neurons; n++) {
@@ -245,110 +241,114 @@ static void neuron_impl_load_neuron_parameters(
 #endif // LOG_LEVEL >= LOG_DEBUG
 }
 
-
 SOMETIMES_UNUSED // Marked unused as only used sometimes
 //! \brief Do the timestep update for the particular implementation
 //! \param[in] neuron_index: The index of the neuron to update
 //! \param[in] external_bias: External input to be applied to the neuron
 //! \return True if a spike has occurred
-static bool neuron_impl_do_timestep_update(uint32_t time, index_t neuron_index,
+static bool neuron_impl_do_timestep_update(index_t neuron_index,
         input_t external_bias) {
     // Get the neuron itself
-    neuron_pointer_t neuron = &neuron_array[neuron_index];
+    neuron_t *this_neuron = &neuron_array[neuron_index];
 
     // Get the input_type parameters and voltage for this neuron
-    input_type_pointer_t input_type = &input_type_array[neuron_index];
+    input_type_t *input_types = &input_type_array[neuron_index];
 
     // Get threshold and additional input parameters for this neuron
-    threshold_type_pointer_t threshold_type =
-            &threshold_type_array[neuron_index];
-    additional_input_pointer_t additional_input =
+    threshold_type_t *the_threshold_type = &threshold_type_array[neuron_index];
+    additional_input_t *additional_inputs =
             &additional_input_array[neuron_index];
-    synapse_param_pointer_t synapse_type =
+    synapse_param_t *the_synapse_type =
             &neuron_synapse_shaping_params[neuron_index];
 
-    // Get the exc and inh values from the synapses
-    input_t* exc_value = synapse_types_get_excitatory_input(synapse_type);
-    input_t* inh_value = synapse_types_get_inhibitory_input(synapse_type);
+    // Store whether the neuron has spiked
+    bool has_spiked = false;
 
-    // Call functions to obtain exc_input and inh_input
-    input_t* exc_input_values = input_type_get_input_value(
-            exc_value, input_type, NUM_EXCITATORY_RECEPTORS);
-    input_t* inh_input_values = input_type_get_input_value(
-            inh_value, input_type, NUM_INHIBITORY_RECEPTORS);
+    // Loop however many times requested; do this in reverse for efficiency,
+    // and because the index doesn't actually matter
+    for (uint32_t i = n_steps_per_timestep; i > 0; i--) {
+        // Get the voltage
+        state_t soma_voltage = neuron_model_get_membrane_voltage(this_neuron);
 
-    // Sum g_syn contributions from all receptors for recording
-    REAL total_exc = 0;
-    REAL total_inh = 0;
+        // Get the exc and inh values from the synapses
+        input_t *exc_values =
+                synapse_types_get_excitatory_input(the_synapse_type);
+        input_t *inh_values =
+                synapse_types_get_inhibitory_input(the_synapse_type);
 
-    for (int i = 0; i < NUM_EXCITATORY_RECEPTORS; i++) {
-        total_exc += exc_input_values[i];
-    }
-    for (int i = 0; i < NUM_INHIBITORY_RECEPTORS; i++) {
-        total_inh += inh_input_values[i];
-    }
-    bool spike = false;
-    state_t voltage = neuron_model_get_voltage(neuron);
-    //neuron_recording_record_accum(V_RECORDING_INDEX, neuron_index, voltage);
-    
-    //neuron_impl_print_inputs(1);
-   
-    if(total_exc != 0 || total_inh !=0){
-        // Call functions to get the input values to be recorded
-        neuron_recording_record_accum(GSYN_EXC_RECORDING_INDEX, neuron_index, total_exc);
-        neuron_recording_record_accum(GSYN_INH_RECORDING_INDEX, neuron_index, total_inh);
+        // Call functions to obtain exc_input and inh_input
+        input_t *exc_input_values = input_type_get_input_value(
+                exc_values, input_types, NUM_EXCITATORY_RECEPTORS);
+        input_t *inh_input_values = input_type_get_input_value(
+                inh_values, input_types, NUM_INHIBITORY_RECEPTORS);
 
-        // Update voltage
-	voltage = neuron_model_update_membrane_voltage(time, neuron);
+        // Sum g_syn contributions from all receptors for recording
+        REAL total_exc = 0;
+        REAL total_inh = 0;
+
+        for (int i = 0; i < NUM_EXCITATORY_RECEPTORS; i++) {
+            total_exc += exc_input_values[i];
+        }
+        for (int i = 0; i < NUM_INHIBITORY_RECEPTORS; i++) {
+            total_inh += inh_input_values[i];
+        }
+
+        // Do recording if on the first step
+        if (i == n_steps_per_timestep) {
+            neuron_recording_record_accum(
+                    V_RECORDING_INDEX, neuron_index, soma_voltage);
+            neuron_recording_record_accum(
+                    GSYN_EXC_RECORDING_INDEX, neuron_index, total_exc);
+            neuron_recording_record_accum(
+                    GSYN_INH_RECORDING_INDEX, neuron_index, total_inh);
+        }
 
         // Call functions to convert exc_input and inh_input to current
-        input_type_convert_excitatory_input_to_current(exc_input_values, input_type, voltage);
-        input_type_convert_inhibitory_input_to_current(inh_input_values, input_type, voltage);
+        input_type_convert_excitatory_input_to_current(
+                exc_input_values, input_types, soma_voltage);
+        input_type_convert_inhibitory_input_to_current(
+                inh_input_values, input_types, soma_voltage);
 
-        external_bias += additional_input_get_input_value_as_current(additional_input, voltage);
-
-       log_info("exc_input_values = %12.6k, inh_input_values= %12.6k, time = %u",exc_input_values, inh_input_values, time);
-
+        external_bias += additional_input_get_input_value_as_current(
+                additional_inputs, soma_voltage);
 
         // update neuron parameters
-        state_t result = neuron_model_state_update(time, 
+        state_t result = neuron_model_state_update(
                 NUM_EXCITATORY_RECEPTORS, exc_input_values,
                 NUM_INHIBITORY_RECEPTORS, inh_input_values,
-                external_bias, neuron);
-        voltage = result; 
-        //log_info("Voltage=%u", voltage);
-        neuron_recording_record_accum(V_RECORDING_INDEX, neuron_index, voltage);
+                external_bias, this_neuron);
+
         // determine if a spike should occur
-        spike = false;
-        spike = threshold_type_is_above_threshold(result, threshold_type);
+        bool spike_now =
+                threshold_type_is_above_threshold(result, the_threshold_type);
 
         // If spike occurs, communicate to relevant parts of model
-        if (spike) {
+        if (spike_now) {
+            has_spiked = true;
+
             // Call relevant model-based functions
             // Tell the neuron model
-            neuron_model_has_spiked(neuron);
-            // Tell the additional input
-            additional_input_has_spiked(additional_input);
-            // Record the spike
-            neuron_recording_record_bit(SPIKE_RECORDING_BITFIELD, neuron_index);
-            }
-              
-        // Shape the existing input according to the included rule
-        synapse_types_shape_input(synapse_type);
+            neuron_model_has_spiked(this_neuron);
 
-        #if LOG_LEVEL >= LOG_DEBUG
-            neuron_model_print_state_variables(neuron);
-        #endif // LOG_LEVEL >= LOG_DEBUG
-    }else{
-	
-   	 voltage = neuron_model_get_voltage(neuron);
-    	neuron_recording_record_accum(V_RECORDING_INDEX, neuron_index, voltage);	
+            // Tell the additional input
+            additional_input_has_spiked(additional_inputs);
+        }
+
+        // Shape the existing input according to the included rule
+        synapse_types_shape_input(the_synapse_type);
     }
 
-     //neuron_recording_record_accum(V_RECORDING_INDEX, neuron_index, voltage);
+    if (has_spiked) {
+        // Record the spike
+        neuron_recording_record_bit(SPIKE_RECORDING_BITFIELD, neuron_index);
+    }
+
+#if LOG_LEVEL >= LOG_DEBUG
+    neuron_model_print_state_variables(this_neuron);
+#endif // LOG_LEVEL >= LOG_DEBUG
 
     // Return the boolean to the model timestep update
-    return(spike);
+    return has_spiked;
 }
 
 SOMETIMES_UNUSED // Marked unused as only used sometimes
@@ -409,7 +409,7 @@ static void neuron_impl_store_neuron_parameters(
 #if LOG_LEVEL >= LOG_DEBUG
 //! \brief Print the inputs to the neurons
 //! \param[in] n_neurons: The number of neurons
-static inline void neuron_impl_print_inputs(uint32_t n_neurons) {
+void neuron_impl_print_inputs(uint32_t n_neurons) {
     bool empty = true;
     for (index_t i = 0; i < n_neurons; i++) {
         synapse_param_t *params = &neuron_synapse_shaping_params[i];
@@ -419,25 +419,25 @@ static inline void neuron_impl_print_inputs(uint32_t n_neurons) {
     }
 
     if (!empty) {
-        log_info("-------------------------------------\n");
+        log_debug("-------------------------------------\n");
 
         for (index_t i = 0; i < n_neurons; i++) {
             synapse_param_t *params = &neuron_synapse_shaping_params[i];
             input_t input = synapse_types_get_excitatory_input(params)
                     - synapse_types_get_inhibitory_input(params);
             if (bitsk(input) != 0) {
-                log_info("%3u: %12.6k (= ", i, input);
+                log_debug("%3u: %12.6k (= ", i, input);
                 synapse_types_print_input(params);
-                log_info(")\n");
+                log_debug(")\n");
             }
         }
-        log_info("-------------------------------------\n");
+        log_debug("-------------------------------------\n");
     }
 }
-//#if LOG_LEVEL >= LOG_DEBUG
+
 //! \brief Print the synapse parameters of the neurons
 //! \param[in] n_neurons: The number of neurons
-inline void neuron_impl_print_synapse_parameters(uint32_t n_neurons) {
+void neuron_impl_print_synapse_parameters(uint32_t n_neurons) {
     log_debug("-------------------------------------\n");
     for (index_t n = 0; n < n_neurons; n++) {
         synapse_types_print_parameters(&neuron_synapse_shaping_params[n]);
@@ -448,7 +448,7 @@ inline void neuron_impl_print_synapse_parameters(uint32_t n_neurons) {
 //! \brief Get the synapse type character for a synapse type
 //! \param[in] synapse_type: The synapse type
 //! \return The descriptor character (sometimes two characters)
-inline const char *neuron_impl_get_synapse_type_char(uint32_t synapse_type) {
+const char *neuron_impl_get_synapse_type_char(uint32_t synapse_type) {
     return synapse_types_get_type_char(synapse_type);
 }
 #endif // LOG_LEVEL >= LOG_DEBUG

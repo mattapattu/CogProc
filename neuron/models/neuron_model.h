@@ -59,7 +59,7 @@ void neuron_model_set_global_neuron_params(
 //!     contains all the parameters for a specific neuron
 //! \return the value to be compared with a threshold value to determine if the
 //!     neuron has spiked
-state_t neuron_model_state_update(int32_t time,
+state_t neuron_model_state_update(
         uint16_t num_excitatory_inputs, const input_t *exc_input,
         uint16_t num_inhibitory_inputs, const input_t *inh_input,
         input_t external_bias, neuron_t *restrict neuron);
@@ -74,11 +74,7 @@ void neuron_model_has_spiked(neuron_t *restrict neuron);
 //!     all the parameters for a specific neuron
 //! \return the membrane voltage for a given neuron with the neuron
 //!     parameters specified in neuron
-state_t neuron_model_update_membrane_voltage(int32_t time, neuron_t *neuron);
-
-state_t neuron_model_get_voltage(neuron_t *neuron);
-
-
+state_t neuron_model_get_membrane_voltage(const neuron_t *neuron);
 
 //! \brief printout of state variables i.e. those values that might change
 //! \param[in] neuron: a pointer to a neuron parameter struct which contains all

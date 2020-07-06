@@ -1,4 +1,5 @@
- /*Copyright (c) 2017-2019 The University of Manchester
+/*
+ * Copyright (c) 2017-2019 The University of Manchester
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,22 +21,17 @@
 
 #include <debug.h>
 
-static int32_t last_update_time = 0;
-
 //! \brief simple Leaky I&F ODE
 //! \param[in,out] neuron: The neuron to update
 //! \param[in] V_prev: previous voltage
 //! \param[in] input_this_timestep: The input to apply
-
-static inline void lif_update(int32_t time, neuron_pointer_t neuron, input_t input_this_timestep) {
+static inline void lif_neuron_closed_form(
+        neuron_t *neuron, REAL V_prev, input_t input_this_timestep) {
+    REAL alpha = input_this_timestep * neuron->R_membrane + neuron->V_rest;
 
     // update membrane voltage
-    neuron->V_membrane =  neuron_model_update_membrane_voltage(time, neuron);
-    neuron->V_membrane += input_this_timestep * neuron->R_membrane;
-    log_info("New V_membrane = %11.4k mv",  neuron->V_membrane);
-
+    neuron->V_membrane = alpha - (neuron->exp_TC * (alpha - V_prev));
 }
-
 
 void neuron_model_set_global_neuron_params(
         const global_neuron_params_t *params) {
@@ -43,12 +39,12 @@ void neuron_model_set_global_neuron_params(
     // Does Nothing - no params
 }
 
-state_t neuron_model_state_update(int32_t time,
+state_t neuron_model_state_update(
 		uint16_t num_excitatory_inputs, const input_t *exc_input,
 		uint16_t num_inhibitory_inputs, const input_t *inh_input,
 		input_t external_bias, neuron_t *restrict neuron) {
-	//log_info("Exc 1: %12.6k, Exc 2: %12.6k", exc_input[0], exc_input[1]);
-	//log_info("Inh 1: %12.6k, Inh 2: %12.6k", inh_input[0], inh_input[1]);
+	log_debug("Exc 1: %12.6k, Exc 2: %12.6k", exc_input[0], exc_input[1]);
+	log_debug("Inh 1: %12.6k, Inh 2: %12.6k", inh_input[0], inh_input[1]);
 
     // If outside of the refractory period
     if (neuron->refract_timer <= 0) {
@@ -64,18 +60,15 @@ state_t neuron_model_state_update(int32_t time,
         // Get the input in nA
         input_t input_this_timestep =
                 total_exc - total_inh + external_bias + neuron->I_offset;
-	
-        log_info("input_this_timestep = %12.6k, time = %u", input_this_timestep, time);
 
-        lif_update(time, neuron, input_this_timestep);
-
+        lif_neuron_closed_form(
+                neuron, neuron->V_membrane, input_this_timestep);
     } else {
         // countdown refractory timer
         neuron->refract_timer--;
     }
     return neuron->V_membrane;
 }
-
 
 void neuron_model_has_spiked(neuron_t *restrict neuron) {
     // reset membrane voltage
@@ -85,37 +78,22 @@ void neuron_model_has_spiked(neuron_t *restrict neuron) {
     neuron->refract_timer  = neuron->T_refract;
 }
 
-state_t neuron_model_update_membrane_voltage(int32_t time, neuron_t *neuron) {
-    int32_t delta_t = time - last_update_time;
-    float exp_factor = 1;
-    for(int32_t k = delta_t; k > 0; k--){
- 	exp_factor = exp_factor*neuron->exp_TC;
-    }
-    if(neuron->V_membrane > neuron->V_rest) {
-          neuron->V_membrane = neuron->V_membrane * (2-exp_factor); //since membvolt is neg. , decay factory > 1
-    }
-    log_info("time = %u, Updated V_membrane = %11.4k mv, delta_t = %u, exp_factor = %f", time, neuron->V_membrane, delta_t, exp_factor);
-    last_update_time = time; 
+state_t neuron_model_get_membrane_voltage(const neuron_t *neuron) {
     return neuron->V_membrane;
 }
-
-state_t neuron_model_get_voltage(neuron_pointer_t neuron) {
-    return neuron->V_membrane;
-}
-
 
 void neuron_model_print_state_variables(const neuron_t *neuron) {
     log_debug("V membrane    = %11.4k mv", neuron->V_membrane);
 }
 
 void neuron_model_print_parameters(const neuron_t *neuron) {
-    log_info("V reset       = %11.4k mv", neuron->V_reset);
-    log_info("V rest        = %11.4k mv", neuron->V_rest);
+    log_debug("V reset       = %11.4k mv", neuron->V_reset);
+    log_debug("V rest        = %11.4k mv", neuron->V_rest);
 
-    log_info("I offset      = %11.4k nA", neuron->I_offset);
-    log_info("R membrane    = %11.4k Mohm", neuron->R_membrane);
+    log_debug("I offset      = %11.4k nA", neuron->I_offset);
+    log_debug("R membrane    = %11.4k Mohm", neuron->R_membrane);
 
-    log_info("exp(-ms/(RC)) = %11.4k [.]", neuron->exp_TC);
+    log_debug("exp(-ms/(RC)) = %11.4k [.]", neuron->exp_TC);
 
-    log_info("T refract     = %u timesteps", neuron->T_refract);
+    log_debug("T refract     = %u timesteps", neuron->T_refract);
 }
