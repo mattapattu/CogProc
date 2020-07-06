@@ -312,6 +312,9 @@ static bool neuron_impl_do_timestep_update(index_t neuron_index,
         external_bias += additional_input_get_input_value_as_current(
                 additional_inputs, soma_voltage);
 
+        log_info("exc_input_values = %12.6k, total_exc= %12.6k",exc_input_values, total_exc);
+ 
+
         // update neuron parameters
         state_t result = neuron_model_state_update(
                 NUM_EXCITATORY_RECEPTORS, exc_input_values,
