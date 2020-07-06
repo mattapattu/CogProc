@@ -30,7 +30,8 @@ static int32_t last_update_time = 0;
 static inline void lif_update(int32_t time, neuron_pointer_t neuron, input_t input_this_timestep) {
 
     // update membrane voltage
-    neuron->V_membrane =  neuron_model_update_membrane_voltage(time, neuron);
+    //neuron->V_membrane =  neuron_model_update_membrane_voltage(time, neuron);
+    log_info("Current V_membrane = %11.4k mv",  neuron->V_membrane);
     neuron->V_membrane += input_this_timestep * neuron->R_membrane;
     log_info("New V_membrane = %11.4k mv",  neuron->V_membrane);
 
@@ -47,7 +48,7 @@ state_t neuron_model_state_update(int32_t time,
 		uint16_t num_excitatory_inputs, const input_t *exc_input,
 		uint16_t num_inhibitory_inputs, const input_t *inh_input,
 		input_t external_bias, neuron_t *restrict neuron) {
-	//log_info("Exc 1: %12.6k, Exc 2: %12.6k", exc_input[0], exc_input[1]);
+	log_info("Exc 1: %12.6k", exc_input[0]);
 	//log_info("Inh 1: %12.6k, Inh 2: %12.6k", inh_input[0], inh_input[1]);
 
     // If outside of the refractory period

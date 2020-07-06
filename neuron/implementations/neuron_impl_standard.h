@@ -307,7 +307,7 @@ static bool neuron_impl_do_timestep_update(uint32_t time, index_t neuron_index,
 
         external_bias += additional_input_get_input_value_as_current(additional_input, voltage);
 
-       log_info("exc_input_values = %12.6k, inh_input_values= %12.6k, time = %u",exc_input_values, inh_input_values, time);
+       log_info("Calling neuron state update : total_exc = %12.6k, time = %u",total_exc, time);
 
 
         // update neuron parameters
@@ -327,6 +327,7 @@ static bool neuron_impl_do_timestep_update(uint32_t time, index_t neuron_index,
             // Call relevant model-based functions
             // Tell the neuron model
             neuron_model_has_spiked(neuron);
+            log_info("Neuron %u has spiked", neuron_index);
             // Tell the additional input
             additional_input_has_spiked(additional_input);
             // Record the spike
