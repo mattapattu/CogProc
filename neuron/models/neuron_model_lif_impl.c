@@ -88,13 +88,13 @@ void neuron_model_print_state_variables(const neuron_t *neuron) {
 }
 
 void neuron_model_print_parameters(const neuron_t *neuron) {
-    log_debug("V reset       = %11.4k mv", neuron->V_reset);
-    log_debug("V rest        = %11.4k mv", neuron->V_rest);
+    log_info("V reset       = %11.4k mv", neuron->V_reset);
+    log_info("V rest        = %11.4k mv", neuron->V_rest);
 
-    log_debug("I offset      = %11.4k nA", neuron->I_offset);
-    log_debug("R membrane    = %11.4k Mohm", neuron->R_membrane);
+    log_info("I offset      = %11.4k nA", neuron->I_offset);
+    log_info("R membrane    = %11.4k Mohm", neuron->R_membrane);
 
-    log_debug("exp(-ms/(RC)) = %11.4k [.]", neuron->exp_TC);
+    log_info("exp(-ms/(RC)) = %11.4k [.]", neuron->exp_TC);
 
-    log_debug("T refract     = %u timesteps", neuron->T_refract);
+    log_info("T refract     = %u timesteps", neuron->T_refract);
 }
