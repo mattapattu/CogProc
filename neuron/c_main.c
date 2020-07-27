@@ -333,6 +333,8 @@ void timer_callback(uint timer_count, uint unused) {
     profiler_write_entry_disable_irq_fiq(PROFILER_EXIT | PROFILER_TIMER);
 }
 
+
+
 //! \brief The entry point for this model.
 void c_main(void) {
 
@@ -350,7 +352,13 @@ void c_main(void) {
     spin1_set_timer_tick_and_phase(timer_period, timer_offset);
 
     // Set up the timer tick callback (others are handled elsewhere)
-    spin1_callback_on(TIMER_TICK, timer_callback, TIMER);
+    //spin1_callback_on(TIMER_TICK, timer_callback, TIMER);
+    // spin1_callback_on(MC_PKT_, mc_pkt_callback, TIMER);
+    spin1_callback_on(MC_PACKET_RECEIVED,
+            multicast_packet_received_callback, mc_packet_callback_priority);
+    simulation_dma_transfer_done_callback_on(
+            DMA_TAG_READ_SYNAPTIC_ROW, dma_complete_callback);
+    spin1_callback_on(USER_EVENT, user_event_callback, user_event_priority);
 
     simulation_run();
 }

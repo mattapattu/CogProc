@@ -258,7 +258,7 @@ static inline void setup_synaptic_dma_write(
 //! \brief Called when a multicast packet is received
 //! \param[in] key: The key of the packet. The spike.
 //! \param payload: Ignored
-static void multicast_packet_received_callback(uint key, uint payload) {
+void multicast_packet_received_callback(uint key, uint payload) {
     use(payload);
     log_debug("Received spike %x at %d, DMA Busy = %d", key, time, dma_busy);
 
@@ -397,11 +397,11 @@ bool spike_processing_initialise( // EXPORTED
     }
 
     // Set up the callbacks
-    spin1_callback_on(MC_PACKET_RECEIVED,
-            multicast_packet_received_callback, mc_packet_callback_priority);
-    simulation_dma_transfer_done_callback_on(
-            DMA_TAG_READ_SYNAPTIC_ROW, dma_complete_callback);
-    spin1_callback_on(USER_EVENT, user_event_callback, user_event_priority);
+    // spin1_callback_on(MC_PACKET_RECEIVED,
+    //         multicast_packet_received_callback, mc_packet_callback_priority);
+    // simulation_dma_transfer_done_callback_on(
+    //         DMA_TAG_READ_SYNAPTIC_ROW, dma_complete_callback);
+    // spin1_callback_on(USER_EVENT, user_event_callback, user_event_priority);
 
     return true;
 }
