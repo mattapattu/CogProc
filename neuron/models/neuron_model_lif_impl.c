@@ -32,11 +32,11 @@ static inline void lif_update(int32_t time, neuron_pointer_t neuron, input_t inp
     // update membrane voltage
     REAL alpha = input_this_timestep * neuron->R_membrane + neuron->V_rest;
     // update membrane voltage
-    V_prev = neuron_model_update_membrane_voltage(time, neuron);
+    REAL V_prev = neuron_model_update_membrane_voltage(time, neuron);
     neuron->V_membrane = alpha - (neuron->exp_TC * (alpha - V_prev));
     
-    log_info("Current V_membrane = %11.4k mv",  neuron->V_membrane);
-    neuron->V_membrane += input_this_timestep * neuron->R_membrane;
+    //log_info("Current V_membrane = %11.4k mv",  neuron->V_membrane);
+    //neuron->V_membrane += input_this_timestep * neuron->R_membrane;
     log_info("New V_membrane = %11.4k mv",  neuron->V_membrane);
 
 }
@@ -99,13 +99,37 @@ state_t neuron_model_update_membrane_voltage(int32_t time, neuron_t *neuron) {
     if(neuron->V_membrane > neuron->V_rest) {
           neuron->V_membrane = neuron->V_membrane * (2-exp_factor); //Membrane potential is always less than 0, so decay factor > 1 : -45*(2-0.9) = -49.5 
     }
-    log_info("time = %u, Updated V_membrane = %11.4k mv, delta_t = %u, exp_factor = %f", time, neuron->V_membrane, delta_t, exp_factor);
+    log_info("time = %u,last_update_time = %u, Updated V_membrane = %11.4k mv, delta_t = %u, exp_factor = %f", time, last_update_time, neuron->V_membrane, delta_t, exp_factor);
     last_update_time = time; 
     return neuron->V_membrane;
 }
 
 state_t neuron_model_get_voltage(neuron_pointer_t neuron) {
     return neuron->V_membrane;
+}
+
+void neuron_model_set_spike_time(neuron_pointer_t neuron, int32_t  spikeTime){
+   neuron->spikeCount++;
+   if(neuron->spikeCount > 10){
+       log_error("Error storing new spike at time = %u. Exiting simulation", spike_time);
+   }else{
+       for(uint32_t i = 0; i < 10; i++){
+           if(neuron->spike_time[i] < spikeTime){
+               continue;
+           }else{
+                for(uint32_t k = 10; k > i; k--){
+                    neuron->spike_time[k] = neuron->spike_time[k-1];
+                }
+                neuron->spike_time[i]  = spikeTime;
+           }
+       }
+  }
+   neuron->spike_time[neuron->spikeCount-1] = spikeTime;
+}
+
+
+int32_t neuron_model_get_next_spiketime(neuron_pointer_t neuron){
+    return(neuron->spike_time[0]);	
 }
 
 

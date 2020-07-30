@@ -51,10 +51,17 @@ typedef struct neuron_t {
     //! refractory time of neuron [timesteps]
     int32_t  T_refract;
 
+    //! LIF incoming spike times: overwrite after 10 spikes
+    int32_t spike_times[10];
+
+    //! LIF incoming spike count
+    int32_t spikeCount;
+
 } neuron_t;
 
 //! LIF global parameters
 typedef struct global_neuron_params_t {
 } global_neuron_params_t;
+
 
 #endif // _NEURON_MODEL_LIF_CURR_IMPL_H_

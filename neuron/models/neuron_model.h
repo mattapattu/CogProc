@@ -90,4 +90,10 @@ void neuron_model_print_state_variables(const neuron_t *neuron);
 //!     the parameters for a specific neuron
 void neuron_model_print_parameters(const neuron_t *neuron);
 
+
+void neuron_model_set_spike_time(neuron_pointer_t neuron, int32_t  spikeTime);
+
+int32_t neuron_model_get_next_spiketime(neuron_pointer_t neuron);
+
+
 #endif // _NEURON_MODEL_H_
