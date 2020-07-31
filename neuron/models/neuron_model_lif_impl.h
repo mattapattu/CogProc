@@ -57,6 +57,19 @@ typedef struct neuron_t {
     //! LIF incoming spike count
     int32_t spikeCount;
 
+    //! next internal event time
+    int32_t tn;
+
+    //! last event time
+    int32_t tl;
+
+    //! EIT
+    int32_t eit;
+
+    //!EOT
+    int32_t eot;
+
+
 } neuron_t;
 
 //! LIF global parameters

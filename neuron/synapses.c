@@ -221,13 +221,15 @@ static inline void process_fixed_synapses(
         uint32_t weight = synapse_row_sparse_weight(synaptic_word);
    
         log_info("combined_synapse_neuron_index  = %u, time = %u,  delay = %u, weight = %u", combined_synapse_neuron_index, time, delay, weight);
+        
+        
 
         // Convert into ring buffer offset
         uint32_t ring_buffer_index = synapses_get_ring_buffer_index_combined(
                 delay + time, combined_synapse_neuron_index,
                 synapse_type_index_bits);
 
-        log_info("ring_buffer_index  = %u", ring_buffer_index);
+        
 
         // Add weight to current ring buffer value
         uint32_t accumulation = ring_buffers[ring_buffer_index] + weight;
@@ -244,6 +246,8 @@ static inline void process_fixed_synapses(
 
         // Store saturated value back in ring-buffer
         ring_buffers[ring_buffer_index] = accumulation;
+
+
     }
 }
 

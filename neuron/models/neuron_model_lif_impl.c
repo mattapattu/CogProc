@@ -48,6 +48,22 @@ void neuron_model_set_global_neuron_params(
     // Does Nothing - no params
 }
 
+neuron_model_pdevs_sim(neuron_t * neuron, int32_t nextSpikeTime){
+    if(neuron->tn <= neuron->eit && neuron->tn <=  nextSpikeTime ){
+        deltaInt(neuron);
+    }else if(nextSpikeTime <= neuron->eit &&  nextSpikeTime < tn ){
+        deltaExt(neuron);
+    }
+    int32_t lookahead = 0;
+
+    //REDO with bitmasks
+    if(eit < tn){
+        lookahead = eit; //
+    }else{
+        lookahead  = tn; // Infinity
+    }
+}
+
 state_t neuron_model_state_update(int32_t time,
 		uint16_t num_excitatory_inputs, const input_t *exc_input,
 		uint16_t num_inhibitory_inputs, const input_t *inh_input,
@@ -108,7 +124,7 @@ state_t neuron_model_get_voltage(neuron_pointer_t neuron) {
     return neuron->V_membrane;
 }
 
-void neuron_model_set_spike_time(neuron_pointer_t neuron, int32_t  spikeTime){
+void neuron_impl_add_spike(neuron_pointer_t neuron, int32_t  spikeTime){
    neuron->spikeCount++;
    if(neuron->spikeCount > 10){
        log_error("Error storing new spike at time = %u. Exiting simulation", spikeTime);

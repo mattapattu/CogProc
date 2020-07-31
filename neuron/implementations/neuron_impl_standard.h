@@ -246,12 +246,17 @@ static void neuron_impl_load_neuron_parameters(
 }
 
 
+static bool neuron_impl_add_spike(uint32_t time, index_t neuron_index,) {
+    neuron_pointer_t neuron = &neuron_array[neuron_index];
+    neuron_model_update_membrane_voltage(neuron, time);
+}
+
 SOMETIMES_UNUSED // Marked unused as only used sometimes
 //! \brief Do the timestep update for the particular implementation
 //! \param[in] neuron_index: The index of the neuron to update
 //! \param[in] external_bias: External input to be applied to the neuron
 //! \return True if a spike has occurred
-static bool neuron_impl_do_timestep_update(uint32_t time, index_t neuron_index,
+/* static bool neuron_impl_do_timestep_update(uint32_t time, index_t neuron_index,
         input_t external_bias) {
     // Get the neuron itself
     neuron_pointer_t neuron = &neuron_array[neuron_index];
@@ -347,6 +352,24 @@ static bool neuron_impl_do_timestep_update(uint32_t time, index_t neuron_index,
     }
 
      //neuron_recording_record_accum(V_RECORDING_INDEX, neuron_index, voltage);
+
+    // Return the boolean to the model timestep update
+    return(spike);
+} */
+
+static bool neuron_impl_neuron_update(uint32_t time, index_t neuron_index,
+        input_t external_bias) {
+    // Get the neuron itself
+    
+
+    if(!neuron_impl_add_spike(neuron_index, time)){
+            log_error("Unable to add spike to neuron %u at time = %u", neuron_index, time);
+        }
+
+    neuron_pointer_t neuron = &neuron_array[neuron_index];
+    int32_t nextSpikeTime = neuron_model_get_next_spiketime(neuron);
+    neuron_model_pdevs_sim(neuron, nextSpikeTime);
+
 
     // Return the boolean to the model timestep update
     return(spike);

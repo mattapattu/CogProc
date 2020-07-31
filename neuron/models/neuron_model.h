@@ -91,7 +91,7 @@ void neuron_model_print_state_variables(const neuron_t *neuron);
 void neuron_model_print_parameters(const neuron_t *neuron);
 
 
-void neuron_model_set_spike_time(neuron_pointer_t neuron, int32_t  spikeTime);
+void neuron_impl_add_spike(neuron_pointer_t neuron, int32_t  spikeTime);
 
 int32_t neuron_model_get_next_spiketime(neuron_pointer_t neuron);
 
