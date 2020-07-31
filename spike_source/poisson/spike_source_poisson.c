@@ -518,10 +518,14 @@ static void send_spike(uint32_t spike_key, uint32_t timer_count) {
     expected_time -= ssp_params.time_between_spikes;
 
     // Send the spike
-    log_debug("Sending spike packet %x at %d\n", spike_key, time);
-    while (!spin1_send_mc_packet(spike_key, 0, NO_PAYLOAD)) {
+    log_info("Sending spike packet %x at %d\n", spike_key, time);
+   // while (!spin1_send_mc_packet(spike_key, 0, NO_PAYLOAD)) {
+   //     spin1_delay_us(1);
+    //}
+    while (!spin1_send_mc_packet(spike_key, time, WITH_PAYLOAD)) {
         spin1_delay_us(1);
     }
+
 }
 
 //! \brief Expand the space for recording spikes.

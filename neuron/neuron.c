@@ -186,10 +186,16 @@ void neuron_do_timestep_update( // EXPORTED
                 expected_time -= time_between_spikes;
 
                 // Send the spike
+               // while (!spin1_send_mc_packet(
+               //         key | neuron_index, 0, NO_PAYLOAD)) {
+               //     spin1_delay_us(1);
+               // }
+
                 while (!spin1_send_mc_packet(
-                        key | neuron_index, 0, NO_PAYLOAD)) {
+                        key | neuron_index, time, WITH_PAYLOAD)) {
                     spin1_delay_us(1);
                 }
+ 
             }
         } else {
             log_debug("the neuron %d has been determined to not spike",

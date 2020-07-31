@@ -211,17 +211,23 @@ static inline void process_fixed_synapses(
         // (should auto increment pointer in single instruction)
         uint32_t synaptic_word = *synaptic_words++;
 
+        log_info("synaptic_word  = %u", synaptic_word);
+
         // Extract components from this word
         uint32_t delay =
                 synapse_row_sparse_delay(synaptic_word, synapse_type_index_bits);
         uint32_t combined_synapse_neuron_index = synapse_row_sparse_type_index(
                 synaptic_word, synapse_type_index_mask);
         uint32_t weight = synapse_row_sparse_weight(synaptic_word);
+   
+        log_info("combined_synapse_neuron_index  = %u, time = %u,  delay = %u, weight = %u", combined_synapse_neuron_index, time, delay, weight);
 
         // Convert into ring buffer offset
         uint32_t ring_buffer_index = synapses_get_ring_buffer_index_combined(
                 delay + time, combined_synapse_neuron_index,
                 synapse_type_index_bits);
+
+        log_info("ring_buffer_index  = %u", ring_buffer_index);
 
         // Add weight to current ring buffer value
         uint32_t accumulation = ring_buffers[ring_buffer_index] + weight;
@@ -330,10 +336,10 @@ void synapses_do_timestep_update(timer_t time) {
             uint32_t ring_buffer_index = synapses_get_ring_buffer_index(
                     time, synapse_type_index, neuron_index,
                     synapse_type_index_bits, synapse_index_bits);
-            log_info(
-                "time = %u, synapse_type_index = %u, neuron_index = %u, SYNAPSE_DELAY_MASK = %08x, synapse_index_bits = %08x",
-                time, synapse_type_index, neuron_index, 
-                SYNAPSE_DELAY_MASK, synapse_type_index_bits);
+            //log_info(
+            //    "time = %u, synapse_type_index = %u, neuron_index = %u, SYNAPSE_DELAY_MASK = %08x, synapse_index_bits = %08x",
+            //    time, synapse_type_index, neuron_index, 
+            //    SYNAPSE_DELAY_MASK, synapse_type_index_bits);
 
             // Convert ring-buffer entry to input and add on to correct
             // input for this synapse type and neuron
