@@ -159,6 +159,9 @@ static void neuron_impl_add_inputs(
     // simple wrapper to synapse type input function
     synapse_param_t *parameters =
             &neuron_synapse_shaping_params[neuron_index];
+    neuron_pointer_t neuron = &neuron_array[neuron_index];
+    neuron_model_set_spike_time(neuron,time);   
+    //PDEVS process     
     synapse_types_add_neuron_input(synapse_type_index,
             parameters, weights_this_timestep);
 }
