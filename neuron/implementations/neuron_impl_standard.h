@@ -381,6 +381,8 @@ static void  neuron_impl_neuron_eit_update(uint32_t time, index_t neuron_index) 
     neuron_pointer_t neuron = &neuron_array[neuron_index];
     neuron_model_eit_update(neuron, time);
 
+    
+
 }
 
 SOMETIMES_UNUSED // Marked unused as only used sometimes

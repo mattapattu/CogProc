@@ -107,7 +107,7 @@ void synapses_do_timestep_update(timer_t time);
 //! \param[out] write_back: whether to write back to SDRAM
 //! \return True if successful
 bool synapses_process_synaptic_row(
-        uint32_t time, synaptic_row_t row, bool *write_back);
+        uint32_t time, synaptic_row_t row, bool *write_back, bool isSpike);
 
 //! \brief returns the number of times the synapses have saturated their
 //!        weights.

@@ -57,6 +57,9 @@ enum spike_processing_dma_tags {
 //! The current timer tick value
 extern uint32_t time;
 
+//! True if multicast packet is a spike
+bool isSpike;
+
 //! True if the DMA "loop" is currently running
 static volatile bool dma_busy;
 
@@ -260,7 +263,12 @@ static inline void setup_synaptic_dma_write(
 //! \param payload: Ignored
 void multicast_packet_received_callback(uint key, uint payload) {
     //use(payload);
-    time = payload;
+    time = payload & 127;
+    if(payload & 128 == 128){
+        isSpike = TRUE;
+    }else{
+        isSpike = FALSE;
+    }
     log_info("Received spike %x with payload %d, DMA Busy = %d", key, payload, dma_busy);
     
      // If there was space to add spike to incoming spike queue

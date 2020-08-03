@@ -198,7 +198,7 @@ static inline void print_inputs(void) {
 //! \param[in] fixed_region_address: The fixed region of the synaptic matrix
 //! \param[in] time: The current simulation time
 static inline void process_fixed_synapses(
-        address_t fixed_region_address, uint32_t time) {
+        address_t fixed_region_address, uint32_t time, bool isSpike) {
     register uint32_t *synaptic_words =
             synapse_row_fixed_weight_controls(fixed_region_address);
     register uint32_t fixed_synapse =
@@ -223,35 +223,35 @@ static inline void process_fixed_synapses(
         log_info("combined_synapse_neuron_index  = %u, time = %u,  delay = %u, weight = %u", combined_synapse_neuron_index, time, delay, weight);
         
         uint32_t neuron_index = combined_synapse_neuron_index & 255;
-        neuron_update(time, neuron_index);
-
-        //If pkt is spike, add to ring buffer
-
-
-        
-
-        // Convert into ring buffer offset
-        uint32_t ring_buffer_index = synapses_get_ring_buffer_index_combined(
+        time = time+delay;
+        if(isSpike){
+            neuron_update(time, neuron_index);
+            // Convert into ring buffer offset
+            uint32_t ring_buffer_index = synapses_get_ring_buffer_index_combined(
                 delay + time, combined_synapse_neuron_index,
                 synapse_type_index_bits);
         
-        //
-        // Add weight to current ring buffer value
-        uint32_t accumulation = ring_buffers[ring_buffer_index] + weight;
+            //
+            // Add weight to current ring buffer value
+            uint32_t accumulation = ring_buffers[ring_buffer_index] + weight;
 
-        // If 17th bit is set, saturate accumulator at UINT16_MAX (0xFFFF)
-        // **NOTE** 0x10000 can be expressed as an ARM literal,
-        //          but 0xFFFF cannot.  Therefore, we use (0x10000 - 1)
-        //          to obtain this value
-        uint32_t sat_test = accumulation & 0x10000;
-        if (sat_test) {
-            accumulation = sat_test - 1;
-            saturation_count++;
+            // If 17th bit is set, saturate accumulator at UINT16_MAX (0xFFFF)
+            // **NOTE** 0x10000 can be expressed as an ARM literal,
+            //          but 0xFFFF cannot.  Therefore, we use (0x10000 - 1)
+            //          to obtain this value
+            uint32_t sat_test = accumulation & 0x10000;
+            if (sat_test) {
+                accumulation = sat_test - 1;
+                saturation_count++;
+            }
+
+            // Store saturated value back in ring-buffer
+            ring_buffers[ring_buffer_index] = accumulation;
+
+        }else{
+            neuron_eit_update(time, neuron_index);
         }
-
-        // Store saturated value back in ring-buffer
-        ring_buffers[ring_buffer_index] = accumulation;
-
+    
 
     }
 }
@@ -370,7 +370,7 @@ void synapses_do_timestep_update(timer_t time) {
 }
 
 bool synapses_process_synaptic_row(
-        uint32_t time, synaptic_row_t row, bool *write_back) {
+        uint32_t time, synaptic_row_t row, bool *write_backm bool isSpike) {
 
     // Get address of non-plastic region from row
     address_t fixed_region_address = synapse_row_fixed_region(row);
@@ -400,7 +400,7 @@ bool synapses_process_synaptic_row(
     // **NOTE** this is done after initiating DMA in an attempt
     // to hide cost of DMA behind this loop to improve the chance
     // that the DMA controller is ready to read next synaptic row afterwards
-    process_fixed_synapses(fixed_region_address, time);
+    process_fixed_synapses(fixed_region_address, time, isSpike);
     //}
     return true;
 }
