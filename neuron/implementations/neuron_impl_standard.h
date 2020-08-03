@@ -246,7 +246,7 @@ static void neuron_impl_load_neuron_parameters(
 }
 
 
-static bool neuron_impl_add_spike(uint32_t time, index_t neuron_index,) {
+static bool neuron_impl_add_spike(uint32_t time, index_t neuron_index) {
     neuron_pointer_t neuron = &neuron_array[neuron_index];
     neuron_model_add_spike(neuron, time);
 }
@@ -374,6 +374,13 @@ static void  neuron_impl_neuron_update(uint32_t time, index_t neuron_index,
 
     // Return the boolean to the model timestep update
     
+}
+
+static void  neuron_impl_neuron_eit_update(uint32_t time, index_t neuron_index) {
+
+    neuron_pointer_t neuron = &neuron_array[neuron_index];
+    neuron_model_eit_update(neuron, time);
+
 }
 
 SOMETIMES_UNUSED // Marked unused as only used sometimes

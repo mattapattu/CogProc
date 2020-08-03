@@ -148,11 +148,25 @@ void neuron_pause(address_t address) { // EXPORTED
             address, START_OF_GLOBAL_PARAMETERS, n_neurons);
 }
 
-void neuron_update(uint32_t time, index_t neuron_index, key_t key){
+void neuron_pdevs_update(uint32_t time, index_t neuron_index){
     input_t external_bias = 0;
-    neuron_impl_do_timestep_update(time, neuron_index, external_bias,key);
+     if (use_key) {
+         neuron_impl_neuron_update(time, neuron_index, external_bias,key);
+     }
+    
 }
 
+void neuron_eit_update(uint32_t time, index_t neuron_index){
+     if (use_key) {
+         neuron_impl_neuron_eit_update(time, neuron_index, key);
+     }
+    
+}
+
+/* void neuron_add_spike(uint32_t time, index_t neuron_index){
+    neuron_impl_add_spike(time, neuron_index);
+}
+ */
 /* void neuron_do_timestep_update( // EXPORTED
         timer_t time, uint timer_count, uint timer_period) {
     // Spin1 API ticks - to know when the timer wraps

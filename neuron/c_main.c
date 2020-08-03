@@ -271,7 +271,7 @@ void resume_callback(void) {
 //! \param[in] timer_count: the number of times this call back has been
 //!            executed since start of simulation
 //! \param[in] unused: unused parameter kept for API consistency
-void timer_callback(uint timer_count, uint unused) {
+/* void timer_callback(uint timer_count, uint unused) {
     use(unused);
 
     profiler_write_entry_disable_irq_fiq(PROFILER_ENTER | PROFILER_TIMER);
@@ -331,13 +331,8 @@ void timer_callback(uint timer_count, uint unused) {
     neuron_do_timestep_update(time, timer_count, timer_period);
 
     profiler_write_entry_disable_irq_fiq(PROFILER_EXIT | PROFILER_TIMER);
-}
+} */
 
-bool endSimulation(){
-    
-    
-   
-}
 
 //! \brief Called when a multicast packet is received
 //! \param[in] key: The key of the packet. The spike.
@@ -366,8 +361,7 @@ void mc_pkt_recvd_callback(uint key, uint payload) {
         simulation_ready_to_read();
         return;
     }
-
-
+    
     multicast_packet_received_callback(key, time);
 
     

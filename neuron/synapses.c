@@ -222,15 +222,20 @@ static inline void process_fixed_synapses(
    
         log_info("combined_synapse_neuron_index  = %u, time = %u,  delay = %u, weight = %u", combined_synapse_neuron_index, time, delay, weight);
         
+        uint32_t neuron_index = combined_synapse_neuron_index & 255;
+        neuron_update(time, neuron_index);
+
+        //If pkt is spike, add to ring buffer
+
+
         
 
         // Convert into ring buffer offset
         uint32_t ring_buffer_index = synapses_get_ring_buffer_index_combined(
                 delay + time, combined_synapse_neuron_index,
                 synapse_type_index_bits);
-
-        neuron_update
-
+        
+        //
         // Add weight to current ring buffer value
         uint32_t accumulation = ring_buffers[ring_buffer_index] + weight;
 

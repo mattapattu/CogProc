@@ -46,8 +46,16 @@ int32_t ta(int32_t neuron_phase){
     }
 }
 
-void lambda(state_t currentState, key_t key, int32_t neuron_index, int32_t time){
+void lambda(neuron_t * neuron, key_t key, int32_t neuron_index, int32_t time){
+    state_t currentState  = neuron->phase;
+
     if(currentState == 2){
+        while (!spin1_send_mc_packet(
+                        key | neuron_index, time, WITH_PAYLOAD)) {
+                    spin1_delay_us(1);
+                }
+    }else if(currentState == 3){
+        time  = time + neuron->tn;
         while (!spin1_send_mc_packet(
                         key | neuron_index, time, WITH_PAYLOAD)) {
                     spin1_delay_us(1);
@@ -78,7 +86,7 @@ void neuron_model_PDevs_sim(neuron_t * neuron, threshold_type_t *threshold_type,
 void neuron_model_Devs_sim(neuron_t * neuron, int16_t event_type, int32_t nextSpikeTime, threshold_type_t *threshold_type, key_t key){
 
     if(event_type == 1 ){
-        lambda(neuron->phase, key, neuron_index, neuron=>tn);
+        lambda(neuron, key, neuron_index, neuron->tn);
         state_t neuron->phase  = deltaInt(neuron);
         neuron->tl = neuron->tn;
         neuron->tn = neuron->tl + ta(neuron->phase);
@@ -105,6 +113,12 @@ static inline void lif_update(int32_t time, neuron_pointer_t neuron, input_t inp
     //neuron->V_membrane += input_this_timestep * neuron->R_membrane;
     log_info("New V_membrane = %11.4k mv",  neuron->V_membrane);
 
+}
+
+void neuron_model_eit_update(neuron_pointer_t neuron, int32_t time){
+    if(time < neuron->eit){
+        neuron->eit = time;
+    }
 }
 
 state_t deltaExt(int32_t time, 
@@ -163,7 +177,10 @@ state_t deltaInt(neuron_t *restrict neuron) {
 }
 
 state_t neuron_model_update_membrane_voltage(int32_t time, neuron_t *neuron) {
-    int32_t delta_t = time - last_update_time;
+    
+    //Check this again!!!! -> Do we update neuron membrane voltage after every state transition ( at t= tl) ?????
+    int32_t delta_t = time - neuron->tl;
+    
     float exp_factor = 1;
     for(int32_t k = delta_t; k > 0; k--){
  	exp_factor = exp_factor*neuron->exp_TC;
@@ -172,7 +189,7 @@ state_t neuron_model_update_membrane_voltage(int32_t time, neuron_t *neuron) {
           neuron->V_membrane = neuron->V_membrane * (2-exp_factor); //Membrane potential is always less than 0, so decay factor > 1 : -45*(2-0.9) = -49.5 
     }
     log_info("time = %u,last_update_time = %u, Updated V_membrane = %11.4k mv, delta_t = %u, exp_factor = %f", time, last_update_time, neuron->V_membrane, delta_t, exp_factor);
-    last_update_time = time; 
+    //last_update_time = time; 
     return neuron->V_membrane;
 }
 
