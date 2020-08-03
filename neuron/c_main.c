@@ -333,33 +333,45 @@ void timer_callback(uint timer_count, uint unused) {
     profiler_write_entry_disable_irq_fiq(PROFILER_EXIT | PROFILER_TIMER);
 }
 
-bool checkSimulationEnd(uint32_t time){
+bool endSimulation(){
+    
+    
+   
+}
+
+//! \brief Called when a multicast packet is received
+//! \param[in] key: The key of the packet. The spike.
+//! \param payload: Ignored
+void mc_pkt_recvd_callback(uint key, uint payload) {
+    //use(payload);
+    time = payload;
+    log_info("Received spike %x with payload %d, DMA Busy = %d", key, payload, dma_busy);
+    
     if(time > 30){
+    
         simulation_handle_pause_resume(resume_callback);
 
         log_debug("Completed a run");
 
-        // rewrite neuron params to SDRAM for reading out if needed
+            // rewrite neuron params to SDRAM for reading out if needed
         data_specification_metadata_t *ds_regions =
-                data_specification_get_data_address();
+            data_specification_get_data_address();
         neuron_pause(data_specification_get_region(NEURON_PARAMS_REGION, ds_regions));
 
         profiler_write_entry_disable_irq_fiq(PROFILER_EXIT | PROFILER_TIMER);
 
         profiler_finalise();
 
-        // Subtract 1 from the time so this tick gets done again on the next
-        // run
-        time--;
-
         log_debug("Rewire tries = %d", count_rewire_attempts);
         simulation_ready_to_read();
-        return(TRUE);
-    }else{
-        return(FALSE);
+        return;
     }
-}
 
+
+    multicast_packet_received_callback(key, time);
+
+    
+}
 
 //! \brief The entry point for this model.
 void c_main(void) {
@@ -380,6 +392,6 @@ void c_main(void) {
     // Set up the timer tick callback (others are handled elsewhere)
     //spin1_callback_on(TIMER_TICK, timer_callback, TIMER);
     spin1_callback_on(MC_PACKET_RECEIVED,
-            multicast_packet_received_callback, mc_packet_callback_priority);
+            mc_pkt_recvd_callback, mc_packet_callback_priority);
     simulation_run();
 }

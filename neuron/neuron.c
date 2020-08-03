@@ -148,7 +148,12 @@ void neuron_pause(address_t address) { // EXPORTED
             address, START_OF_GLOBAL_PARAMETERS, n_neurons);
 }
 
-void neuron_do_timestep_update( // EXPORTED
+void neuron_update(uint32_t time, index_t neuron_index, key_t key){
+    input_t external_bias = 0;
+    neuron_impl_do_timestep_update(time, neuron_index, external_bias,key);
+}
+
+/* void neuron_do_timestep_update( // EXPORTED
         timer_t time, uint timer_count, uint timer_period) {
     // Spin1 API ticks - to know when the timer wraps
     extern uint ticks;
@@ -214,6 +219,7 @@ void neuron_do_timestep_update( // EXPORTED
     // Re-enable interrupts
     spin1_mode_restore(cpsr);
 }
+ */
 
 void neuron_add_inputs( // EXPORTED
         index_t synapse_type_index, index_t neuron_index,

@@ -21,6 +21,8 @@
 #define _NEURON_MODEL_LIF_CURR_IMPL_H_
 
 #include "neuron_model.h"
+#include <common/neuron-typedefs.h>
+
 
 /////////////////////////////////////////////////////////////
 //! definition for LIF neuron parameters
@@ -43,7 +45,7 @@ typedef struct neuron_t {
     REAL     I_offset;
 
     //! countdown to end of next refractory period [timesteps]
-    int32_t  refract_timer;
+    //int32_t  refract_timer;
 
     //! post-spike reset membrane voltage [mV]
     REAL     V_reset;
@@ -68,6 +70,10 @@ typedef struct neuron_t {
 
     //!EOT
     int32_t eot;
+
+    //! Neuron Phases: 0 = Resting,  1 = Subthreshold, 2 = Threshold, 3 = Refractory, 
+    int16_t phase;
+
 
 
 } neuron_t;

@@ -229,7 +229,7 @@ static inline void process_fixed_synapses(
                 delay + time, combined_synapse_neuron_index,
                 synapse_type_index_bits);
 
-        
+        neuron_update
 
         // Add weight to current ring buffer value
         uint32_t accumulation = ring_buffers[ring_buffer_index] + weight;

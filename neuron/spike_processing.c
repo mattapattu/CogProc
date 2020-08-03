@@ -262,10 +262,8 @@ void multicast_packet_received_callback(uint key, uint payload) {
     //use(payload);
     time = payload;
     log_info("Received spike %x with payload %d, DMA Busy = %d", key, payload, dma_busy);
-    if(checkSimulationEnd(payload)){
-        return;
-    }
-    // If there was space to add spike to incoming spike queue
+    
+     // If there was space to add spike to incoming spike queue
     if (in_spikes_add_spike(key)) {
         // If we're not already processing synaptic DMAs,
         // flag pipeline as busy and trigger a feed event

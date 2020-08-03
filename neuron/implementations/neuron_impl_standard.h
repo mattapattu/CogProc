@@ -248,7 +248,7 @@ static void neuron_impl_load_neuron_parameters(
 
 static bool neuron_impl_add_spike(uint32_t time, index_t neuron_index,) {
     neuron_pointer_t neuron = &neuron_array[neuron_index];
-    neuron_model_update_membrane_voltage(neuron, time);
+    neuron_model_add_spike(neuron, time);
 }
 
 SOMETIMES_UNUSED // Marked unused as only used sometimes
@@ -357,22 +357,23 @@ SOMETIMES_UNUSED // Marked unused as only used sometimes
     return(spike);
 } */
 
-static bool neuron_impl_neuron_update(uint32_t time, index_t neuron_index,
-        input_t external_bias) {
+static void  neuron_impl_neuron_update(uint32_t time, index_t neuron_index,
+        input_t external_bias, key_t key) {
     // Get the neuron itself
     
 
     if(!neuron_impl_add_spike(neuron_index, time)){
             log_error("Unable to add spike to neuron %u at time = %u", neuron_index, time);
         }
-
+    threshold_type_pointer_t threshold_type =
+            &threshold_type_array[neuron_index];
     neuron_pointer_t neuron = &neuron_array[neuron_index];
     int32_t nextSpikeTime = neuron_model_get_next_spiketime(neuron);
-    neuron_model_pdevs_sim(neuron, nextSpikeTime);
+    neuron_model_pdevs_sim(neuron, threshold_type, nextSpikeTime, key, neuron_index);
 
 
     // Return the boolean to the model timestep update
-    return(spike);
+    
 }
 
 SOMETIMES_UNUSED // Marked unused as only used sometimes
