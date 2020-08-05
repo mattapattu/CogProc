@@ -105,7 +105,7 @@ bool neuron_model_PDevs_sim(neuron_t * neuron, uint32_t threshold,  uint32_t nex
 }
 
 //DEVS atomic simulator
-static inline void neuron_model_Devs_sim(neuron_t * neuron, int16_t event_type, uint32_t nextSpikeTime, uint32_t threshold, key_t key, uint32_t neuron_index, input_t input){
+void neuron_model_Devs_sim(neuron_t * neuron, int16_t event_type, uint32_t nextSpikeTime, uint32_t threshold, key_t key, uint32_t neuron_index, input_t input){
     //event_type 1 - Internal event
     if(event_type == 1 ){
         lambda(neuron, key, neuron_index, neuron->tn);

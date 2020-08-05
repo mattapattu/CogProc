@@ -104,5 +104,6 @@ int32_t deltaInt(neuron_pointer_t neuron);
 
 int32_t deltaExt(neuron_pointer_t neuron, uint32_t time, uint32_t threshold, input_t input);
 
+void neuron_model_Devs_sim(neuron_t * neuron, int16_t event_type, uint32_t nextSpikeTime, uint32_t threshold, key_t key, uint32_t neuron_index, input_t input);
 
 #endif // _NEURON_MODEL_H_
