@@ -68,14 +68,15 @@ void lambda(neuron_t * neuron, key_t key, uint32_t neuron_index, uint32_t time){
 }
 
 //DEVS PDEVS  simulator
-bool neuron_model_PDevs_sim(neuron_t * neuron, threshold_type_t *threshold_type,  uint32_t nextSpikeTime, key_t key, uint32_t neuron_index){
+bool neuron_model_PDevs_sim(neuron_t * neuron, threshold_type_t *threshold_type,  uint32_t nextSpikeTime, key_t key, uint32_t neuron_index, input_t input){
     if(neuron->tn <= neuron->eit && neuron->tn <=  nextSpikeTime ){
         //Call deltaInt()
-        neuron_model_devs_sim(neuron, 1,nextSpikeTime, threshold_type, key, neuron_index );
+        neuron_model_devs_sim(neuron, 1,nextSpikeTime, threshold_type, key, neuron_index, input );
     }else if(nextSpikeTime <= neuron->eit &&  nextSpikeTime < neuron->tn ){
         //Call deltaExt()
         neuron->waitCounter = 0;
-        neuron_model_devs_sim(neuron, 2,nextSpikeTime,  threshold_type, key, neuron_index);
+        neuron_model_devs_sim(neuron, 2,nextSpikeTime,  threshold_type, key, neuron_index, input);
+        neuron_model_spiketime_pop(neuron);
     }// an expected spike has been delayed
     else if(nextSpikeTime > neuron->eit){
         if(neuron->waitCounter > 30){
@@ -102,7 +103,7 @@ bool neuron_model_PDevs_sim(neuron_t * neuron, threshold_type_t *threshold_type,
 }
 
 //DEVS atomic simulator
-static void neuron_model_Devs_sim(neuron_t * neuron, int16_t event_type, uint32_t nextSpikeTime, threshold_type_t *threshold_type, key_t key, uint32_t neuron_index){
+static void neuron_model_Devs_sim(neuron_t * neuron, int16_t event_type, uint32_t nextSpikeTime, threshold_type_t *threshold_type, key_t key, uint32_t neuron_index, input_t input){
     //event_type 1 - Internal event
     if(event_type == 1 ){
         lambda(neuron, key, neuron_index, neuron->tn);
@@ -114,7 +115,7 @@ static void neuron_model_Devs_sim(neuron_t * neuron, int16_t event_type, uint32_
     else if(event_type == 2){
         uint32_t e = nextSpikeTime  - neuron->tl;
         //neuron->phase = deltaExt(neuron, e, threshold_type);
-        neuron->phase = deltaExt(neuron, nextSpikeTime, threshold_type);
+        neuron->phase = deltaExt(neuron, nextSpikeTime, threshold_type, input);
         neuron->tl = nextSpikeTime;
         neuron->tn = neuron->tl + ta(neuron);
     }
@@ -146,7 +147,7 @@ void neuron_model_eit_update(neuron_pointer_t neuron, uint32_t time){
     }
 }
 
-static state_t deltaExt(neuron_t *restrict neuron, uint32_t time, threshold_type_t *threshold_type) {
+static state_t deltaExt(neuron_t *restrict neuron, uint32_t time, threshold_type_t *threshold_type, input_t input) {
 	log_info("Exc 1: %12.6k", exc_input[0]);
 	//log_info("Inh 1: %12.6k, Inh 2: %12.6k", inh_input[0], inh_input[1]);
 
@@ -155,7 +156,7 @@ static state_t deltaExt(neuron_t *restrict neuron, uint32_t time, threshold_type
         return(neuron->phase);
     }else{
        
-        lif_update(time, neuron, input_this_timestep);
+        lif_update(time, neuron, input);
 
         if(neuron->V_membrane >=threshold_type->threshold_value){
             neuron->V_membrane = neuron->V_reset;
@@ -168,7 +169,7 @@ static state_t deltaExt(neuron_t *restrict neuron, uint32_t time, threshold_type
     
 }
 
-static state_t deltaInt(neuron_t *restrict neuron) {
+static state_t deltaInt(neuron_t *neuron) {
 	
 	//log_info("Inh 1: %12.6k, Inh 2: %12.6k", inh_input[0], inh_input[1]);
 

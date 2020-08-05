@@ -230,10 +230,10 @@ static inline void process_fixed_synapses(
         time = time+delay;
         //msg is spike
         if(eit == 0){
-            neuron_update(time, neuron_index);
+            
             // Convert into ring buffer offset
             uint32_t ring_buffer_index = synapses_get_ring_buffer_index_combined(
-                delay + time, combined_synapse_neuron_index,
+                time, combined_synapse_neuron_index,
                 synapse_type_index_bits);
         
             //
@@ -252,7 +252,7 @@ static inline void process_fixed_synapses(
 
             // Store saturated value back in ring-buffer
             ring_buffers[ring_buffer_index] = accumulation;
-
+            neuron_pdevs_update(time, neuron_index);
         }
          //msg is EIT 
         else if(eit ==1){
@@ -364,7 +364,7 @@ void synapses_do_timestep_update(timer_t time) {
             neuron_add_inputs(
                     synapse_type_index, neuron_index,
                     synapses_convert_weight_to_input(
-                            ring_buffers[ring_buffer_index],
+                            ring_buffers[ring_bufffer_index],
                             ring_buffer_to_input_left_shifts[synapse_type_index]));
 
             // Clear ring buffer
@@ -376,6 +376,15 @@ void synapses_do_timestep_update(timer_t time) {
 
     // Re-enable the interrupts
     spin1_mode_restore(state);
+}
+
+
+uint32_t synapses_get_ring_buffer_input(uint32_t time, uint32_t neuron_index){
+
+    uint32_t ring_buffer_index = synapses_get_ring_buffer_index(time, 0, neuron_index,
+                    synapse_type_index_bits, synapse_index_bits);
+    return(ring_buffers[ring_buffer_index]);                
+
 }
 
 bool synapses_process_synaptic_row(

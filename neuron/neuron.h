@@ -64,7 +64,7 @@ bool neuron_initialise(
 // void neuron_do_timestep_update(
 //         timer_t time, uint timer_count, uint timer_period);
 
-void neuron_update(uint32_t time, index_t neuron_index);
+void neuron_pdevs_update(uint32_t time, index_t neuron_index);
 
 void neuron_eit_update(uint32_t time, index_t neuron_index);
 

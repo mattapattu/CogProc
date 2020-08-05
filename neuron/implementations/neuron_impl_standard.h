@@ -28,6 +28,7 @@
 #include <neuron/additional_inputs/additional_input.h>
 #include <neuron/threshold_types/threshold_type.h>
 #include <neuron/synapse_types/synapse_types.h>
+#include <neuron/synapses.h>
 
 // Further includes
 #include <debug.h>
@@ -251,111 +252,6 @@ static bool neuron_impl_add_spike(uint32_t time, index_t neuron_index) {
     return(neuron_model_add_spike(neuron, time));
 }
 
-SOMETIMES_UNUSED // Marked unused as only used sometimes
-//! \brief Do the timestep update for the particular implementation
-//! \param[in] neuron_index: The index of the neuron to update
-//! \param[in] external_bias: External input to be applied to the neuron
-//! \return True if a spike has occurred
-/* static bool neuron_impl_do_timestep_update(uint32_t time, index_t neuron_index,
-        input_t external_bias) {
-    // Get the neuron itself
-    neuron_pointer_t neuron = &neuron_array[neuron_index];
-
-    // Get the input_type parameters and voltage for this neuron
-    input_type_pointer_t input_type = &input_type_array[neuron_index];
-
-    // Get threshold and additional input parameters for this neuron
-    threshold_type_pointer_t threshold_type =
-            &threshold_type_array[neuron_index];
-    additional_input_pointer_t additional_input =
-            &additional_input_array[neuron_index];
-    synapse_param_pointer_t synapse_type =
-            &neuron_synapse_shaping_params[neuron_index];
-
-    // Get the exc and inh values from the synapses
-    input_t* exc_value = synapse_types_get_excitatory_input(synapse_type);
-    input_t* inh_value = synapse_types_get_inhibitory_input(synapse_type);
-
-    // Call functions to obtain exc_input and inh_input
-    input_t* exc_input_values = input_type_get_input_value(
-            exc_value, input_type, NUM_EXCITATORY_RECEPTORS);
-    input_t* inh_input_values = input_type_get_input_value(
-            inh_value, input_type, NUM_INHIBITORY_RECEPTORS);
-
-    // Sum g_syn contributions from all receptors for recording
-    REAL total_exc = 0;
-    REAL total_inh = 0;
-
-    for (int i = 0; i < NUM_EXCITATORY_RECEPTORS; i++) {
-        total_exc += exc_input_values[i];
-    }
-    for (int i = 0; i < NUM_INHIBITORY_RECEPTORS; i++) {
-        total_inh += inh_input_values[i];
-    }
-    bool spike = false;
-    state_t voltage = neuron_model_get_voltage(neuron);
-    //neuron_recording_record_accum(V_RECORDING_INDEX, neuron_index, voltage);
-    
-    //neuron_impl_print_inputs(1);
-   
-    if(total_exc != 0 || total_inh !=0){
-        // Call functions to get the input values to be recorded
-        neuron_recording_record_accum(GSYN_EXC_RECORDING_INDEX, neuron_index, total_exc);
-        neuron_recording_record_accum(GSYN_INH_RECORDING_INDEX, neuron_index, total_inh);
-
-        // Update voltage
-	voltage = neuron_model_update_membrane_voltage(time, neuron);
-
-        // Call functions to convert exc_input and inh_input to current
-        input_type_convert_excitatory_input_to_current(exc_input_values, input_type, voltage);
-        input_type_convert_inhibitory_input_to_current(inh_input_values, input_type, voltage);
-
-        external_bias += additional_input_get_input_value_as_current(additional_input, voltage);
-
-       log_info("Calling neuron state update : total_exc = %12.6k, time = %u",total_exc, time);
-
-
-        // update neuron parameters
-        state_t result = neuron_model_state_update(time, 
-                NUM_EXCITATORY_RECEPTORS, exc_input_values,
-                NUM_INHIBITORY_RECEPTORS, inh_input_values,
-                external_bias, neuron);
-        voltage = result; 
-        //log_info("Voltage=%u", voltage);
-        neuron_recording_record_accum(V_RECORDING_INDEX, neuron_index, voltage);
-        // determine if a spike should occur
-        spike = false;
-        spike = threshold_type_is_above_threshold(result, threshold_type);
-
-        // If spike occurs, communicate to relevant parts of model
-        if (spike) {
-            // Call relevant model-based functions
-            // Tell the neuron model
-            neuron_model_has_spiked(neuron);
-            log_info("Neuron %u has spiked", neuron_index);
-            // Tell the additional input
-            additional_input_has_spiked(additional_input);
-            // Record the spike
-            neuron_recording_record_bit(SPIKE_RECORDING_BITFIELD, neuron_index);
-            }
-              
-        // Shape the existing input according to the included rule
-        synapse_types_shape_input(synapse_type);
-
-        #if LOG_LEVEL >= LOG_DEBUG
-            neuron_model_print_state_variables(neuron);
-        #endif // LOG_LEVEL >= LOG_DEBUG
-    }else{
-	
-   	 voltage = neuron_model_get_voltage(neuron);
-    	neuron_recording_record_accum(V_RECORDING_INDEX, neuron_index, voltage);	
-    }
-
-     //neuron_recording_record_accum(V_RECORDING_INDEX, neuron_index, voltage);
-
-    // Return the boolean to the model timestep update
-    return(spike);
-} */
 
 static void  neuron_impl_neuron_update(uint32_t time, index_t neuron_index,
         input_t external_bias, key_t key) {
@@ -370,9 +266,10 @@ static void  neuron_impl_neuron_update(uint32_t time, index_t neuron_index,
 
     neuron_pointer_t neuron = &neuron_array[neuron_index];
 
-    int32_t nextSpikeTime = neuron_model_get_next_spiketime(neuron);
+    int32_t nextSpikeTime = neuron->spiketimes[0];
 
-    while(!neuron_model_pdevs_sim(neuron, threshold_type, nextSpikeTime, key, neuron_index)){
+    input_t input = synapses_get_ring_buffer_input(nextSpikeTime,neuron_index );
+    while(!neuron_model_pdevs_sim(neuron, threshold_type, nextSpikeTime, key, neuron_index, input)){
         log_info("No event to process. Wait for new spike");
     }
 
