@@ -198,7 +198,11 @@ static inline void print_inputs(void) {
 //! \param[in] fixed_region_address: The fixed region of the synaptic matrix
 //! \param[in] time: The current simulation time
 static inline void process_fixed_synapses(
-        address_t fixed_region_address, uint32_t time, bool isSpike) {
+        address_t fixed_region_address, uint32_t payload) {
+    uint32_t time = payload &  2147483648; 
+    uint8_t eit =   (payload >> 32) & 1;
+    
+    
     register uint32_t *synaptic_words =
             synapse_row_fixed_weight_controls(fixed_region_address);
     register uint32_t fixed_synapse =
@@ -224,7 +228,8 @@ static inline void process_fixed_synapses(
         
         uint32_t neuron_index = combined_synapse_neuron_index & 255;
         time = time+delay;
-        if(isSpike){
+        //msg is spike
+        if(eit == 0){
             neuron_update(time, neuron_index);
             // Convert into ring buffer offset
             uint32_t ring_buffer_index = synapses_get_ring_buffer_index_combined(
@@ -248,8 +253,12 @@ static inline void process_fixed_synapses(
             // Store saturated value back in ring-buffer
             ring_buffers[ring_buffer_index] = accumulation;
 
-        }else{
+        }
+         //msg is EIT 
+        else if(eit ==1){
             neuron_eit_update(time, neuron_index);
+        } else{
+            log_error("Unknown message recevied");
         }
     
 
@@ -370,7 +379,10 @@ void synapses_do_timestep_update(timer_t time) {
 }
 
 bool synapses_process_synaptic_row(
-        uint32_t time, synaptic_row_t row, bool *write_backm bool isSpike) {
+        uint32_t payload, synaptic_row_t row, bool *write_back) {
+
+    uint32_t time = payload &  2147483648; 
+
 
     // Get address of non-plastic region from row
     address_t fixed_region_address = synapse_row_fixed_region(row);
@@ -400,7 +412,7 @@ bool synapses_process_synaptic_row(
     // **NOTE** this is done after initiating DMA in an attempt
     // to hide cost of DMA behind this loop to improve the chance
     // that the DMA controller is ready to read next synaptic row afterwards
-    process_fixed_synapses(fixed_region_address, time, isSpike);
+    process_fixed_synapses(fixed_region_address, payload);
     //}
     return true;
 }

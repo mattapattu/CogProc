@@ -57,9 +57,6 @@ enum spike_processing_dma_tags {
 //! The current timer tick value
 extern uint32_t time;
 
-//! True if multicast packet is a spike
-bool isSpike;
-
 //! True if the DMA "loop" is currently running
 static volatile bool dma_busy;
 
@@ -128,7 +125,7 @@ static inline void do_dma_read(
 //! \return True if there's something to do
 static inline bool is_something_to_do(
         address_t *row_address, size_t *n_bytes_to_transfer,
-        spike_t *spike, uint32_t *n_rewire, uint32_t *n_process_spike) {
+        spike_t *spike, uint32_t *n_rewire, uint32_t *n_process_spike, uint32_t *spiketime) {
     // Disable interrupts here as dma_busy modification is a critical section
     uint cpsr = spin1_int_disable();
 
@@ -153,12 +150,13 @@ static inline bool is_something_to_do(
     }
     cpsr = spin1_int_disable();
     // Are there any more spikes to process?
-    while (in_spikes_get_next_spike(spike)) {
+    while (in_spikes_get_next_spike(spike) && in_spiketimes_get_next_spiketime(spiketime)) {
         // Enable interrupts while looking up in the master pop table,
         // as this can be slow
         spin1_mode_restore(cpsr);
         if (population_table_get_first_address(
                 *spike, row_address, n_bytes_to_transfer)) {
+            time = spiketime;        
             synaptogenesis_spike_received(time, *spike);
             *n_process_spike += 1;
             return true;
@@ -189,7 +187,7 @@ static inline bool is_something_to_do(
 //! \param[in,out] n_synapse_processes:
 //!     Accumulator of number of synapses processed
 static void setup_synaptic_dma_read(dma_buffer *current_buffer,
-        uint32_t *n_rewires, uint32_t *n_synapse_processes) {
+        uint32_t *n_rewires, uint32_t *n_synapse_processes, uint32_t *spiketime) {
     // Set up to store the DMA location and size to read
     address_t row_address;
     size_t n_bytes_to_transfer;
@@ -200,7 +198,8 @@ static void setup_synaptic_dma_read(dma_buffer *current_buffer,
     // Keep looking if there is something to do until a DMA can be done
     bool setup_done = false;
     while (!setup_done && is_something_to_do(&row_address,
-            &n_bytes_to_transfer, &spike, &dma_n_rewires, &dma_n_spikes)) {
+            &n_bytes_to_transfer, &spike, &dma_n_rewires, &dma_n_spikes, spiketime)) {
+        log_info("spiketime = %u", spiketime);        
         if (current_buffer != NULL &&
                 current_buffer->sdram_writeback_address == row_address) {
             // If we can reuse the row, add on what we can use it for
@@ -215,6 +214,7 @@ static void setup_synaptic_dma_read(dma_buffer *current_buffer,
             synaptic_row_t single_fixed_synapse =
                     direct_synapses_get_direct_synapse(row_address);
             bool write_back;
+            time = spiketime; //spiketime = payload = eit bit + time
             synapses_process_synaptic_row(
                     time, single_fixed_synapse, &write_back);
             dma_n_rewires = 0;
@@ -263,16 +263,11 @@ static inline void setup_synaptic_dma_write(
 //! \param payload: Ignored
 void multicast_packet_received_callback(uint key, uint payload) {
     //use(payload);
-    time = payload & 127;
-    if(payload & 128 == 128){
-        isSpike = TRUE;
-    }else{
-        isSpike = FALSE;
-    }
+    
     log_info("Received spike %x with payload %d, DMA Busy = %d", key, payload, dma_busy);
     
      // If there was space to add spike to incoming spike queue
-    if (in_spikes_add_spike(key)) {
+    if (in_spikes_add_spike(key) && in_spiketimes_add_spiketime(payload)) {
         // If we're not already processing synaptic DMAs,
         // flag pipeline as busy and trigger a feed event
         // NOTE: locking is not used here because this is assumed to be FIQ
@@ -312,7 +307,8 @@ static void dma_complete_callback(uint unused, uint tag) {
     // count repeats of the current spike
     uint32_t n_rewires = dma_n_rewires;
     uint32_t n_spikes = dma_n_spikes;
-    setup_synaptic_dma_read(current_buffer, &n_rewires, &n_spikes);
+    unint32_t *spiketime;
+    setup_synaptic_dma_read(current_buffer, &n_rewires, &n_spikes, spiketime);
 
     // Assume no write back but assume any write back is plastic only
     bool write_back = false;
@@ -333,6 +329,7 @@ static void dma_complete_callback(uint unused, uint tag) {
         // Process synaptic row, writing it back if it's the last time
         // it's going to be processed
         bool write_back_now = false;
+        time = spiketime;
         if (!synapses_process_synaptic_row(
                 time, current_buffer->row, &write_back_now)) {
             log_error(
@@ -402,6 +399,10 @@ bool spike_processing_initialise( // EXPORTED
 
     // Allocate incoming spike buffer
     if (!in_spikes_initialize_spike_buffer(incoming_spike_buffer_size)) {
+        return false;
+    }
+
+     if (!in_spiketimes_initialize_spike_buffer(incoming_spike_buffer_size)) {
         return false;
     }
 

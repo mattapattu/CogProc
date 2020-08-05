@@ -50,12 +50,16 @@ void lambda(neuron_t * neuron, key_t key, int32_t neuron_index, int32_t time){
     state_t currentState  = neuron->phase;
 
     if(currentState == 2){
+        //clear 32nd bit if packet is spike 
+        time = time & (~(1 << 32));
         while (!spin1_send_mc_packet(
                         key | neuron_index, time, WITH_PAYLOAD)) {
                     spin1_delay_us(1);
                 }
     }else if(currentState == 3){
         time  = time + neuron->tn;
+        //set 32nd bit if packet is eot messg. 
+        time = (1 << 32) | time;
         while (!spin1_send_mc_packet(
                         key | neuron_index, time, WITH_PAYLOAD)) {
                     spin1_delay_us(1);
@@ -84,14 +88,15 @@ void neuron_model_PDevs_sim(neuron_t * neuron, threshold_type_t *threshold_type,
 
 //DEVS atomic simulator
 void neuron_model_Devs_sim(neuron_t * neuron, int16_t event_type, int32_t nextSpikeTime, threshold_type_t *threshold_type, key_t key){
-
+    //event_type 1 - Internal event
     if(event_type == 1 ){
         lambda(neuron, key, neuron_index, neuron->tn);
         state_t neuron->phase  = deltaInt(neuron);
         neuron->tl = neuron->tn;
         neuron->tn = neuron->tl + ta(neuron->phase);
 
-    }else if(event_type == 2){
+    }//event_type 2 - External event
+    else if(event_type == 2){
         int32_t e = nextSpikeTime  - neuron->tl;
         state_t neuron->phase = deltaExt(neuron, e, threshold_type);
         neuron->tl = nextSpikeTime;
@@ -209,24 +214,32 @@ void neuron_impl_add_spike(neuron_pointer_t neuron, int32_t  spikeTime){
    neuron->spikeCount++;
    if(neuron->spikeCount > 10){
        log_error("Error storing new spike at time = %u. Exiting simulation", spikeTime);
+   }else if(spikeTime >= neuron->spike_times[neuron->spikeCount-1] ){
+       neuron->spike_times[neuron->spikeCount] = spikeTime;
    }else{
-       for(uint32_t i = 0; i < 10; i++){
+       for(uint32_t i = 0; i < 9; i++){
            if(neuron->spike_times[i] < spikeTime){
                continue;
            }else{
-                for(uint32_t k = 10; k > i; k--){
-                    neuron->spike_times[k] = neuron->spike_times[k-1];
-                }
-                neuron->spike_times[i]  = spikeTime;
+               for(uint32_t j = 9; j >= i; j--){
+                      neuron->spike_times[j] =  neuron->spike_times[j-1];      
+               }
+               neuron->spike_times[i]  = spikeTime;
            }
        }
-  }
-   neuron->spike_times[neuron->spikeCount-1] = spikeTime;
+   }
 }
 
 
-int32_t neuron_model_get_next_spiketime(neuron_pointer_t neuron){
-    return(neuron->spike_times[0]);	
+int32_t neuron_model_spiketime_pop(neuron_pointer_t neuron){
+    int32_t nextSpike = neuron->spike_times[0];
+    neuron->spike_times[0] = 0;
+    for(uint32_t i = 0; i < 9; i++){
+        neuron->spike_times[i] = neuron->spike_times[i+1];
+    }
+    neuron->spike_times[9] = 0;   
+    neuron->spikeCount--;
+    return(nextSpike);	
 }
 
 

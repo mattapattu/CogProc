@@ -385,6 +385,8 @@ void c_main(void) {
 
     // Set up the timer tick callback (others are handled elsewhere)
     //spin1_callback_on(TIMER_TICK, timer_callback, TIMER);
+    spin1_callback_on(MCPL_PACKET_RECEIVED,
+            mc_pkt_recvd_callback, mc_packet_callback_priority);
     spin1_callback_on(MC_PACKET_RECEIVED,
             mc_pkt_recvd_callback, mc_packet_callback_priority);
     simulation_run();

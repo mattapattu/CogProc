@@ -22,6 +22,7 @@
 
 #include <common/neuron-typedefs.h>
 #include <common/in_spikes.h>
+#include <common/in_spiketimes.h>
 #include <spin1_api.h>
 
 //! \brief Initialise the spike processing system
