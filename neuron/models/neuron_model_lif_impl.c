@@ -147,8 +147,8 @@ void neuron_model_eit_update(neuron_pointer_t neuron, uint32_t time){
     }
 }
 
-static state_t deltaExt(neuron_t *restrict neuron, uint32_t time, threshold_type_t *threshold_type, input_t input) {
-	log_info("Exc 1: %12.6k", exc_input[0]);
+static state_t deltaExt(neuron_pointer_t neuron, uint32_t time, threshold_type_t *threshold_type, input_t input) {
+	//log_info("Exc 1: %12.6k", exc_input[0]);
 	//log_info("Inh 1: %12.6k, Inh 2: %12.6k", inh_input[0], inh_input[1]);
 
     if(neuron->phase == 2 || neuron->phase == 3){
@@ -158,7 +158,7 @@ static state_t deltaExt(neuron_t *restrict neuron, uint32_t time, threshold_type
        
         lif_update(time, neuron, input);
 
-        if(neuron->V_membrane >=threshold_type->threshold_value){
+        if(neuron->V_membrane >= threshold_type->threshold_value){
             neuron->V_membrane = neuron->V_reset;
             return(2);
         }else{
@@ -169,7 +169,7 @@ static state_t deltaExt(neuron_t *restrict neuron, uint32_t time, threshold_type
     
 }
 
-static state_t deltaInt(neuron_t *neuron) {
+static state_t deltaInt(neuron_pointer_t neuron) {
 	
 	//log_info("Inh 1: %12.6k, Inh 2: %12.6k", inh_input[0], inh_input[1]);
 

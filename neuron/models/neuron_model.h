@@ -75,7 +75,7 @@ void neuron_model_has_spiked(neuron_t *restrict neuron);
 //!     all the parameters for a specific neuron
 //! \return the membrane voltage for a given neuron with the neuron
 //!     parameters specified in neuron
-state_t neuron_model_update_membrane_voltage(int32_t time, neuron_t *neuron);
+state_t neuron_model_update_membrane_voltage(uint32_t time, neuron_t *neuron);
 
 state_t neuron_model_get_voltage(neuron_t *neuron);
 
