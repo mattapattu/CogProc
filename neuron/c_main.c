@@ -339,7 +339,8 @@ void resume_callback(void) {
 //! \param payload: Ignored
 void mc_pkt_recvd_callback(uint key, uint payload) {
     //use(payload);
-    time = payload;
+
+    uint32_t time = payload &  2147483648; 
     log_info("Received spike %x with payload %d, DMA Busy = %d", key, payload, dma_busy);
     
     if(time > 30){
@@ -362,7 +363,7 @@ void mc_pkt_recvd_callback(uint key, uint payload) {
         return;
     }
     
-    multicast_packet_received_callback(key, time);
+    multicast_packet_received_callback(key, payload);
 
     
 }
