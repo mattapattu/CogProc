@@ -26,6 +26,7 @@
 #define _NEURON_MODEL_H_
 
 #include <common/neuron-typedefs.h>
+#include <neuron/threshold_types/threshold_type.h>
 
 //! Forward declaration of neuron type (creates a definition for a pointer to a
 //! neuron parameter struct
@@ -91,7 +92,7 @@ void neuron_model_print_state_variables(const neuron_t *neuron);
 void neuron_model_print_parameters(const neuron_t *neuron);
 
 
-void neuron_impl_add_spike(neuron_pointer_t neuron, int32_t  spikeTime);
+bool neuron_model_add_spike(neuron_pointer_t neuron, int32_t  spikeTime);
 
 int32_t neuron_model_spiketime_pop(neuron_pointer_t neuron);
 

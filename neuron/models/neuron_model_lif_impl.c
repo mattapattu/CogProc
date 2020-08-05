@@ -231,12 +231,14 @@ state_t neuron_model_get_voltage(neuron_pointer_t neuron) {
     return neuron->V_membrane;
 }
 
-void neuron_impl_add_spike(neuron_pointer_t neuron, uint32_t  spikeTime){
+bool neuron_model_add_spike(neuron_pointer_t neuron, uint32_t  spikeTime){
    neuron->spikeCount++;
    if(neuron->spikeCount > 10){
        log_error("Error storing new spike at time = %u. Exiting simulation", spikeTime);
+       return FALSE;
    }else if(spikeTime >= neuron->spike_times[neuron->spikeCount-1] ){
        neuron->spike_times[neuron->spikeCount] = spikeTime;
+       return TRUE;
    }else{
        for(uint32_t i = 0; i < 9; i++){
            if(neuron->spike_times[i] < spikeTime){
@@ -248,6 +250,7 @@ void neuron_impl_add_spike(neuron_pointer_t neuron, uint32_t  spikeTime){
                neuron->spike_times[i]  = spikeTime;
            }
        }
+       return TRUE;
    }
 }
 
