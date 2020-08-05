@@ -100,5 +100,9 @@ bool neuron_model_PDevs_sim(neuron_t * neuron, threshold_type_t *threshold_type,
 
 void neuron_model_eit_update(neuron_pointer_t neuron, uint32_t time);
 
+int32_t deltaInt(neuron_pointer_t neuron);
+
+int32_t deltaExt(neuron_pointer_t neuron, uint32_t time, threshold_type_t *threshold_type, input_t input);
+
 
 #endif // _NEURON_MODEL_H_

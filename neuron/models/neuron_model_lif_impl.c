@@ -149,7 +149,7 @@ void neuron_model_eit_update(neuron_pointer_t neuron, uint32_t time){
     }
 }
 
-static inline int32_t deltaExt(neuron_pointer_t neuron, uint32_t time, threshold_type_t *threshold_type, input_t input) {
+int32_t deltaExt(neuron_pointer_t neuron, uint32_t time, threshold_type_t *threshold_type, input_t input) {
 	//log_info("Exc 1: %12.6k", exc_input[0]);
 	//log_info("Inh 1: %12.6k, Inh 2: %12.6k", inh_input[0], inh_input[1]);
 
@@ -171,7 +171,7 @@ static inline int32_t deltaExt(neuron_pointer_t neuron, uint32_t time, threshold
     
 }
 
-static inline int32_t deltaInt(neuron_pointer_t neuron) {
+int32_t deltaInt(neuron_pointer_t neuron) {
 	
 	//log_info("Inh 1: %12.6k, Inh 2: %12.6k", inh_input[0], inh_input[1]);
 
@@ -187,7 +187,7 @@ static inline int32_t deltaInt(neuron_pointer_t neuron) {
     
 }
 
-static state_t neuron_model_update_membrane_voltage(uint32_t time, neuron_t *neuron) {
+state_t neuron_model_update_membrane_voltage(uint32_t time, neuron_t *neuron) {
     
     //Check this again!!!! -> Do we update neuron membrane voltage after every state transition ( at t= tl) ?????
     uint32_t delta_t = time - neuron->tl;
