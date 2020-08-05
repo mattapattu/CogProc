@@ -67,6 +67,6 @@ uint32_t spike_processing_get_successful_rewires(void);
 //! \return currently always true
 bool spike_processing_do_rewiring(int number_of_rewires);
 
-void multicast_packet_received_callback(uint key, uint payload)
+void multicast_packet_received_callback(uint key, uint payload);
 
 #endif // _SPIKE_PROCESSING_H_
