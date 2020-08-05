@@ -150,16 +150,13 @@ void neuron_pause(address_t address) { // EXPORTED
 
 void neuron_pdevs_update(uint32_t time, index_t neuron_index){
     input_t external_bias = 0;
-     if (use_key) {
-         neuron_impl_neuron_update(time, neuron_index, external_bias,key);
-     }
-    
+    neuron_impl_neuron_update(time, neuron_index, external_bias,key);
+        
 }
 
 void neuron_eit_update(uint32_t time, index_t neuron_index){
-     if (use_key) {
-         neuron_impl_neuron_eit_update(time, neuron_index, key);
-     }
+
+   neuron_impl_neuron_eit_update(time, neuron_index); 
     
 }
 
