@@ -383,7 +383,11 @@ uint32_t synapses_get_ring_buffer_input(uint32_t time, uint32_t neuron_index){
 
     uint32_t ring_buffer_index = synapses_get_ring_buffer_index(time, 0, neuron_index,
                     synapse_type_index_bits, synapse_index_bits);
-    return(ring_buffers[ring_buffer_index]);                
+    uint32_t input = synapses_convert_weight_to_input(
+                            ring_buffers[ring_bufffer_index],
+                            ring_buffer_to_input_left_shifts[synapse_type_index]);
+    ring_buffers[ring_bufffer_index] = 0;                                        
+    return(input);                
 
 }
 
