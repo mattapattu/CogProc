@@ -345,7 +345,7 @@ uint32_t synapses_get_ring_buffer_input(uint32_t time, uint32_t neuron_index){
     uint32_t input = synapses_convert_weight_to_input(
                             ring_buffers[ring_buffer_index],
                             ring_buffer_to_input_left_shifts[0]);
-    ring_buffers[ring_bufffer_index] = 0;                                        
+    ring_buffers[ring_buffer_index] = 0;                                        
     
     // Re-enable the interrupts
     spin1_mode_restore(state);
