@@ -73,11 +73,11 @@ void lambda(neuron_t * neuron, key_t key, uint32_t neuron_index, uint32_t time){
 bool neuron_model_PDevs_sim(neuron_t * neuron, uint32_t threshold,  uint32_t nextSpikeTime, key_t key, uint32_t neuron_index, input_t input){
     if(neuron->tn <= neuron->eit && neuron->tn <=  nextSpikeTime ){
         //Call deltaInt()
-        neuron_model_devs_sim(neuron, 1,nextSpikeTime, threshold, key, neuron_index, input );
+        neuron_model_Devs_sim(neuron, 1,nextSpikeTime, threshold, key, neuron_index, input );
     }else if(nextSpikeTime <= neuron->eit &&  nextSpikeTime < neuron->tn ){
         //Call deltaExt()
         neuron->waitCounter = 0;
-        neuron_model_devs_sim(neuron, 2,nextSpikeTime,  threshold, key, neuron_index, input);
+        neuron_model_Devs_sim(neuron, 2,nextSpikeTime,  threshold, key, neuron_index, input);
         neuron_model_spiketime_pop(neuron);
     }// an expected spike has been delayed
     else if(nextSpikeTime > neuron->eit){
