@@ -34,7 +34,7 @@ void neuron_model_set_global_neuron_params(
     // Does Nothing - no params
 }
 
-int32_t ta(int32_t neuron_phase){
+uint32_t ta(uint32_t neuron_phase){
     if(neuron_phase == 0){
         return(2147483646);
     }else if(neuron_phase == 1){
@@ -46,7 +46,7 @@ int32_t ta(int32_t neuron_phase){
     }
 }
 
-void lambda(neuron_t * neuron, key_t key, int32_t neuron_index, int32_t time){
+void lambda(neuron_t * neuron, key_t key, uint32_t neuron_index, uint32_t time){
     state_t currentState  = neuron->phase;
 
     if(currentState == 2){
@@ -68,7 +68,7 @@ void lambda(neuron_t * neuron, key_t key, int32_t neuron_index, int32_t time){
 }
 
 //DEVS PDEVS  simulator
-bool neuron_model_PDevs_sim(neuron_t * neuron, threshold_type_t *threshold_type,  int32_t nextSpikeTime, key_t key, int32_t neuron_index){
+bool neuron_model_PDevs_sim(neuron_t * neuron, threshold_type_t *threshold_type,  uint32_t nextSpikeTime, key_t key, uint32_t neuron_index){
     if(neuron->tn <= neuron->eit && neuron->tn <=  nextSpikeTime ){
         //Call deltaInt()
         neuron_model_devs_sim(neuron, 1,nextSpikeTime, threshold_type, key, neuron_index );
@@ -85,7 +85,7 @@ bool neuron_model_PDevs_sim(neuron_t * neuron, threshold_type_t *threshold_type,
         neuron->waitCounter++;
         return FALSE;
     }
-    int32_t lookahead = 0;
+    uint32_t lookahead = 0;
 
     //REDO with bitmasks
     if(neuron->eit < neuron->tn ){
@@ -102,7 +102,7 @@ bool neuron_model_PDevs_sim(neuron_t * neuron, threshold_type_t *threshold_type,
 }
 
 //DEVS atomic simulator
-void neuron_model_Devs_sim(neuron_t * neuron, int16_t event_type, int32_t nextSpikeTime, threshold_type_t *threshold_type, key_t key){
+void neuron_model_Devs_sim(neuron_t * neuron, int16_t event_type, uint32_t nextSpikeTime, threshold_type_t *threshold_type, key_t key){
     //event_type 1 - Internal event
     if(event_type == 1 ){
         lambda(neuron, key, neuron_index, neuron->tn);
@@ -112,7 +112,7 @@ void neuron_model_Devs_sim(neuron_t * neuron, int16_t event_type, int32_t nextSp
 
     }//event_type 2 - External event
     else if(event_type == 2){
-        int32_t e = nextSpikeTime  - neuron->tl;
+        uint32_t e = nextSpikeTime  - neuron->tl;
         state_t neuron->phase = deltaExt(neuron, e, threshold_type);
         neuron->tl = nextSpikeTime;
         neuron->tn = neuron->tl + ta(neuron->phase);
@@ -121,7 +121,7 @@ void neuron_model_Devs_sim(neuron_t * neuron, int16_t event_type, int32_t nextSp
 }
 
 
-static inline void lif_update(int32_t time, neuron_pointer_t neuron, input_t input_this_timestep) {
+static inline void lif_update(uint32_t time, neuron_pointer_t neuron, input_t input_this_timestep) {
 
     // update membrane voltage
     REAL alpha = input_this_timestep * neuron->R_membrane + neuron->V_rest;
@@ -139,13 +139,13 @@ static inline void lif_update(int32_t time, neuron_pointer_t neuron, input_t inp
 
 }
 
-void neuron_model_eit_update(neuron_pointer_t neuron, int32_t time){
+void neuron_model_eit_update(neuron_pointer_t neuron, uint32_t time){
     if(time < neuron->eit){
         neuron->eit = time;
     }
 }
 
-state_t deltaExt(int32_t time, 
+state_t deltaExt(uint32_t time, 
 		uint16_t num_excitatory_inputs, const input_t *exc_input,
 		uint16_t num_inhibitory_inputs, const input_t *inh_input,
 		input_t external_bias, neuron_t *restrict neuron, threshold_type_t *threshold_type) {
@@ -153,7 +153,7 @@ state_t deltaExt(int32_t time,
 	//log_info("Inh 1: %12.6k, Inh 2: %12.6k", inh_input[0], inh_input[1]);
 
     if(neuron->phase == 2 || neuron->phase == 3){
-        log_info("Ignore input as neuron is in threshold/refractory phase")
+        log_info("Ignore input as neuron is in threshold/refractory phase");
         return(neuron->phase);
     }else{
         REAL total_exc = 0;
@@ -189,7 +189,7 @@ state_t deltaInt(neuron_t *restrict neuron) {
 	//log_info("Inh 1: %12.6k, Inh 2: %12.6k", inh_input[0], inh_input[1]);
 
     if(neuron->phase == 0 || neuron->phase == 1){
-        log_info("In phase 0 or 1 = no neuron phase change ")
+        log_info("In phase 0 or 1 = no neuron phase change ");
         return(neuron->phase);
     }else if(neuron->phase == 2){
         return(3);
@@ -200,14 +200,14 @@ state_t deltaInt(neuron_t *restrict neuron) {
     
 }
 
-state_t neuron_model_update_membrane_voltage(int32_t time, neuron_t *neuron) {
+state_t neuron_model_update_membrane_voltage(uint32_t time, neuron_t *neuron) {
     
     //Check this again!!!! -> Do we update neuron membrane voltage after every state transition ( at t= tl) ?????
-    int32_t delta_t = time - neuron->tl;
+    uint32_t delta_t = time - neuron->tl;
     
     float exp_factor = 1;
     
-    for(int32_t k = delta_t; k > 0; k--){
+    for(uint32_t k = delta_t; k > 0; k--){
  	    exp_factor = exp_factor*neuron->exp_TC;
     }
     
@@ -231,7 +231,7 @@ state_t neuron_model_get_voltage(neuron_pointer_t neuron) {
     return neuron->V_membrane;
 }
 
-void neuron_impl_add_spike(neuron_pointer_t neuron, int32_t  spikeTime){
+void neuron_impl_add_spike(neuron_pointer_t neuron, uint32_t  spikeTime){
    neuron->spikeCount++;
    if(neuron->spikeCount > 10){
        log_error("Error storing new spike at time = %u. Exiting simulation", spikeTime);
@@ -252,8 +252,8 @@ void neuron_impl_add_spike(neuron_pointer_t neuron, int32_t  spikeTime){
 }
 
 
-int32_t neuron_model_spiketime_pop(neuron_pointer_t neuron){
-    int32_t nextSpike = neuron->spike_times[0];
+uint32_t neuron_model_spiketime_pop(neuron_pointer_t neuron){
+    uint32_t nextSpike = neuron->spike_times[0];
     neuron->spike_times[0] = 0;
     for(uint32_t i = 0; i < 9; i++){
         neuron->spike_times[i] = neuron->spike_times[i+1];

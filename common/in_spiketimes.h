@@ -18,8 +18,8 @@
 //! \file
 //! \brief Functions for immediate handling of incoming spikes.
 
-#ifndef _IN_SPIKES_H_
-#define _IN_SPIKES_H_
+#ifndef _IN_SPIKETIMES_H_
+#define _IN_SPIKETIMES_H_
 
 #include "neuron-typedefs.h"
 #include <circular_buffer.h>
