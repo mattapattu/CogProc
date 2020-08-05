@@ -74,6 +74,7 @@ typedef struct neuron_t {
     //! Neuron Phases: 0 = Resting,  1 = Subthreshold, 2 = Threshold, 3 = Refractory, 
     int16_t phase;
 
+    int16_t waitCounter;
 
 
 } neuron_t;

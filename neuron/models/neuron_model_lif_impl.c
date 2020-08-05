@@ -36,9 +36,9 @@ void neuron_model_set_global_neuron_params(
 
 int32_t ta(int32_t neuron_phase){
     if(neuron_phase == 0){
-        return(2147483647);
+        return(2147483646);
     }else if(neuron_phase == 1){
-        return(2147483647);
+        return(2147483646);
     }else if(neuron_phase == 2){
         return(0);
     }else if(neuron_phase == 3){
@@ -68,13 +68,22 @@ void lambda(neuron_t * neuron, key_t key, int32_t neuron_index, int32_t time){
 }
 
 //DEVS PDEVS  simulator
-void neuron_model_PDevs_sim(neuron_t * neuron, threshold_type_t *threshold_type,  int32_t nextSpikeTime, key_t key, int32_t neuron_index){
+bool neuron_model_PDevs_sim(neuron_t * neuron, threshold_type_t *threshold_type,  int32_t nextSpikeTime, key_t key, int32_t neuron_index){
     if(neuron->tn <= neuron->eit && neuron->tn <=  nextSpikeTime ){
         //Call deltaInt()
         neuron_model_devs_sim(neuron, 1,nextSpikeTime, threshold_type, key, neuron_index );
     }else if(nextSpikeTime <= neuron->eit &&  nextSpikeTime < tn ){
         //Call deltaExt()
+        neuron->waitCounter = 0;
         neuron_model_devs_sim(neuron, 2,nextSpikeTime,  threshold_type, key, neuron_index);
+    }// an expected spike has been delayed
+    else if(nextSpikeTime > neuron->eit){
+        if(neuron->waitCounter > 30){
+            log_error("Expected spike has not arrived yet");
+            //Possible exit here ?
+        }
+        neuron->waitCounter++;
+        return FALSE;
     }
     int32_t lookahead = 0;
 
@@ -83,6 +92,12 @@ void neuron_model_PDevs_sim(neuron_t * neuron, threshold_type_t *threshold_type,
         lookahead = neuron->eit; //
     }else{
         lookahead  = neuron->tn; // Infinity
+    }
+    if(lookahead == 2147483646){
+        //IF next event is at time = infinity, stop PDevs while loop
+        return FALSE;
+    }else{
+        return TRUE;
     }
 }
 
@@ -112,7 +127,11 @@ static inline void lif_update(int32_t time, neuron_pointer_t neuron, input_t inp
     REAL alpha = input_this_timestep * neuron->R_membrane + neuron->V_rest;
     // update membrane voltage
     REAL V_prev = neuron_model_update_membrane_voltage(time, neuron);
+    if(V_prev < neuron->V_rest){
+        V_prev = neuron->V_rest;
+    }
     neuron->V_membrane = alpha - (neuron->exp_TC * (alpha - V_prev));
+    
     
     //log_info("Current V_membrane = %11.4k mv",  neuron->V_membrane);
     //neuron->V_membrane += input_this_timestep * neuron->R_membrane;
@@ -187,14 +206,16 @@ state_t neuron_model_update_membrane_voltage(int32_t time, neuron_t *neuron) {
     int32_t delta_t = time - neuron->tl;
     
     float exp_factor = 1;
+    
     for(int32_t k = delta_t; k > 0; k--){
- 	exp_factor = exp_factor*neuron->exp_TC;
+ 	    exp_factor = exp_factor*neuron->exp_TC;
     }
+    
     if(neuron->V_membrane > neuron->V_rest) {
           neuron->V_membrane = neuron->V_membrane * (2-exp_factor); //Membrane potential is always less than 0, so decay factor > 1 : -45*(2-0.9) = -49.5 
     }
     log_info("time = %u,last_update_time = %u, Updated V_membrane = %11.4k mv, delta_t = %u, exp_factor = %f", time, last_update_time, neuron->V_membrane, delta_t, exp_factor);
-    //last_update_time = time; 
+    
     return neuron->V_membrane;
 }
 
