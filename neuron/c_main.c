@@ -275,7 +275,7 @@ void mc_pkt_recvd_callback(uint key, uint payload) {
     //use(payload);
 
     uint32_t time = payload &  2147483648; 
-    log_info("Received spike %x with payload %d, DMA Busy = %d", key, payload, dma_busy);
+    log_info("Received spike %x with payload %d", key, payload);
     
     if(time > 30){
     
