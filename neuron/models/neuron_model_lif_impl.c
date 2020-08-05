@@ -17,6 +17,8 @@
 //! \file
 //! \brief Leaky Integrate and Fire neuron implementation
 #include "neuron_model_lif_impl.h"
+#include <neuron/threshold_types/threshold_type.h>
+
 
 #include <debug.h>
 
@@ -103,7 +105,7 @@ bool neuron_model_PDevs_sim(neuron_t * neuron, threshold_type_t *threshold_type,
 }
 
 //DEVS atomic simulator
-static void neuron_model_Devs_sim(neuron_t * neuron, int16_t event_type, uint32_t nextSpikeTime, threshold_type_t *threshold_type, key_t key, uint32_t neuron_index, input_t input){
+static inline void neuron_model_Devs_sim(neuron_t * neuron, int16_t event_type, uint32_t nextSpikeTime, threshold_type_t *threshold_type, key_t key, uint32_t neuron_index, input_t input){
     //event_type 1 - Internal event
     if(event_type == 1 ){
         lambda(neuron, key, neuron_index, neuron->tn);
@@ -147,7 +149,7 @@ void neuron_model_eit_update(neuron_pointer_t neuron, uint32_t time){
     }
 }
 
-static state_t deltaExt(neuron_pointer_t neuron, uint32_t time, threshold_type_t *threshold_type, input_t input) {
+static inline state_t deltaExt(neuron_pointer_t neuron, uint32_t time, threshold_type_t *threshold_type, input_t input) {
 	//log_info("Exc 1: %12.6k", exc_input[0]);
 	//log_info("Inh 1: %12.6k, Inh 2: %12.6k", inh_input[0], inh_input[1]);
 
@@ -169,7 +171,7 @@ static state_t deltaExt(neuron_pointer_t neuron, uint32_t time, threshold_type_t
     
 }
 
-static state_t deltaInt(neuron_pointer_t neuron) {
+static inline state_t deltaInt(neuron_pointer_t neuron) {
 	
 	//log_info("Inh 1: %12.6k, Inh 2: %12.6k", inh_input[0], inh_input[1]);
 
