@@ -149,7 +149,7 @@ void neuron_model_eit_update(neuron_pointer_t neuron, uint32_t time){
     }
 }
 
-static inline state_t deltaExt(neuron_pointer_t neuron, uint32_t time, threshold_type_t *threshold_type, input_t input) {
+static inline int32_t deltaExt(neuron_pointer_t neuron, uint32_t time, threshold_type_t *threshold_type, input_t input) {
 	//log_info("Exc 1: %12.6k", exc_input[0]);
 	//log_info("Inh 1: %12.6k, Inh 2: %12.6k", inh_input[0], inh_input[1]);
 
@@ -171,7 +171,7 @@ static inline state_t deltaExt(neuron_pointer_t neuron, uint32_t time, threshold
     
 }
 
-static inline state_t deltaInt(neuron_pointer_t neuron) {
+static inline int32_t deltaInt(neuron_pointer_t neuron) {
 	
 	//log_info("Inh 1: %12.6k, Inh 2: %12.6k", inh_input[0], inh_input[1]);
 
