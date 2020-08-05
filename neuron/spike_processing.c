@@ -307,7 +307,7 @@ static void dma_complete_callback(uint unused, uint tag) {
     // count repeats of the current spike
     uint32_t n_rewires = dma_n_rewires;
     uint32_t n_spikes = dma_n_spikes;
-    unint32_t *spiketime;
+    uint32_t *spiketime;
     setup_synaptic_dma_read(current_buffer, &n_rewires, &n_spikes, spiketime);
 
     // Assume no write back but assume any write back is plastic only
@@ -374,7 +374,8 @@ void user_event_callback(uint unused0, uint unused1) {
         dma_complete_callback(0, DMA_TAG_READ_SYNAPTIC_ROW);
     } else {
         // If the DMA buffer is invalid, just do the first transfer possible
-        setup_synaptic_dma_read(NULL, NULL, NULL);
+        uint32_t *spiketime;
+        setup_synaptic_dma_read(NULL, NULL, NULL,spiketime);
     }
 }
 
