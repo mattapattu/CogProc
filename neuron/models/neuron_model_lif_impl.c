@@ -86,7 +86,7 @@ bool neuron_model_PDevs_sim(neuron_t * neuron, uint32_t threshold,  uint32_t nex
     else if(nextSpikeTime > neuron->eit){
         if(neuron->waitCounter > 30){
             
-            log_error("Expected event at eit = %u has not arrived yet",neuron->eit );
+            log_error("On neuron = %u an expected event at eit = %u has not arrived yet",neuron_index, neuron->eit );
             //Possible exit here ?
         }
         neuron->waitCounter++;

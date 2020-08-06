@@ -210,6 +210,8 @@ static inline void process_fixed_synapses(
 
     num_fixed_pre_synaptic_events += fixed_synapse;
 
+    log_info("New MC pkt: eit = %u, time = %u,  payload = %u", eit, time, payload);
+
     for (; fixed_synapse > 0; fixed_synapse--) {
         // Get the next 32 bit word from the synaptic_row
         // (should auto increment pointer in single instruction)
