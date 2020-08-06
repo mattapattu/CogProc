@@ -64,7 +64,7 @@ void lambda(neuron_t * neuron, key_t key, uint32_t neuron_index){
         //time  = time + neuron->tn;
         //set 32nd bit if packet is eot messg. 
         log_info("Neuron phase = %u, nextEventTime = %u",currentState, nextEventTime );
-        nextEventTime = (1 << 32) | time;
+        nextEventTime = (1 << 32) | nextEventTime;
         while (!spin1_send_mc_packet(
                         key | neuron_index, time, WITH_PAYLOAD)) {
                     spin1_delay_us(1);
@@ -99,7 +99,7 @@ bool neuron_model_PDevs_sim(neuron_t * neuron, uint32_t threshold,  uint32_t nex
     }else{
         neuron->eot  = neuron->tn; // Infinity
     }
-    if(lookahead == 2147483646){
+    if(neuron->eot == 2147483646){
         //IF next event is at time = infinity, stop PDevs while loop
         return FALSE;
     }else{
@@ -111,7 +111,7 @@ bool neuron_model_PDevs_sim(neuron_t * neuron, uint32_t threshold,  uint32_t nex
 void neuron_model_Devs_sim(neuron_t * neuron, int16_t event_type, uint32_t nextSpikeTime, uint32_t threshold, key_t key, uint32_t neuron_index, input_t input){
     //event_type 1 - Internal event
     if(event_type == 1 ){
-        lambda(neuron, key, neuron_index, neuron->tn);
+        lambda(neuron, key, neuron_index);
         neuron->phase  = deltaInt(neuron);
         neuron->tl = neuron->tn;
         neuron->tn = neuron->tl + ta(neuron);
