@@ -149,6 +149,7 @@ static inline void lif_update(uint32_t time, neuron_pointer_t neuron, input_t in
 }
 
 void neuron_model_eit_update(neuron_pointer_t neuron, uint32_t time){
+    
     if(time < neuron->eit){
         neuron->eit = time;
     }
