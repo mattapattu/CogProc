@@ -48,20 +48,23 @@ static uint32_t ta(neuron_t * neuron){
     }
 }
 
-void lambda(neuron_t * neuron, key_t key, uint32_t neuron_index, uint32_t time){
+void lambda(neuron_t * neuron, key_t key, uint32_t neuron_index){
     state_t currentState  = neuron->phase;
+    uint32_t nextEventTime = neuron->eot;
 
     if(currentState == 2){
         //clear 32nd bit if packet is spike 
-        time = time & (~(1 << 32));
+        nextEventTime = nextEventTime & (~(1 << 32));
+        log_info("Neuron phase = %u, nextEventTime = %u",currentState, nextEventTime );
         while (!spin1_send_mc_packet(
-                        key | neuron_index, time, WITH_PAYLOAD)) {
+                        key | neuron_index, nextEventTime, WITH_PAYLOAD)) {
                     spin1_delay_us(1);
                 }
     }else if(currentState == 3){
-        time  = time + neuron->tn;
+        //time  = time + neuron->tn;
         //set 32nd bit if packet is eot messg. 
-        time = (1 << 32) | time;
+        log_info("Neuron phase = %u, nextEventTime = %u",currentState, nextEventTime );
+        nextEventTime = (1 << 32) | time;
         while (!spin1_send_mc_packet(
                         key | neuron_index, time, WITH_PAYLOAD)) {
                     spin1_delay_us(1);
@@ -88,13 +91,13 @@ bool neuron_model_PDevs_sim(neuron_t * neuron, uint32_t threshold,  uint32_t nex
         neuron->waitCounter++;
         return FALSE;
     }
-    uint32_t lookahead = 0;
+    //uint32_t lookahead = 0;
 
     //REDO with bitmasks
     if(neuron->eit < neuron->tn ){
-        lookahead = neuron->eit; //
+        neuron->eot = neuron->eit; //
     }else{
-        lookahead  = neuron->tn; // Infinity
+        neuron->eot  = neuron->tn; // Infinity
     }
     if(lookahead == 2147483646){
         //IF next event is at time = infinity, stop PDevs while loop
@@ -251,6 +254,17 @@ uint32_t neuron_model_spiketime_pop(neuron_pointer_t neuron){
     neuron->spike_times[9] = 0;   
     neuron->spikeCount--;
     return(nextSpike);	
+}
+
+void neuron_model_init(neuron_pointer_t neuron){
+    neuron->spikeCount = 0;
+    neuron->tl = 0;
+    neuron->tn = 0;
+    neuron->eit = 0;
+    neuron->eot = 0;
+    neuron->phase = 0;
+    neuron->waitCounter = 0;
+    neuron->V_membrane = neuron->V_rest;
 }
 
 
