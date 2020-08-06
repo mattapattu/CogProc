@@ -66,7 +66,7 @@ void lambda(neuron_t * neuron, key_t key, uint32_t neuron_index){
         log_info("Neuron phase = %u, nextEventTime = %u",currentState, nextEventTime );
         nextEventTime = (1 << 32) | nextEventTime;
         while (!spin1_send_mc_packet(
-                        key | neuron_index, time, WITH_PAYLOAD)) {
+                        key | neuron_index, nextEventTime, WITH_PAYLOAD)) {
                     spin1_delay_us(1);
                 }
     }
