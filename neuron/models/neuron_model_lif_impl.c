@@ -85,10 +85,12 @@ bool neuron_model_PDevs_sim(neuron_t * neuron, uint32_t threshold,  uint32_t nex
     }// an expected spike has been delayed
     else if(nextSpikeTime > neuron->eit){
         if(neuron->waitCounter > 30){
-            log_error("Expected spike at eit = %u has not arrived yet",neuron->eit );
+            
+            log_error("Expected event at eit = %u has not arrived yet",neuron->eit );
             //Possible exit here ?
         }
         neuron->waitCounter++;
+        spin1_delay_us(100);
         return FALSE;
     }
     //uint32_t lookahead = 0;
@@ -258,10 +260,10 @@ uint32_t neuron_model_spiketime_pop(neuron_pointer_t neuron){
 
 void neuron_model_init(neuron_pointer_t neuron){
     neuron->spikeCount = 0;
-    neuron->tl = 0;
-    neuron->tn = 0;
-    neuron->eit = 0;
-    neuron->eot = 0;
+    neuron->tl = 2147483646;
+    neuron->tn = 2147483646;
+    neuron->eit = 2147483646;
+    neuron->eot = 2147483646;
     neuron->phase = 0;
     neuron->waitCounter = 0;
     neuron->V_membrane = neuron->V_rest;
