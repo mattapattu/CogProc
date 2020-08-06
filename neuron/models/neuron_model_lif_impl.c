@@ -85,7 +85,7 @@ bool neuron_model_PDevs_sim(neuron_t * neuron, uint32_t threshold,  uint32_t nex
     }// an expected spike has been delayed
     else if(nextSpikeTime > neuron->eit){
         if(neuron->waitCounter > 30){
-            log_error("Expected spike has not arrived yet");
+            log_error("Expected spike at eit = %u has not arrived yet",neuron->eit );
             //Possible exit here ?
         }
         neuron->waitCounter++;
