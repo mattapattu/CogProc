@@ -198,11 +198,19 @@ static inline void print_inputs(void) {
 //! \param[in] fixed_region_address: The fixed region of the synaptic matrix
 //! \param[in] time: The current simulation time
 static inline void process_fixed_synapses(
-        address_t fixed_region_address, uint32_t payload) {
-    uint32_t time = payload &  2147483648; 
-    uint8_t eit =   (payload >> 32) & 1;
-    
-    
+    address_t fixed_region_address, uint32_t payload) {
+
+    uint32_t time  = -1;  
+    uint8_t eit =   -1;
+    if(payload == 0 ){
+        //pkt came from sourcearray and is a spike at time t =0
+        time = 0;
+        eit = 0;
+    }else{
+        time = payload &  2147483648; 
+        eit =   (payload >> 32) & 1;
+    }
+ 
     register uint32_t *synaptic_words =
             synapse_row_fixed_weight_controls(fixed_region_address);
     register uint32_t fixed_synapse =
@@ -212,6 +220,7 @@ static inline void process_fixed_synapses(
 
     log_info("New MC pkt: eit = %u, time = %u,  payload = %u", eit, time, payload);
 
+    
     for (; fixed_synapse > 0; fixed_synapse--) {
         // Get the next 32 bit word from the synaptic_row
         // (should auto increment pointer in single instruction)
