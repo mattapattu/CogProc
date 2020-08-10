@@ -273,11 +273,11 @@ static int32_t  neuron_impl_neuron_update(uint32_t time, index_t neuron_index,
     uint32_t threshold = threshold_type->threshold_value;
     neuron_pointer_t neuron = &neuron_array[neuron_index];
 
-    int32_t nextSpikeTime = neuron->spike_times[0];
+    uint32_t nextSpikeTime = neuron->spike_times[0];
     input_t input = synapses_get_ring_buffer_input(nextSpikeTime,neuron_index );
     log_info("nextSpikeTime = %u, input = %u", nextSpikeTime, input);
     
-    int ret = 1;
+    int32_t ret = 1;
     while(ret == 1){
         ret = neuron_model_PDevs_sim(neuron, threshold_type, nextSpikeTime, key, neuron_index, input);
         log_info("neuron_model_PDevs_sim returns %u", ret);
