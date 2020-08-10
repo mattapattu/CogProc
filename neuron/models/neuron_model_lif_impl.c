@@ -265,7 +265,7 @@ uint32_t neuron_model_spiketime_pop(neuron_pointer_t neuron){
     return(nextSpike);	
 }
 
-void neuron_model_init(const neuron_t *neuron){
+void neuron_model_init(neuron_t *neuron){
     neuron->spikeCount = 0;
     neuron->tl = 200000;
     neuron->tn = 200000;
