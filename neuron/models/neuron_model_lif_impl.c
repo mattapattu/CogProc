@@ -95,6 +95,9 @@ int32_t neuron_model_PDevs_sim(neuron_t * neuron, uint32_t threshold,  uint32_t 
         neuron->waitCounter++;
         spin1_delay_us(1000);
         return(-1);
+    }else{
+        log_info("Unkown condition. Check");
+        return(-2);
     }
     //uint32_t lookahead = 0;
 
