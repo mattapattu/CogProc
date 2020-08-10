@@ -148,9 +148,13 @@ void neuron_pause(address_t address) { // EXPORTED
             address, START_OF_GLOBAL_PARAMETERS, n_neurons);
 }
 
-void neuron_pdevs_update(uint32_t time, index_t neuron_index){
+int32_t neuron_pdevs_update(uint32_t time, index_t neuron_index){
     input_t external_bias = 0;
-    neuron_impl_neuron_update(time, neuron_index, external_bias,key);
+    if(neuron_impl_neuron_update(time, neuron_index, external_bias,key) == -1){
+        return -1;
+    }else{
+        return 1;
+    }
         
 }
 

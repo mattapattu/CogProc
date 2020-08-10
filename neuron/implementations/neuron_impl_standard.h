@@ -258,7 +258,7 @@ static bool neuron_impl_add_spike(index_t neuron_index, uint32_t time) {
 }
 
 
-static void  neuron_impl_neuron_update(uint32_t time, index_t neuron_index,
+static int32_t  neuron_impl_neuron_update(uint32_t time, index_t neuron_index,
         input_t external_bias, key_t key) {
     // Get the neuron itself
     
@@ -274,19 +274,20 @@ static void  neuron_impl_neuron_update(uint32_t time, index_t neuron_index,
     neuron_pointer_t neuron = &neuron_array[neuron_index];
 
     int32_t nextSpikeTime = neuron->spike_times[0];
-    log_info("nextSpikeTime = %u", nextSpikeTime);
     input_t input = synapses_get_ring_buffer_input(nextSpikeTime,neuron_index );
-    log_info("input = %u", input);
+    log_info("nextSpikeTime = %u, input = %u", nextSpikeTime, input);
     
-    int ret = 0;
+    int ret = 1;
     while(ret == 1){
         ret = neuron_model_PDevs_sim(neuron, threshold_type, nextSpikeTime, key, neuron_index, input);
         log_info("neuron_model_PDevs_sim returns %u", ret);
     }
     if( ret == 0){
-        //log_info("No event to process. Wait for new spike");
+        log_info("No event to process. Wait for new spike");
+        return 1;
     }else if(ret == -1){
         log_info("New event has not arrived after X clock cycles");
+        return -1;
     }
 
 
