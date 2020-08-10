@@ -228,7 +228,7 @@ state_t neuron_model_get_voltage(neuron_pointer_t neuron) {
 bool neuron_model_add_spike(neuron_pointer_t neuron, uint32_t  spikeTime){
    neuron->spikeCount++;
    if(neuron->spikeCount > 10){
-       log_error("Error storing new spike at time = %u. Exiting simulation", spikeTime);
+       log_error("spikeCount = %u, error storing new spike at time = %u. Exiting simulation", neuron->spikeCount, spikeTime);
        for(int32_t k =0;k<10;k++){
            log_info("neuron->spike_times[k]  = %u", neuron->spike_times[k] );
        }
@@ -274,6 +274,8 @@ void neuron_model_init(neuron_pointer_t neuron){
     neuron->phase = 0;
     neuron->waitCounter = 0;
     neuron->V_membrane = neuron->V_rest;
+    log_info("Initializing neuron params,spikeCount = %u", neuron->spikeCount);
+
 }
 
 
