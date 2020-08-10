@@ -210,7 +210,7 @@ state_t neuron_model_update_membrane_voltage(uint32_t time, neuron_t *neuron) {
     uint32_t delta_t = time - neuron->tl;
     
     float exp_factor = 1;
-    
+    log_info("exp_TC  = %f, delta_t = %u",neuron->exp_TC,  delta_t);
     for(uint32_t k = delta_t; k > 0; k--){
  	    exp_factor = exp_factor*neuron->exp_TC;
     }
