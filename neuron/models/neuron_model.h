@@ -96,7 +96,7 @@ bool neuron_model_add_spike(neuron_pointer_t neuron, uint32_t  spikeTime);
 
 uint32_t neuron_model_spiketime_pop(neuron_pointer_t neuron);
 
-bool neuron_model_PDevs_sim(neuron_t * neuron, uint32_t threshold,  uint32_t nextSpikeTime, key_t key, uint32_t neuron_index, input_t input);
+int32_t neuron_model_PDevs_sim(neuron_t * neuron, uint32_t threshold,  uint32_t nextSpikeTime, key_t key, uint32_t neuron_index, input_t input);
 
 void neuron_model_eit_update(neuron_pointer_t neuron, uint32_t time);
 

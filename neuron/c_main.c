@@ -268,6 +268,7 @@ void resume_callback(void) {
 }
 
 
+
 //! \brief Called when a multicast packet is received
 //! \param[in] key: The key of the packet. The spike.
 //! \param payload: Ignored
@@ -277,7 +278,7 @@ void mc_pkt_recvd_callback(uint key, uint payload) {
     uint32_t time = payload &  2147483648; 
     log_info("Received spike %x with payload %d", key, payload);
     
-    if(time > 30){
+    if(time > 10){
     
         simulation_handle_pause_resume(resume_callback);
 

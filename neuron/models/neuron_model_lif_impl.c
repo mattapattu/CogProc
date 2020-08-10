@@ -73,7 +73,7 @@ void lambda(neuron_t * neuron, key_t key, uint32_t neuron_index){
 }
 
 //DEVS PDEVS  simulator
-bool neuron_model_PDevs_sim(neuron_t * neuron, uint32_t threshold,  uint32_t nextSpikeTime, key_t key, uint32_t neuron_index, input_t input){
+int32_t neuron_model_PDevs_sim(neuron_t * neuron, uint32_t threshold,  uint32_t nextSpikeTime, key_t key, uint32_t neuron_index, input_t input){
     if(neuron->tn <= neuron->eit && neuron->tn <=  nextSpikeTime ){
         //Call deltaInt()
         neuron_model_Devs_sim(neuron, 1,nextSpikeTime, threshold, key, neuron_index, input );
@@ -86,12 +86,13 @@ bool neuron_model_PDevs_sim(neuron_t * neuron, uint32_t threshold,  uint32_t nex
     else if(nextSpikeTime > neuron->eit){
         if(neuron->waitCounter > 30){
             
-            log_error("On neuron = %u an expected event at eit = %u has not arrived yet",neuron_index, neuron->eit );
-            //Possible exit here ?
+            //log_error("On neuron = %u an expected event at eit = %u has not arrived yet",neuron_index, neuron->eit );
+            log_info("New event has not arrived after X clock cycles. Exit simulation");
+            //Add graceful exit here
         }
         neuron->waitCounter++;
-        spin1_delay_us(100);
-        return FALSE;
+        spin1_delay_us(1000);
+        return(-1);
     }
     //uint32_t lookahead = 0;
 
@@ -103,9 +104,9 @@ bool neuron_model_PDevs_sim(neuron_t * neuron, uint32_t threshold,  uint32_t nex
     }
     if(neuron->eot == 2147483646){
         //IF next event is at time = infinity, stop PDevs while loop
-        return FALSE;
+        return(0);
     }else{
-        return TRUE;
+        return(1);
     }
 }
 

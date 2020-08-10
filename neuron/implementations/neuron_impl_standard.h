@@ -272,8 +272,16 @@ static void  neuron_impl_neuron_update(uint32_t time, index_t neuron_index,
     int32_t nextSpikeTime = neuron->spike_times[0];
 
     input_t input = synapses_get_ring_buffer_input(nextSpikeTime,neuron_index );
-    while(!neuron_model_PDevs_sim(neuron, threshold_type, nextSpikeTime, key, neuron_index, input)){
-        log_info("No event to process. Wait for new spike");
+    
+    int ret = 0;
+    while(ret == 1){
+        ret = neuron_model_PDevs_sim(neuron, threshold_type, nextSpikeTime, key, neuron_index, input);
+        
+    }
+    if( ret == 0){
+        //log_info("No event to process. Wait for new spike");
+    }else if(ret == -1){
+        log_info("New event has not arrived after X clock cycles");
     }
 
 
