@@ -133,7 +133,6 @@ void neuron_model_Devs_sim(neuron_t * neuron, int16_t event_type, uint32_t nextS
     }//event_type 2 - External event
     else if(event_type == 2){
         uint32_t e = nextSpikeTime  - neuron->tl;
-        //neuron->phase = deltaExt(neuron, e, threshold_type);
         neuron->phase = deltaExt(neuron, nextSpikeTime, threshold, input);
         neuron->tl = nextSpikeTime;
         neuron->tn = neuron->tl + ta(neuron);
@@ -175,9 +174,9 @@ int32_t deltaExt(neuron_pointer_t neuron, uint32_t time, uint32_t threshold, inp
         log_info("Ignore input as neuron is in threshold/refractory phase");
         return(neuron->phase);
     }else{
-       
+        log_info("Calling lif_update");
         lif_update(time, neuron, input);
-
+        log_info("neuron->V_membrane = %u", neuron->V_membrane);
         if(neuron->V_membrane >= threshold){
             neuron->V_membrane = neuron->V_reset;
             return(2);
@@ -266,6 +265,7 @@ bool neuron_model_add_spike(neuron_pointer_t neuron, uint32_t  spikeTime){
 
 
 uint32_t neuron_model_spiketime_pop(neuron_pointer_t neuron){
+
     uint32_t nextSpike = neuron->spike_times[0];
     neuron->spike_times[0] = 0;
     for(uint32_t i = 0; i < 9; i++){
@@ -273,6 +273,7 @@ uint32_t neuron_model_spiketime_pop(neuron_pointer_t neuron){
     }
     neuron->spike_times[9] = 0;   
     neuron->spikeCount--;
+    log_info("Popping spike at nextSpike = %u", nextSpike);
     return(nextSpike);	
 }
 
