@@ -251,8 +251,8 @@ static void neuron_impl_load_neuron_parameters(
 }
 
 
-static bool neuron_impl_add_spike(uint32_t time, index_t neuron_index) {
-    log_info("Adding spike to  neuron  = %u", neuron_index);
+static bool neuron_impl_add_spike(index_t neuron_index, uint32_t time) {
+    log_info("Adding spike at time = %u to neuron_index  = %u", time, neuron_index);
     neuron_pointer_t neuron = &neuron_array[neuron_index];
     return(neuron_model_add_spike(neuron, time));
 }
