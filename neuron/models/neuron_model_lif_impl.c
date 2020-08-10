@@ -76,15 +76,19 @@ void lambda(neuron_t * neuron, key_t key, uint32_t neuron_index){
 int32_t neuron_model_PDevs_sim(neuron_t * neuron, uint32_t threshold,  uint32_t nextSpikeTime, key_t key, uint32_t neuron_index, input_t input){
     if(neuron->tn <= neuron->eit && neuron->tn <=  nextSpikeTime ){
         //Call deltaInt()
-        neuron_model_Devs_sim(neuron, 1,nextSpikeTime, threshold, key, neuron_index, input );
         log_info("Process internal event  at time = %u", neuron->eit);
+        neuron_model_Devs_sim(neuron, 1,nextSpikeTime, threshold, key, neuron_index, input );
+        return(1);
+        
     }else if(nextSpikeTime <= neuron->eit &&  nextSpikeTime < neuron->tn ){
         //Call deltaExt()
         neuron->waitCounter = 0;
+        log_info("Process spike at time = %u", nextSpikeTime);
         neuron_model_Devs_sim(neuron, 2,nextSpikeTime,  threshold, key, neuron_index, input);
         neuron_model_spiketime_pop(neuron);
-        log_info("Process spike at time = %u", nextSpikeTime);
-    }// an expected spike has been delayed
+        return(1);
+    }
+    // an expected spike has been delayed
     else if(nextSpikeTime > neuron->eit){
         log_info("New event has not arrived after X clock cycles");
         if(neuron->waitCounter > 30){
