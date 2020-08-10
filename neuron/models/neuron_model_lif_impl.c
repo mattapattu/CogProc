@@ -145,16 +145,16 @@ static inline void lif_update(uint32_t time, neuron_pointer_t neuron, input_t in
 
     // update membrane voltage
     REAL alpha = input_this_timestep * neuron->R_membrane + neuron->V_rest;
+    log_info("alpha = %u",  alpha);
     // update membrane voltage
     REAL V_prev = neuron_model_update_membrane_voltage(time, neuron);
+    log_info("V_prev = %u",  V_prev);
     if(V_prev < neuron->V_rest){
         V_prev = neuron->V_rest;
     }
     neuron->V_membrane = alpha - (neuron->exp_TC * (alpha - V_prev));
     
     
-    //log_info("Current V_membrane = %11.4k mv",  neuron->V_membrane);
-    //neuron->V_membrane += input_this_timestep * neuron->R_membrane;
     log_info("New V_membrane = %11.4k mv",  neuron->V_membrane);
 
 }
@@ -214,11 +214,13 @@ state_t neuron_model_update_membrane_voltage(uint32_t time, neuron_t *neuron) {
     for(uint32_t k = delta_t; k > 0; k--){
  	    exp_factor = exp_factor*neuron->exp_TC;
     }
+
+    log_info("exp_factor = %u, "exp_factor);
     
     if(neuron->V_membrane > neuron->V_rest) {
           neuron->V_membrane = neuron->V_membrane * (2-exp_factor); //Membrane potential is always less than 0, so decay factor > 1 : -45*(2-0.9) = -49.5 
     }
-    //log_info("time = %u,last_update_time = %u, Updated V_membrane = %11.4k mv, delta_t = %u, exp_factor = %f", time, last_update_time, neuron->V_membrane, delta_t, exp_factor);
+    log_info("Updated V_membrane = %11.4k mv, delta_t = %u, exp_factor = %f", neuron->V_membrane, delta_t, exp_factor);
     
     return neuron->V_membrane;
 }
