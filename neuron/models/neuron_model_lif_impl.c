@@ -215,7 +215,7 @@ state_t neuron_model_update_membrane_voltage(uint32_t time, neuron_t *neuron) {
  	    exp_factor = exp_factor*neuron->exp_TC;
     }
 
-    log_info("exp_factor = %u, "exp_factor);
+    log_info("exp_factor = %f", exp_factor);
     
     if(neuron->V_membrane > neuron->V_rest) {
           neuron->V_membrane = neuron->V_membrane * (2-exp_factor); //Membrane potential is always less than 0, so decay factor > 1 : -45*(2-0.9) = -49.5 
