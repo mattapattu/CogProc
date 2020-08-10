@@ -278,7 +278,7 @@ static void  neuron_impl_neuron_update(uint32_t time, index_t neuron_index,
     int ret = 0;
     while(ret == 1){
         ret = neuron_model_PDevs_sim(neuron, threshold_type, nextSpikeTime, key, neuron_index, input);
-        
+        log_info("neuron_model_PDevs_sim returns %u", ret);
     }
     if( ret == 0){
         //log_info("No event to process. Wait for new spike");
