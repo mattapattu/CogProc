@@ -235,9 +235,10 @@ static inline void process_fixed_synapses(
                 synaptic_word, synapse_type_index_mask);
         uint32_t weight = synapse_row_sparse_weight(synaptic_word);
    
-        log_info("combined_synapse_neuron_index  = %u, time = %u,  delay = %u, weight = %u", combined_synapse_neuron_index, time, delay, weight);
+        
         
         uint32_t neuron_index = combined_synapse_neuron_index & 255;
+        log_info("neuron_index = %u, combined_synapse_neuron_index  = %u, time = %u,  delay = %u, weight = %u",neuron_index, combined_synapse_neuron_index, time, delay, weight);
         time = time+delay;
         //msg is spike
         if(eit == 0){
