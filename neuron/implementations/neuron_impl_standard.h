@@ -104,6 +104,7 @@ static bool neuron_impl_initialise(uint32_t n_neurons) {
             return false;
         }
         for (index_t n = 0; n < n_neurons; n++) {
+            log_info("Initializing neuron  = %u", n);
             neuron_model_init(&neuron_array[n]);
         }
     }
@@ -251,6 +252,7 @@ static void neuron_impl_load_neuron_parameters(
 
 
 static bool neuron_impl_add_spike(uint32_t time, index_t neuron_index) {
+    log_info("Adding spike to  neuron  = %u", neuron_index);
     neuron_pointer_t neuron = &neuron_array[neuron_index];
     return(neuron_model_add_spike(neuron, time));
 }
