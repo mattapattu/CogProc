@@ -276,13 +276,13 @@ void mc_pkt_recvd_callback(uint key, uint payload) {
     //use(payload);
 
     uint32_t time = payload &  2147483648; 
-    log_info("Received spike %x with payload %d", key, payload);
+    log_info("Received spike %x with payload %d at time = %u", key, payload, time);
     
     if(time > 10){
     
         simulation_handle_pause_resume(resume_callback);
 
-        log_debug("Completed a run");
+        log_info("Time > 10, exiting simulation");
 
             // rewrite neuron params to SDRAM for reading out if needed
         data_specification_metadata_t *ds_regions =
@@ -296,9 +296,11 @@ void mc_pkt_recvd_callback(uint key, uint payload) {
         log_debug("Rewire tries = %d", count_rewire_attempts);
         simulation_ready_to_read();
         return;
+    }else{
+        multicast_packet_received_callback(key, payload);
     }
     
-    multicast_packet_received_callback(key, payload);
+    
 
     
 }
