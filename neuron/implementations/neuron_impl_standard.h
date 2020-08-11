@@ -299,7 +299,7 @@ static int32_t  neuron_impl_neuron_update(uint32_t time, index_t neuron_index,
 
     threshold_type_pointer_t threshold_type =
             &threshold_type_array[neuron_index];
-    uint32_t threshold = threshold_type->threshold_value;
+    int32_t threshold = threshold_type->threshold_value;
     neuron_pointer_t neuron = &neuron_array[neuron_index];
 
     uint32_t nextSpikeTime = neuron->spike_times[0];
@@ -311,7 +311,7 @@ static int32_t  neuron_impl_neuron_update(uint32_t time, index_t neuron_index,
         //log_info("Calling neuron_model_PDevs_sim");
         //log_info("neuron %u: tl = %u", neuron_index, neuron->tl);
         nextSpikeTime = neuron->spike_times[0];
-        ret = neuron_model_PDevs_sim(neuron, threshold_type, nextSpikeTime, key, neuron_index, input);
+        ret = neuron_model_PDevs_sim(neuron, threshold, nextSpikeTime, key, neuron_index, input);
         log_info("neuron_model_PDevs_sim returns %u", ret);
         if(ret == 1){
             continue;

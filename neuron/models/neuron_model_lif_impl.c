@@ -83,7 +83,7 @@ int32_t neuron_model_check_pending_ev(neuron_t * neuron){
 
 
 //DEVS PDEVS  simulator
-int32_t neuron_model_PDevs_sim(neuron_t * neuron, uint32_t threshold,  uint32_t nextSpikeTime, key_t key, uint32_t neuron_index, input_t input){
+int32_t neuron_model_PDevs_sim(neuron_t * neuron, int32_t threshold,  uint32_t nextSpikeTime, key_t key, uint32_t neuron_index, input_t input){
     if(neuron->tn <= neuron->eit && neuron->tn <=  nextSpikeTime ){
         //Call deltaInt()
         log_info("Process internal event  at time = %u", neuron->eit);
@@ -133,7 +133,7 @@ int32_t neuron_model_PDevs_sim(neuron_t * neuron, uint32_t threshold,  uint32_t 
 }
 
 //DEVS atomic simulator
-void neuron_model_Devs_sim(neuron_t * neuron, int16_t event_type, uint32_t nextSpikeTime, uint32_t threshold, key_t key, uint32_t neuron_index, input_t input){
+void neuron_model_Devs_sim(neuron_t * neuron, int16_t event_type, uint32_t nextSpikeTime, int32_t threshold, key_t key, uint32_t neuron_index, input_t input){
     //event_type 1 - Internal event
     if(event_type == 1 ){
         lambda(neuron, key, neuron_index);
@@ -175,7 +175,7 @@ static inline void lif_update(uint32_t time, neuron_t * neuron, input_t input_th
     // }
     neuron->V_membrane = alpha - (neuron->exp_TC * (alpha - V_prev));
     
-    log_info("New V_membrane after lif_update = %f",  neuron->V_membrane);
+    
 
 }
 
@@ -186,7 +186,7 @@ void neuron_model_eit_update(neuron_t * neuron, uint32_t time){
     }
 }
 
-int32_t deltaExt(neuron_t * neuron, uint32_t time, uint32_t threshold, input_t input) {
+int32_t deltaExt(neuron_t * neuron, uint32_t time, int32_t threshold, input_t input) {
 	//log_info("Exc 1: %12.6k", exc_input[0]);
 	//log_info("Inh 1: %12.6k, Inh 2: %12.6k", inh_input[0], inh_input[1]);
 
@@ -196,7 +196,7 @@ int32_t deltaExt(neuron_t * neuron, uint32_t time, uint32_t threshold, input_t i
     }else{
         log_info("external input = %f", input);
         lif_update(time, neuron, input);
-        //log_info("V_membrane = %f", neuron->V_membrane);
+        log_info("New V_membrane after lif_update = %f, threshold = %i",  neuron->V_membrane,threshold);
         if(neuron->V_membrane >= threshold){
             neuron->V_membrane = neuron->V_reset;
             return(2);
