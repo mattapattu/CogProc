@@ -259,6 +259,11 @@ static bool neuron_impl_add_spike(index_t neuron_index, uint32_t time) {
     return(neuron_model_add_spike(neuron, time));
 }
 
+static void  neuron_impl_neuron_eit_update(uint32_t time, index_t neuron_index) {
+
+    neuron_pointer_t neuron = &neuron_array[neuron_index];
+    neuron_model_eit_update(neuron, time);
+}
 
 static int32_t  neuron_impl_neuron_update(uint32_t time, index_t neuron_index,
         input_t external_bias, key_t key,  bool eit) {
@@ -307,14 +312,7 @@ static int32_t  neuron_impl_neuron_update(uint32_t time, index_t neuron_index,
     
 }
 
-static void  neuron_impl_neuron_eit_update(uint32_t time, index_t neuron_index) {
 
-    neuron_pointer_t neuron = &neuron_array[neuron_index];
-    neuron_model_eit_update(neuron, time);
-
-    
-
-}
 
 SOMETIMES_UNUSED // Marked unused as only used sometimes
 //! \brief Stores neuron parameters back into SDRAM
