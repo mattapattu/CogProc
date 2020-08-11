@@ -261,14 +261,14 @@ static bool neuron_impl_add_spike(index_t neuron_index, uint32_t time) {
 
 
 static int32_t  neuron_impl_neuron_update(uint32_t time, index_t neuron_index,
-        input_t external_bias, key_t keym bool eit) {
+        input_t external_bias, key_t key,  bool eit) {
     // Get the neuron itself
     
     if(eit){
         neuron_impl_neuron_eit_update(time, neuron_index);
     }else{
          if(!neuron_impl_add_spike(neuron_index, time)){
-        log_error("Unable to add spike to neuron %u at time = %u", neuron_index, time);
+            log_error("Unable to add spike to neuron %u at time = %u", neuron_index, time);
         }
     }
 
