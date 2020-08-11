@@ -212,19 +212,19 @@ state_t neuron_model_update_membrane_voltage(uint32_t time, neuron_t *neuron) {
     uint32_t delta_t = time - neuron->tl;
     uint32_t simulation_timestep = 1000; //Redo later to read from PyNN
     uint32_t loopMax = delta_t/simulation_timestep;
-    float exp_factor = 1;
+    float exp_factor = neuron->exp_TC;
     
     log_info("exp_TC  = %f, time = %u, tl = %u,  delta_t = %u, loopMax = %u",neuron->exp_TC,time, neuron->tl,   delta_t, loopMax);
-    for(uint32_t k = loopMax; k > 0; k--){
+    for(uint32_t k = loopMax; k > 1; k--){
  	    exp_factor = exp_factor*neuron->exp_TC;
     }
 
-    log_info("exp_factor = %f", exp_factor);
+    log_info("exp_factor = %f, V_membrane = %f", exp_factor, neuron->V_membrane);
     
     if(neuron->V_membrane > neuron->V_rest) {
           neuron->V_membrane = neuron->V_membrane * (2-exp_factor); //Membrane potential is always less than 0, so decay factor > 1 : -45*(2-0.9) = -49.5 
     }
-    log_info("Updated V_membrane = %11.4k mv, delta_t = %u, exp_factor = %f", neuron->V_membrane, delta_t, exp_factor);
+    log_info("Updated V_membrane = %f, delta_t = %u, exp_factor = %f", neuron->V_membrane, delta_t, exp_factor);
     
     return neuron->V_membrane;
 }
@@ -302,7 +302,7 @@ void neuron_model_print_state_variables(const neuron_t *neuron) {
 }
 
 void neuron_model_print_parameters(const neuron_t *neuron) {
-    
+
     log_info("V reset       = %11.4k mv", neuron->V_reset);
     log_info("V rest        = %11.4k mv", neuron->V_rest);
 

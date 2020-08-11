@@ -234,12 +234,12 @@ static void neuron_impl_load_neuron_parameters(
     neuron_model_set_global_neuron_params(global_parameters);
 
     for (index_t n = 0; n < n_neurons; n++) {
-            log_info("Initializing neuron  = %u", n);
+            //log_infolog_info("Initializing neuron  = %u", n);
             neuron_model_init(&neuron_array[n]);
     }
 
 for (index_t n = 0; n < n_neurons; n++) {
-        log_info("Print neuron parameters after load");
+        //log_info("Print neuron parameters after load");
         neuron_model_print_parameters(&neuron_array[n]);
     }
 #if LOG_LEVEL >= LOG_DEBUG
@@ -253,9 +253,9 @@ for (index_t n = 0; n < n_neurons; n++) {
 
 
 static bool neuron_impl_add_spike(index_t neuron_index, uint32_t time) {
-    log_info("Adding spike at time = %u to neuron_index  = %u", time, neuron_index);
+    //log_info("Adding spike at time = %u to neuron_index  = %u", time, neuron_index);
     neuron_pointer_t neuron = &neuron_array[neuron_index];
-    log_info("neuron %u: tl = %u", neuron_index, neuron->tl);
+    //log_info("neuron %u: tl = %u", neuron_index, neuron->tl);
     return(neuron_model_add_spike(neuron, time));
 }
 
@@ -277,20 +277,20 @@ static int32_t  neuron_impl_neuron_update(uint32_t time, index_t neuron_index,
 
     uint32_t nextSpikeTime = neuron->spike_times[0];
     input_t input = synapses_get_ring_buffer_input(nextSpikeTime,neuron_index );
-    log_info("nextSpikeTime = %u, input = %u", nextSpikeTime, input);
+    //log_info("nextSpikeTime = %u, input = %u", nextSpikeTime, input);
     
     int32_t ret = 1;
     while(ret == 1){
-        log_info("Calling neuron_model_PDevs_sim");
-        log_info("neuron %u: tl = %u", neuron_index, neuron->tl);
+        //log_info("Calling neuron_model_PDevs_sim");
+        //log_info("neuron %u: tl = %u", neuron_index, neuron->tl);
         ret = neuron_model_PDevs_sim(neuron, threshold_type, nextSpikeTime, key, neuron_index, input);
-        log_info("neuron_model_PDevs_sim returns %u", ret);
+        //log_info("neuron_model_PDevs_sim returns %u", ret);
     }
     if( ret == 0){
-        log_info("No event to process. Wait for new spike");
+        //log_info("No event to process. Wait for new spike");
         return 1;
     }else if(ret == -1){
-        log_info("New event has not arrived after X clock cycles");
+        //log_info("New event has not arrived after X clock cycles");
         return -1;
     }
 
