@@ -317,6 +317,9 @@ void neuron_model_init(neuron_t *neuron){
 
 }
 
+int32_t neuron_model_get_phase(neuron_t * neuron){
+    return(neuron->phase);
+}
 
 void neuron_model_print_state_variables(const neuron_t *neuron) {
     log_debug("V membrane    = %11.4k mv", neuron->V_membrane);

@@ -108,4 +108,6 @@ void neuron_model_Devs_sim(neuron_t * neuron, int16_t event_type, uint32_t nextS
 
 void neuron_model_init(neuron_t * neuron);
 
+int32_t neuron_model_get_phase(neuron_t * neuron);
+
 #endif // _NEURON_MODEL_H_

@@ -98,6 +98,8 @@ void neuron_print_inputs(void);
 //! \details Only available in debug mode.
 void neuron_print_synapse_parameters(void);
 
+
+
 //! \brief Get the synapse _type_ description character.
 //! \details Only available in debug mode.
 //! \param[in] synapse_type: The synapse type.
