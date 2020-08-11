@@ -145,7 +145,7 @@ static inline void lif_update(uint32_t time, neuron_pointer_t neuron, input_t in
 
     // update membrane voltage
     REAL alpha = input_this_timestep * neuron->R_membrane + neuron->V_rest;
-    log_info("alpha = %u",  alpha);
+    log_info("alpha = %u, time = %u",  alpha, time);
     // update membrane voltage
     REAL V_prev = neuron_model_update_membrane_voltage(time, neuron);
     log_info("V_prev = %u",  V_prev);
@@ -207,12 +207,13 @@ int32_t deltaInt(neuron_pointer_t neuron) {
 state_t neuron_model_update_membrane_voltage(uint32_t time, neuron_t *neuron) {
     
     //Check this again!!!! -> Do we update neuron membrane voltage after every state transition ( at t= tl) ?????
+
     uint32_t delta_t = time - neuron->tl;
     uint32_t simulation_timestep = 1000; //Redo later to read from PyNN
     uint32_t loopMax = delta_t/simulation_timestep;
     float exp_factor = 1;
     
-    log_info("exp_TC  = %f, delta_t = %u, loopMax = %u",neuron->exp_TC,  delta_t, loopMax);
+    log_info("exp_TC  = %f, time = %u, tl = %u,  delta_t = %u, loopMax = %u",neuron->exp_TC,time, neuron->tl,   delta_t, loopMax);
     for(uint32_t k = loopMax; k > 0; k--){
  	    exp_factor = exp_factor*neuron->exp_TC;
     }
