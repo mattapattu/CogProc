@@ -150,13 +150,12 @@ static inline void lif_update(uint32_t time, neuron_t * neuron, input_t input_th
     // update membrane voltage
     REAL V_prev = neuron_model_update_membrane_voltage(time, neuron);
     log_info("V_prev = %u",  V_prev);
-    if(V_prev < neuron->V_rest){
-        V_prev = neuron->V_rest;
-    }
+    // if(V_prev < neuron->V_rest){
+    //     V_prev = neuron->V_rest;
+    // }
     neuron->V_membrane = alpha - (neuron->exp_TC * (alpha - V_prev));
     
-    
-    log_info("New V_membrane = %11.4k mv",  neuron->V_membrane);
+    log_info("New V_membrane after lif_update = %f",  neuron->V_membrane);
 
 }
 
@@ -205,7 +204,7 @@ int32_t deltaInt(neuron_t * neuron) {
     
 }
 
-state_t neuron_model_update_membrane_voltage(uint32_t time, neuron_t *neuron) {
+int32_t neuron_model_update_membrane_voltage(uint32_t time, neuron_t *neuron) {
     
     //Check this again!!!! -> Do we update neuron membrane voltage after every state transition ( at t= tl) ?????
 
@@ -215,18 +214,17 @@ state_t neuron_model_update_membrane_voltage(uint32_t time, neuron_t *neuron) {
     float exp_factor = neuron->exp_TC;
     
     log_info("exp_TC  = %f, time = %u, tl = %u,  delta_t = %u, loopMax = %u",neuron->exp_TC,time, neuron->tl,   delta_t, loopMax);
-    for(uint32_t k = loopMax; k > 1; k--){
- 	    exp_factor = exp_factor*neuron->exp_TC;
-    }
-
-    log_info("exp_factor = %f, V_membrane = %f", exp_factor, neuron->V_membrane);
-    
+   
     if(neuron->V_membrane > neuron->V_rest) {
+          for(uint32_t k = loopMax; k > 1; k--){
+ 	            exp_factor = exp_factor*neuron->exp_TC;
+           }  
+          log_info("exp_factor = %f, V_membrane = %f", exp_factor, neuron->V_membrane); 
           neuron->V_membrane = neuron->V_membrane * (2-exp_factor); //Membrane potential is always less than 0, so decay factor > 1 : -45*(2-0.9) = -49.5 
+          log_info("Updated V_membrane = %f, delta_t = %u, exp_factor = %f", neuron->V_membrane, delta_t, exp_factor);
     }
-    log_info("Updated V_membrane = %f, delta_t = %u, exp_factor = %f", neuron->V_membrane, delta_t, exp_factor);
-    
-    return neuron->V_membrane;
+   
+    return(neuron->V_membrane);
 }
 
 /* void neuron_model_has_spiked(neuron_t *restrict neuron) {
