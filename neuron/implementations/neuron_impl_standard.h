@@ -280,6 +280,7 @@ static int32_t  neuron_impl_neuron_update(uint32_t time, index_t neuron_index,
     int32_t ret = 1;
     while(ret == 1){
         log_info("Calling neuron_model_PDevs_sim");
+        log_info("neuron %u: tl = %u", neuron_index, neuron->tl);
         ret = neuron_model_PDevs_sim(neuron, threshold_type, nextSpikeTime, key, neuron_index, input);
         log_info("neuron_model_PDevs_sim returns %u", ret);
     }
