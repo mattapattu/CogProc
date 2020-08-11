@@ -145,7 +145,7 @@ static inline void lif_update(uint32_t time, neuron_t * neuron, input_t input_th
 
     // update membrane voltage
     REAL alpha = input_this_timestep * neuron->R_membrane + neuron->V_rest;
-    log_info("alpha = %u, time = %u",  alpha, time);
+    log_info("alpha = %u, time = %u, tl = %u",  alpha, time, neuron->tl);
     // update membrane voltage
     REAL V_prev = neuron_model_update_membrane_voltage(time, neuron);
     log_info("V_prev = %u",  V_prev);
@@ -291,7 +291,7 @@ void neuron_model_init(neuron_t *neuron){
     neuron->phase = 0;
     neuron->waitCounter = 0;
     neuron->V_membrane = neuron->V_rest;
-    log_info("Initializing neuron params,spikeCount = %u", neuron->spikeCount);
+    log_info("Initializing neuron params,spikeCount = %u, tl = %u", neuron->spikeCount, neuron->tl);
 
 }
 
