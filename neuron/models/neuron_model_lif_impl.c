@@ -176,7 +176,7 @@ int32_t deltaExt(neuron_t * neuron, uint32_t time, uint32_t threshold, input_t i
     }else{
         log_info("external input = %f", input);
         lif_update(time, neuron, input);
-        log_info("V_membrane = %u", neuron->V_membrane);
+        //log_info("V_membrane = %f", neuron->V_membrane);
         if(neuron->V_membrane >= threshold){
             neuron->V_membrane = neuron->V_reset;
             return(2);
@@ -213,15 +213,15 @@ int32_t neuron_model_update_membrane_voltage(uint32_t time, neuron_t *neuron) {
     uint32_t loopMax = delta_t/simulation_timestep;
     float exp_factor = neuron->exp_TC;
     
-    log_info("exp_TC  = %f, time = %u, tl = %u,  delta_t = %u, loopMax = %u, V_membrane = %f",neuron->exp_TC,time, neuron->tl,   delta_t, loopMax, neuron->V_membrane);
+    //log_info("exp_TC  = %f, time = %u, tl = %u,  delta_t = %u, loopMax = %u, V_membrane = %f",neuron->exp_TC,time, neuron->tl,   delta_t, loopMax, neuron->V_membrane);
    
     if(neuron->V_membrane > neuron->V_rest) {
           for(uint32_t k = loopMax; k > 1; k--){
  	            exp_factor = exp_factor*neuron->exp_TC;
            }  
-          log_info("exp_factor = %f, V_membrane = %f", exp_factor, neuron->V_membrane); 
+          //log_info("exp_factor = %f, V_membrane = %f", exp_factor, neuron->V_membrane); 
           neuron->V_membrane = neuron->V_membrane * (2-exp_factor); //Membrane potential is always less than 0, so decay factor > 1 : -45*(2-0.9) = -49.5 
-          log_info("Updated V_membrane = %f, delta_t = %u, exp_factor = %f", neuron->V_membrane, delta_t, exp_factor);
+          //log_info("Updated V_membrane = %f, delta_t = %u, exp_factor = %f", neuron->V_membrane, delta_t, exp_factor);
     }
    
     return(neuron->V_membrane);
@@ -310,6 +310,6 @@ void neuron_model_print_parameters(const neuron_t *neuron) {
     log_info("exp(-ms/(RC)) = %11.4k [.]", neuron->exp_TC);
 
     log_info("T refract     = %u timesteps", neuron->T_refract);
-    log_info("V_membrane     = %u ", neuron->V_membrane);
+    log_info("V_membrane     = %f ", neuron->V_membrane);
     
 }
