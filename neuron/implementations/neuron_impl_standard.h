@@ -103,10 +103,6 @@ static bool neuron_impl_initialise(uint32_t n_neurons) {
             log_error("Unable to allocate neuron array - Out of DTCM");
             return false;
         }
-        for (index_t n = 0; n < n_neurons; n++) {
-            log_info("Initializing neuron  = %u", n);
-            neuron_model_init(&neuron_array[n]);
-        }
     }
 
     // Allocate DTCM for input type array and copy block of data
@@ -238,10 +234,14 @@ static void neuron_impl_load_neuron_parameters(
     neuron_model_set_global_neuron_params(global_parameters);
 
     for (index_t n = 0; n < n_neurons; n++) {
+            log_info("Initializing neuron  = %u", n);
+            neuron_model_init(&neuron_array[n]);
+    }
+
+for (index_t n = 0; n < n_neurons; n++) {
         log_info("Print neuron parameters after load");
         neuron_model_print_parameters(&neuron_array[n]);
     }
-
 #if LOG_LEVEL >= LOG_DEBUG
     log_debug("-------------------------------------\n");
     for (index_t n = 0; n < n_neurons; n++) {
