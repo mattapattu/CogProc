@@ -196,7 +196,7 @@ int32_t deltaExt(neuron_t * neuron, uint32_t time, int32_t threshold, input_t in
     }else{
         log_info("external input = %f", input);
         lif_update(time, neuron, input);
-        log_info("New V_membrane after lif_update = %f, threshold = %i",  neuron->V_membrane,threshold);
+        log_info("New V_membrane after lif_update = %f, threshold = %d",  neuron->V_membrane,threshold);
         if(neuron->V_membrane >= threshold){
             neuron->V_membrane = neuron->V_reset;
             return(2);
