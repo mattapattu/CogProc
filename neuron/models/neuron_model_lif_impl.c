@@ -302,6 +302,7 @@ void neuron_model_print_state_variables(const neuron_t *neuron) {
 }
 
 void neuron_model_print_parameters(const neuron_t *neuron) {
+    
     log_info("V reset       = %11.4k mv", neuron->V_reset);
     log_info("V rest        = %11.4k mv", neuron->V_rest);
 
