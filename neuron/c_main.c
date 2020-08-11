@@ -277,33 +277,29 @@ void mc_pkt_recvd_callback(uint key, uint payload) {
 
     uint32_t time = payload &  2147483648; 
     log_info("Received spike %x with payload %d at time = %u", key, payload, time);
-    
-    if(time > 10){
-    
-        simulation_handle_pause_resume(resume_callback);
-
-        log_info("Time > 10, exiting simulation");
-
-            // rewrite neuron params to SDRAM for reading out if needed
-        data_specification_metadata_t *ds_regions =
-            data_specification_get_data_address();
-        neuron_pause(data_specification_get_region(NEURON_PARAMS_REGION, ds_regions));
-
-        profiler_write_entry_disable_irq_fiq(PROFILER_EXIT | PROFILER_TIMER);
-
-        profiler_finalise();
-
-        log_debug("Rewire tries = %d", count_rewire_attempts);
-        simulation_ready_to_read();
-        return;
-    }else{
-        multicast_packet_received_callback(key, payload);
-    }
-    
-    
-
-    
+    multicast_packet_received_callback(key, payload);
+       
 }
+
+
+/* void end_simulation(){
+    simulation_handle_pause_resume(resume_callback);
+
+    log_info("Time > 10, exiting simulation");
+
+    // rewrite neuron params to SDRAM for reading out if needed
+    data_specification_metadata_t *ds_regions =
+            data_specification_get_data_address();
+    neuron_pause(data_specification_get_region(NEURON_PARAMS_REGION, ds_regions));
+
+    profiler_write_entry_disable_irq_fiq(PROFILER_EXIT | PROFILER_TIMER);
+
+    profiler_finalise();
+
+    log_debug("Rewire tries = %d", count_rewire_attempts);
+    simulation_ready_to_read();
+    return;    
+} */
 
 //! \brief The entry point for this model.
 void c_main(void) {

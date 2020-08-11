@@ -251,6 +251,26 @@ for (index_t n = 0; n < n_neurons; n++) {
 #endif // LOG_LEVEL >= LOG_DEBUG
 }
 
+static bool neuron_impl_check_sim_end(){
+    bool endSim = true;
+    bool err = false;
+    for (index_t n = 0; n < n_neurons; n++) {
+        if(neuron_model_get_phase(&neuron_array[n]) == 4){
+            endSim = endSim && true;
+        }else if(neuron_model_get_phase(&neuron_array[n]) == 5){
+            err = true;
+            break;
+        }
+    }
+    if(err){
+        log_info("Call end sim as neuron in Error phase");
+        return(err);
+    }else if(endSim){
+        log_info("All neurons in Idle state. Call end_sim");
+        return(endSim);
+    }
+}
+
 
 static bool neuron_impl_add_spike(index_t neuron_index, uint32_t time) {
     //log_info("Adding spike at time = %u to neuron_index  = %u", time, neuron_index);

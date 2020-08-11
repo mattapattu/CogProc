@@ -71,7 +71,7 @@ typedef struct neuron_t {
     //!EOT
     uint32_t eot;
 
-    //! Neuron Phases: 0 = Resting,  1 = Subthreshold, 2 = Threshold, 3 = Refractory, 
+    //! Neuron Phases: 0 = Resting,  1 = Subthreshold, 2 = Threshold, 3 = Refractory, 4 = Idle (or Exit), 5 = Error
     uint16_t phase;
 
     uint16_t waitCounter;

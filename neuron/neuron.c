@@ -24,6 +24,8 @@
 #include "implementations/neuron_impl.h"
 #include "plasticity/synapse_dynamics.h"
 #include <debug.h>
+#include <simulation.h>
+
 
 //! The key to be used for this core (will be ORed with neuron ID)
 static key_t key;
@@ -148,19 +150,33 @@ void neuron_pause(address_t address) { // EXPORTED
             address, START_OF_GLOBAL_PARAMETERS, n_neurons);
 }
 
-int32_t neuron_pdevs_update(uint32_t time, index_t neuron_index, bool eit){
+
+static void end_simulation(){
+
+    simulation_handle_pause_resume(NULL);
+    simulation_ready_to_read();
+    return;    
+} 
+
+void neuron_pdevs_update(uint32_t time, index_t neuron_index, bool eit){
     input_t external_bias = 0;
     
+    // if(!eit){
+    //     neuron_recording_setup_for_next_recording();
+
+    // }
     int32_t ret = neuron_impl_neuron_update(time, neuron_index, external_bias,key,eit);
     
     if(ret == 0){
         log_info("Neuron %u has no more events to process", neuron_index);
-        return(0);
     }else if(ret == -1){
         log_info("An expected input msg on neuron %u has not arrived on time", neuron_index);
-        return(-1);
     }
         
+    if(neuron_impl_check_sim_end()){
+        log_info("Calling end_sim for graceful exit");
+        end_simulation();
+    }
 }
 
 

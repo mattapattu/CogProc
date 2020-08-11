@@ -76,6 +76,7 @@ int32_t neuron_model_check_pending_ev(neuron_t * neuron){
     if(neuron->tn != 2147483646 || neuron->spikeCount > 0 || neuron->eit != 2147483646 ){
         return 1;
     }else{
+        neuron->phase = 4;
         return 0;
     }
 }
@@ -87,7 +88,7 @@ int32_t neuron_model_PDevs_sim(neuron_t * neuron, uint32_t threshold,  uint32_t 
         //Call deltaInt()
         log_info("Process internal event  at time = %u", neuron->eit);
         neuron_model_Devs_sim(neuron, 1,nextSpikeTime, threshold, key, neuron_index, input );
-        return(neuron_model_check_pending_ev(neuron));
+        
         
     }else if(nextSpikeTime <= neuron->eit &&  nextSpikeTime < neuron->tn ){
         //Call deltaExt()
@@ -95,20 +96,20 @@ int32_t neuron_model_PDevs_sim(neuron_t * neuron, uint32_t threshold,  uint32_t 
         log_info("Process spike at time = %u", nextSpikeTime);
         neuron_model_Devs_sim(neuron, 2,nextSpikeTime,  threshold, key, neuron_index, input);
         neuron_model_spiketime_pop(neuron);
-        return(neuron_model_check_pending_ev(neuron));
     }
     // an expected spike has been delayed
     else if(nextSpikeTime > neuron->eit){
         log_info("New event has not arrived after X clock cycles");
         if(neuron->waitCounter > 30){
             
-            //log_error("On neuron = %u an expected event at eit = %u has not arrived yet",neuron_index, neuron->eit );
             log_info("New event has not arrived after waitCounter> 30. Exit simulation");
             //Add graceful exit here
+            neuron->phase = 5;
+            return(-1);
         }
         neuron->waitCounter++;
         spin1_delay_us(1000);
-        return(-1);
+        
     }else{
         log_info("Unknown condition. Check");
         log_info("tn = %u, eit = %u, nextSpikeTime = %u", neuron->tn, neuron->eit, nextSpikeTime);
@@ -122,12 +123,13 @@ int32_t neuron_model_PDevs_sim(neuron_t * neuron, uint32_t threshold,  uint32_t 
     }else{
         neuron->eot  = neuron->tn; // Infinity
     }
-    if(neuron->eot == 2147483646){
-        //IF next event is at time = infinity, stop PDevs while loop
-        return(0);
-    }else{
-        return(1);
-    }
+    // if(neuron->eot == 2147483646){
+    //     //IF next event is at time = infinity, stop PDevs while loop
+    //     return(0);
+    // }else{
+    //     return(1);
+    // }
+    return(neuron_model_check_pending_ev(neuron));
 }
 
 //DEVS atomic simulator
