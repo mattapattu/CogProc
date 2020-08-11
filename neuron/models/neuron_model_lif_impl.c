@@ -310,6 +310,7 @@ void neuron_model_init(neuron_t *neuron){
     neuron->V_membrane = neuron->V_rest;
     for(uint32_t i = 0; i < 10; i++){
         neuron->spike_times[i] = 2147483646;
+    }
     log_info("Initializing neuron params,spikeCount = %u, tl = %u", neuron->spikeCount, neuron->tl);
 
 }
