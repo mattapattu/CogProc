@@ -290,14 +290,15 @@ static int32_t  neuron_impl_neuron_update(uint32_t time, index_t neuron_index,
     while(ret == 1){
         //log_info("Calling neuron_model_PDevs_sim");
         //log_info("neuron %u: tl = %u", neuron_index, neuron->tl);
+        nextSpikeTime = neuron->spike_times[0];
         ret = neuron_model_PDevs_sim(neuron, threshold_type, nextSpikeTime, key, neuron_index, input);
+        log_info("neuron_model_PDevs_sim returns %u", ret);
         if(ret == 1){
             continue;
         }else{
             break;
         }
         
-        //log_info("neuron_model_PDevs_sim returns %u", ret);
     }
     if( ret == 0){
         //log_info("No event to process. Wait for new spike");

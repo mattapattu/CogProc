@@ -73,7 +73,7 @@ void lambda(neuron_t * neuron, key_t key, uint32_t neuron_index){
 }
 
 int32_t neuron_model_check_pending_ev(neuron_t * neuron){
-    if(neuron->tn != 2147483646 || neuron->spike_times[0] != 2147483646){
+    if(neuron->tn != 2147483646 || neuron->spikeCount > 0 || neuron->eit != 2147483646 ){
         return 1;
     }else{
         return 0;
