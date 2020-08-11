@@ -276,7 +276,8 @@ bool neuron_model_add_spike(neuron_t * neuron, uint32_t  spikeTime){
        neuron->spike_times[neuron->spikeCount] = spikeTime;
        return TRUE;
    }else{
-       for(uint32_t i = 0; i < 9; i++){
+       uint32_t i;
+       for(i = 0; i < 9; i++){
            if(neuron->spike_times[i] < spikeTime){
                continue;
            }else{
