@@ -173,7 +173,7 @@ void neuron_pdevs_update(uint32_t time, index_t neuron_index, bool eit){
         log_info("An expected input msg on neuron %u has not arrived on time", neuron_index);
     }
         
-    if(neuron_impl_check_sim_end()){
+    if(neuron_impl_check_sim_end(uint32_t n_neurons)){
         log_info("Calling end_sim for graceful exit");
         end_simulation();
     }
