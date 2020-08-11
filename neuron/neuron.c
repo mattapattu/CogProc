@@ -163,11 +163,7 @@ int32_t neuron_pdevs_update(uint32_t time, index_t neuron_index, bool eit){
         
 }
 
-void neuron_eit_update(uint32_t time, index_t neuron_index){
 
-   
-    
-}
 
 /* void neuron_add_spike(uint32_t time, index_t neuron_index){
     neuron_impl_add_spike(time, neuron_index);

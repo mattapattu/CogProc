@@ -241,7 +241,7 @@ static inline void process_fixed_synapses(
         log_info("neuron_index = %u, combined_synapse_neuron_index  = %u, time = %u,  delay = %u, weight = %u",neuron_index, combined_synapse_neuron_index, time, delay, weight);
         time = time+delay;
         //msg is spike
-        if(eit == 0){
+        
             
             // Convert into ring buffer offset
             uint32_t ring_buffer_index = synapses_get_ring_buffer_index_combined(
@@ -265,15 +265,15 @@ static inline void process_fixed_synapses(
             // Store saturated value back in ring-buffer
             ring_buffers[ring_buffer_index] = accumulation;
             log_info("Calling neuron_pdevs_update at time  = %u", time);
-            neuron_pdevs_update(time, neuron_index);
-        }
-         //msg is EIT 
-        else if(eit ==1){
-            log_info("Calling neuron_eit_update at time  = %u", time);
-            neuron_eit_update(time, neuron_index);
-        } else{
-            log_error("Unknown message recevied");
-        }
+            if(eit == 0){
+                neuron_pdevs_update(time, neuron_index,FALSE);
+            } //msg is EIT 
+            else if(eit == 1){
+                //log_info("Calling neuron_eit_update at time  = %u", time);
+                neuron_pdevs_update(time, neuron_index,TRUE);
+            } else{
+                log_error("Unknown message recevied");
+            }
     
 
     }
