@@ -272,7 +272,7 @@ bool neuron_model_add_spike(neuron_t * neuron, uint32_t  spikeTime){
        }
        return FALSE;
    }else if(spikeTime >= neuron->spike_times[neuron->spikeCount-1] ){
-       log_info("Adding new spike at time = %u", spikeTime);
+       log_info("Adding new spike time = %u at the end of array", spikeTime);
        neuron->spike_times[neuron->spikeCount] = spikeTime;
        return TRUE;
    }else{
@@ -286,7 +286,7 @@ bool neuron_model_add_spike(neuron_t * neuron, uint32_t  spikeTime){
                neuron->spike_times[i]  = spikeTime;
            }
        }
-       log_info("Adding new spike at time = %u", spikeTime);
+       log_info("Adding new spike at time = %u at index = %u", spikeTime,i);
        return TRUE;
    }
 }
