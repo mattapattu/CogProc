@@ -141,7 +141,7 @@ void neuron_model_Devs_sim(neuron_t * neuron, int16_t event_type, uint32_t nextS
 }
 
 
-static inline void lif_update(uint32_t time, neuron_pointer_t neuron, input_t input_this_timestep) {
+static inline void lif_update(uint32_t time, neuron_t * neuron, input_t input_this_timestep) {
 
     // update membrane voltage
     REAL alpha = input_this_timestep * neuron->R_membrane + neuron->V_rest;
@@ -159,14 +159,14 @@ static inline void lif_update(uint32_t time, neuron_pointer_t neuron, input_t in
 
 }
 
-void neuron_model_eit_update(neuron_pointer_t neuron, uint32_t time){
+void neuron_model_eit_update(neuron_t * neuron, uint32_t time){
     
     if(time < neuron->eit){
         neuron->eit = time;
     }
 }
 
-int32_t deltaExt(neuron_pointer_t neuron, uint32_t time, uint32_t threshold, input_t input) {
+int32_t deltaExt(neuron_t * neuron, uint32_t time, uint32_t threshold, input_t input) {
 	//log_info("Exc 1: %12.6k", exc_input[0]);
 	//log_info("Inh 1: %12.6k, Inh 2: %12.6k", inh_input[0], inh_input[1]);
 
@@ -188,7 +188,7 @@ int32_t deltaExt(neuron_pointer_t neuron, uint32_t time, uint32_t threshold, inp
     
 }
 
-int32_t deltaInt(neuron_pointer_t neuron) {
+int32_t deltaInt(neuron_t * neuron) {
 	
 	//log_info("Inh 1: %12.6k, Inh 2: %12.6k", inh_input[0], inh_input[1]);
 
@@ -236,11 +236,11 @@ state_t neuron_model_update_membrane_voltage(uint32_t time, neuron_t *neuron) {
     //neuron->refract_timer  = neuron->T_refract;
 } */
 
-state_t neuron_model_get_voltage(neuron_pointer_t neuron) {
+state_t neuron_model_get_voltage(neuron_t * neuron) {
     return neuron->V_membrane;
 }
 
-bool neuron_model_add_spike(neuron_pointer_t neuron, uint32_t  spikeTime){
+bool neuron_model_add_spike(neuron_t * neuron, uint32_t  spikeTime){
    neuron->spikeCount++;
    if(neuron->spikeCount > 10){
        log_error("spiGkeCount = %u, error storing new spike at time = %u. Exiting simulation", neuron->spikeCount, spikeTime);
@@ -269,7 +269,7 @@ bool neuron_model_add_spike(neuron_pointer_t neuron, uint32_t  spikeTime){
 }
 
 
-uint32_t neuron_model_spiketime_pop(neuron_pointer_t neuron){
+uint32_t neuron_model_spiketime_pop(neuron_t * neuron){
 
     uint32_t nextSpike = neuron->spike_times[0];
     neuron->spike_times[0] = 0;
