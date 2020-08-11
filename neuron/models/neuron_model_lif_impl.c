@@ -174,9 +174,9 @@ int32_t deltaExt(neuron_t * neuron, uint32_t time, uint32_t threshold, input_t i
         log_info("Ignore input as neuron is in threshold/refractory phase");
         return(neuron->phase);
     }else{
-        log_info("Calling lif_update");
+        log_info("external input = %f", input);
         lif_update(time, neuron, input);
-        log_info("neuron->V_membrane = %u", neuron->V_membrane);
+        log_info("V_membrane = %u", neuron->V_membrane);
         if(neuron->V_membrane >= threshold){
             neuron->V_membrane = neuron->V_reset;
             return(2);
@@ -213,7 +213,7 @@ int32_t neuron_model_update_membrane_voltage(uint32_t time, neuron_t *neuron) {
     uint32_t loopMax = delta_t/simulation_timestep;
     float exp_factor = neuron->exp_TC;
     
-    log_info("exp_TC  = %f, time = %u, tl = %u,  delta_t = %u, loopMax = %u",neuron->exp_TC,time, neuron->tl,   delta_t, loopMax);
+    log_info("exp_TC  = %f, time = %u, tl = %u,  delta_t = %u, loopMax = %u, V_membrane = %f",neuron->exp_TC,time, neuron->tl,   delta_t, loopMax, neuron->V_membrane);
    
     if(neuron->V_membrane > neuron->V_rest) {
           for(uint32_t k = loopMax; k > 1; k--){
@@ -310,5 +310,6 @@ void neuron_model_print_parameters(const neuron_t *neuron) {
     log_info("exp(-ms/(RC)) = %11.4k [.]", neuron->exp_TC);
 
     log_info("T refract     = %u timesteps", neuron->T_refract);
-    log_info("tl     = %u ", neuron->tl);
+    log_info("V_membrane     = %u ", neuron->V_membrane);
+    
 }
