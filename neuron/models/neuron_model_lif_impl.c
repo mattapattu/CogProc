@@ -73,6 +73,7 @@ void lambda(neuron_t * neuron, key_t key, uint32_t neuron_index){
 }
 
 int32_t neuron_model_check_pending_ev(neuron_t * neuron){
+    log_info("phase = %u, tn = %u, eit = %u, spikeCount = %u", neuron->phase, neuron->tn, neuron->eit, neuron->spikeCount);
     if(neuron->tn != 2147483646 || neuron->spikeCount > 0 || neuron->eit != 2147483646 ){
         return 1;
     }else{
@@ -142,6 +143,7 @@ void neuron_model_Devs_sim(neuron_t * neuron, int16_t event_type, uint32_t nextS
         if(ta(neuron) == 2147483646){
             neuron->tn = 2147483646;
         }else{
+            //Next phase change = last event time + time-advance(current-phase)
             neuron->tn = neuron->tl + ta(neuron);
         }
         
@@ -198,7 +200,7 @@ int32_t deltaExt(neuron_t * neuron, uint32_t time, int32_t threshold, input_t in
         lif_update(time, neuron, input);
         log_info("New V_membrane after lif_update = %f, threshold = %d",  neuron->V_membrane,threshold);
         if(neuron->V_membrane >= -50){ //do not hard-code, change this
-            neuron->V_membrane = neuron->V_reset;
+            
             return(2);
         }else{
             return(1);
@@ -213,9 +215,11 @@ int32_t deltaInt(neuron_t * neuron) {
 	//log_info("Inh 1: %12.6k, Inh 2: %12.6k", inh_input[0], inh_input[1]);
 
     if(neuron->phase == 0 || neuron->phase == 1){
-        log_info("In phase 0 or 1 = no neuron phase change ");
+        log_info("Neuron in phase 0/1, no neuron phase change ");
         return(neuron->phase);
     }else if(neuron->phase == 2){
+        log_info("Neuron in phase 2, reset V_memb and change to phase 3");
+        neuron->V_membrane = neuron->V_reset;
         return(3);
     }else if(neuron->phase == 3){
         return(1);
