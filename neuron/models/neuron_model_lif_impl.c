@@ -311,4 +311,5 @@ void neuron_model_print_parameters(const neuron_t *neuron) {
     log_info("exp(-ms/(RC)) = %11.4k [.]", neuron->exp_TC);
 
     log_info("T refract     = %u timesteps", neuron->T_refract);
+    log_info("tl     = %u ", neuron->tl);
 }
