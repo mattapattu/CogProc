@@ -148,19 +148,24 @@ void neuron_pause(address_t address) { // EXPORTED
             address, START_OF_GLOBAL_PARAMETERS, n_neurons);
 }
 
-int32_t neuron_pdevs_update(uint32_t time, index_t neuron_index){
+int32_t neuron_pdevs_update(uint32_t time, index_t neuron_index, bool eit){
     input_t external_bias = 0;
-    if(neuron_impl_neuron_update(time, neuron_index, external_bias,key) == -1){
-        return -1;
-    }else{
-        return 1;
+    
+    int32_t ret = neuron_impl_neuron_update(time, neuron_index, external_bias,key,eit);
+    
+    if(ret == 0){
+        log_info("Neuron %u has no more events to process", neuron_index);
+        return(0);
+    }else if(ret == -1){
+        log_info("An expected input msg on neuron %u has not arrived on time", neuron_index);
+        return(-1);
     }
         
 }
 
 void neuron_eit_update(uint32_t time, index_t neuron_index){
 
-   neuron_impl_neuron_eit_update(time, neuron_index); 
+   
     
 }
 

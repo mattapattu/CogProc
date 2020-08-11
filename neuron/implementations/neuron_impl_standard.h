@@ -261,15 +261,17 @@ static bool neuron_impl_add_spike(index_t neuron_index, uint32_t time) {
 
 
 static int32_t  neuron_impl_neuron_update(uint32_t time, index_t neuron_index,
-        input_t external_bias, key_t key) {
+        input_t external_bias, key_t keym bool eit) {
     // Get the neuron itself
     
-
-    if(!neuron_impl_add_spike(neuron_index, time)){
+    if(eit){
+        neuron_impl_neuron_eit_update(time, neuron_index);
+    }else{
+         if(!neuron_impl_add_spike(neuron_index, time)){
         log_error("Unable to add spike to neuron %u at time = %u", neuron_index, time);
+        }
     }
 
-    
     threshold_type_pointer_t threshold_type =
             &threshold_type_array[neuron_index];
     uint32_t threshold = threshold_type->threshold_value;
@@ -284,11 +286,17 @@ static int32_t  neuron_impl_neuron_update(uint32_t time, index_t neuron_index,
         //log_info("Calling neuron_model_PDevs_sim");
         //log_info("neuron %u: tl = %u", neuron_index, neuron->tl);
         ret = neuron_model_PDevs_sim(neuron, threshold_type, nextSpikeTime, key, neuron_index, input);
+        if(ret == 1){
+            continue;
+        }else{
+            break;
+        }
+        
         //log_info("neuron_model_PDevs_sim returns %u", ret);
     }
     if( ret == 0){
         //log_info("No event to process. Wait for new spike");
-        return 1;
+        return 0;
     }else if(ret == -1){
         //log_info("New event has not arrived after X clock cycles");
         return -1;

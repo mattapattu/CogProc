@@ -72,13 +72,22 @@ void lambda(neuron_t * neuron, key_t key, uint32_t neuron_index){
     }
 }
 
+int32_t neuron_model_check_pending_ev(neuron_t * neuron){
+    if(neuron->tn != 2147483646 || neuron->spike_times[0] != 2147483646){
+        return 1;
+    }else{
+        return 0;
+    }
+}
+
+
 //DEVS PDEVS  simulator
 int32_t neuron_model_PDevs_sim(neuron_t * neuron, uint32_t threshold,  uint32_t nextSpikeTime, key_t key, uint32_t neuron_index, input_t input){
     if(neuron->tn <= neuron->eit && neuron->tn <=  nextSpikeTime ){
         //Call deltaInt()
         log_info("Process internal event  at time = %u", neuron->eit);
         neuron_model_Devs_sim(neuron, 1,nextSpikeTime, threshold, key, neuron_index, input );
-        return(1);
+        return(neuron_model_check_pending_ev(neuron));
         
     }else if(nextSpikeTime <= neuron->eit &&  nextSpikeTime < neuron->tn ){
         //Call deltaExt()
@@ -86,7 +95,7 @@ int32_t neuron_model_PDevs_sim(neuron_t * neuron, uint32_t threshold,  uint32_t 
         log_info("Process spike at time = %u", nextSpikeTime);
         neuron_model_Devs_sim(neuron, 2,nextSpikeTime,  threshold, key, neuron_index, input);
         neuron_model_spiketime_pop(neuron);
-        return(1);
+        return(neuron_model_check_pending_ev(neuron));
     }
     // an expected spike has been delayed
     else if(nextSpikeTime > neuron->eit){
@@ -128,14 +137,23 @@ void neuron_model_Devs_sim(neuron_t * neuron, int16_t event_type, uint32_t nextS
         lambda(neuron, key, neuron_index);
         neuron->phase  = deltaInt(neuron);
         neuron->tl = neuron->tn;
-        neuron->tn = neuron->tl + ta(neuron);
+        if(ta(neuron) == 2147483646){
+            neuron->tn = 2147483646;
+        }else{
+            neuron->tn = neuron->tl + ta(neuron);
+        }
+        
         log_info("Event 1 , new tl = %u, new tn = %u",neuron->tl,  neuron->tn);
     }//event_type 2 - External event
     else if(event_type == 2){
         uint32_t e = nextSpikeTime  - neuron->tl;
         neuron->phase = deltaExt(neuron, nextSpikeTime, threshold, input);
         neuron->tl = nextSpikeTime;
-        neuron->tn = neuron->tl + ta(neuron);
+        if(ta(neuron) == 2147483646){
+            neuron->tn = 2147483646;
+        }else{
+            neuron->tn = neuron->tl + ta(neuron);
+        }
         log_info("Event 2 , new tl = %u, new tn = %u",neuron->tl,  neuron->tn);
     }
 
@@ -146,10 +164,10 @@ static inline void lif_update(uint32_t time, neuron_t * neuron, input_t input_th
 
     // update membrane voltage
     REAL alpha = input_this_timestep * neuron->R_membrane + neuron->V_rest;
-    log_info("alpha = %u, time = %u, tl = %u",  alpha, time, neuron->tl);
+    //log_info("alpha = %u, time = %u, tl = %u",  alpha, time, neuron->tl);
     // update membrane voltage
     REAL V_prev = neuron_model_update_membrane_voltage(time, neuron);
-    log_info("V_prev = %u",  V_prev);
+    //log_info("V_prev = %f",  V_prev);
     // if(V_prev < neuron->V_rest){
     //     V_prev = neuron->V_rest;
     // }
@@ -277,19 +295,21 @@ uint32_t neuron_model_spiketime_pop(neuron_t * neuron){
     }
     neuron->spike_times[9] = 0;   
     neuron->spikeCount--;
-    log_info("Popping spike at nextSpike = %u", nextSpike);
+    log_info("Popping spike from spike_times = %u", nextSpike);
     return(nextSpike);	
 }
 
 void neuron_model_init(neuron_t *neuron){
     neuron->spikeCount = 0;
     neuron->tl = 0;
-    neuron->tn = 200000;
-    neuron->eit = 200000;
-    neuron->eot = 200000;
+    neuron->tn = 2147483646;
+    neuron->eit = 2147483646;
+    neuron->eot = 2147483646;
     neuron->phase = 0;
     neuron->waitCounter = 0;
     neuron->V_membrane = neuron->V_rest;
+    for(uint32_t i = 0; i < 10; i++){
+        neuron->spike_times[i] = 2147483646;
     log_info("Initializing neuron params,spikeCount = %u, tl = %u", neuron->spikeCount, neuron->tl);
 
 }
