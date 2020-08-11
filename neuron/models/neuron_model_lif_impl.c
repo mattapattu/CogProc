@@ -208,10 +208,12 @@ state_t neuron_model_update_membrane_voltage(uint32_t time, neuron_t *neuron) {
     
     //Check this again!!!! -> Do we update neuron membrane voltage after every state transition ( at t= tl) ?????
     uint32_t delta_t = time - neuron->tl;
-    
+    uint32_t simulation_timestep = 1000; //Redo later to read from PyNN
+    uint32_t loopMax = delta_t/simulation_timestep;
     float exp_factor = 1;
-    log_info("exp_TC  = %f, delta_t = %u",neuron->exp_TC,  delta_t);
-    for(uint32_t k = delta_t; k > 0; k--){
+    
+    log_info("exp_TC  = %f, delta_t = %u, loopMax = %u",neuron->exp_TC,  delta_t, loopMax);
+    for(uint32_t k = loopMax; k > 0; k--){
  	    exp_factor = exp_factor*neuron->exp_TC;
     }
 
