@@ -295,13 +295,12 @@ bool neuron_model_add_spike(neuron_t * neuron, uint32_t  spikeTime){
 uint32_t neuron_model_spiketime_pop(neuron_t * neuron){
 
     uint32_t nextSpike = neuron->spike_times[0];
-    neuron->spike_times[0] = 0;
     for(uint32_t i = 0; i < 9; i++){
         neuron->spike_times[i] = neuron->spike_times[i+1];
     }
     neuron->spike_times[9] = 0;   
     neuron->spikeCount--;
-    log_info("Popping spike from spike_times = %u", nextSpike);
+    log_info("Removing spike from spike_times = %u, nextspiketime = %u", nextSpike,neuron->spike_times[0]);
     return(nextSpike);	
 }
 
