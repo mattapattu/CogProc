@@ -74,13 +74,13 @@ void lambda(neuron_t * neuron, key_t key, uint32_t neuron_index){
 
 int32_t neuron_model_check_pending_ev(neuron_t * neuron){
     //log_info("phase = %u, tn = %u, eit = %u, spikeCount = %u", neuron->phase, neuron->tn, neuron->eit, neuron->spikeCount);
-    if(neuron->tn != 2147483646 ||  ||  ){
+    if(neuron->tn < 2147483646){
         log_info("Next Internal Event < Infinity, continue PDEVS loop");
         return 1;
     }else if(neuron->spikeCount > 0){
         log_info("spikeCount > 0, continue PDEVS loop");
         return 1;
-    }else if(neuron->eit != 2147483646){
+    }else if(neuron->eit < 2147483646){
         log_info("earliest Input Time < Infinity, continue PDEVS loop");
         return 1;
     }else{
