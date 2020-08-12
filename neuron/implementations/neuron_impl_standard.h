@@ -314,7 +314,7 @@ static bool neuron_impl_do_timestep_update(index_t neuron_index,
         external_bias += additional_input_get_input_value_as_current(
                 additional_inputs, soma_voltage);
 
-        log_info("exc_input_values = %12.6k, total_exc= %12.6k",exc_input_values, total_exc);
+        //log_info("exc_input_values = %12.6k, total_exc= %12.6k",exc_input_values, total_exc);
  
 
         // update neuron parameters
@@ -324,6 +324,8 @@ static bool neuron_impl_do_timestep_update(index_t neuron_index,
                 external_bias, this_neuron);
 
         // determine if a spike should occur
+        log_info("result = %d",result);
+ 
         bool spike_now =
                 threshold_type_is_above_threshold(result, the_threshold_type);
 
