@@ -85,7 +85,7 @@ int32_t neuron_model_check_pending_ev(neuron_t * neuron){
         log_info("earliest Input Time < Infinity, continue PDEVS loop");
         return 1;
     }else{
-        log_info("no events to process, exit PDEVS loop");
+        log_info("no events to process, set phase to IDLE");
         neuron->phase = 4;
         return 0;
     }
@@ -112,7 +112,7 @@ int32_t neuron_model_PDevs_sim(neuron_t * neuron, int32_t threshold,  uint32_t n
         log_info("New event has not arrived after X clock cycles");
         if(neuron->waitCounter > 30){
             
-            log_info("New event has not arrived after waitCounter> 30. Exit simulation");
+            log_info("New event has not arrived after waitCounter> 30. Set neuron phase to ERR");
             //Add graceful exit here
             neuron->phase = 5;
             return(-1);
