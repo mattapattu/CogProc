@@ -55,7 +55,7 @@ void lambda(neuron_t * neuron, key_t key, uint32_t neuron_index){
     if(currentState == 2){
         //clear 32nd bit if packet is spike 
         nextEventTime = nextEventTime & (~(1 << 32));
-        log_info("Neuron phase = %u, nextEventTime = %u",currentState, nextEventTime );
+        log_info("Sending Spike with payload = %u", nextEventTime );
         while (!spin1_send_mc_packet(
                         key | neuron_index, nextEventTime, WITH_PAYLOAD)) {
                     spin1_delay_us(1);
@@ -63,7 +63,7 @@ void lambda(neuron_t * neuron, key_t key, uint32_t neuron_index){
     }else if(currentState == 3){
         //time  = time + neuron->tn;
         //set 32nd bit if packet is eot messg. 
-        log_info("Neuron phase = %u, nextEventTime = %u",currentState, nextEventTime );
+        log_info("Sending EOT with payload = %u", nextEventTime );
         nextEventTime = (1 << 32) | nextEventTime;
         while (!spin1_send_mc_packet(
                         key | neuron_index, nextEventTime, WITH_PAYLOAD)) {
@@ -146,8 +146,10 @@ void neuron_model_Devs_sim(neuron_t * neuron, int16_t event_type, uint32_t nextS
     //event_type 1 - Internal event
     if(event_type == 1 ){
         lambda(neuron, key, neuron_index);
+        log_info("Internal event = phase %d expired",neuron->phase);
         neuron->phase  = deltaInt(neuron);
-        log_info("New neuron phase = %u",neuron->phase);
+        log_info("New phase after deltaInt = phase %d",neuron->phase);
+        
         neuron->tl = neuron->tn;
         if(ta(neuron) == 2147483646){
             neuron->tn = 2147483646;
@@ -161,8 +163,9 @@ void neuron_model_Devs_sim(neuron_t * neuron, int16_t event_type, uint32_t nextS
     }//event_type 2 - External event
     else if(event_type == 2){
         uint32_t e = nextSpikeTime  - neuron->tl;
+        log_info("External event = spike with neuron in phase %d",neuron->phase);
         neuron->phase = deltaExt(neuron, nextSpikeTime, threshold, input);
-        log_info("New neuron phase = %u",neuron->phase);
+        log_info("New neuron phase = %d",neuron->phase);
         neuron->tl = nextSpikeTime;
         if(ta(neuron) == 2147483646){
             neuron->tn = 2147483646;
