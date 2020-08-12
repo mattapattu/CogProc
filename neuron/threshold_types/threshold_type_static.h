@@ -34,7 +34,9 @@ struct threshold_type_t {
 //! \return True if the neuron should fire
 static inline bool threshold_type_is_above_threshold(
         state_t value, threshold_type_t *threshold_type) {
-    return REAL_COMPARE(value, >=, threshold_type->threshold_value);
+    log_info("V_memb = %d, threshold = %d",value, threshold_type->threshold_value);
+    return(REAL_COMPARE(value, >=, threshold_type->threshold_value));
+    
 }
 
 #endif // _THRESHOLD_TYPE_STATIC_H_
