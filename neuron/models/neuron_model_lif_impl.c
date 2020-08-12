@@ -230,10 +230,10 @@ int32_t deltaInt(neuron_t * neuron) {
 	//log_info("Inh 1: %12.6k, Inh 2: %12.6k", inh_input[0], inh_input[1]);
 
     if(neuron->phase == 0 || neuron->phase == 1){
-        log_info("Neuron in phase 0/1, no neuron phase change ");
+        //log_info("Neuron in phase 0/1, no neuron phase change ");
         return(neuron->phase);
     }else if(neuron->phase == 2){
-        log_info("Neuron in phase 2, reset V_memb and change to phase 3");
+        //log_info("Neuron in phase 2, reset V_memb and change to phase 3");
         neuron->V_membrane = neuron->V_reset;
         return(3);
     }else if(neuron->phase == 3){
@@ -295,6 +295,7 @@ bool neuron_model_add_spike(neuron_t * neuron, uint32_t  spikeTime){
        uint32_t i;
        for(i = 0; i < 9; i++){
            if(neuron->spike_times[i] < spikeTime){
+               log_info("Adding new spike: spike_times[%u] = %u ", i,neuron->spike_times[i]);
                continue;
            }else{
                for(uint32_t j = 9; j >= i; j--){
