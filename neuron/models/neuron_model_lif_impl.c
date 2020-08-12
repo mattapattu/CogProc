@@ -64,8 +64,9 @@ void lambda(neuron_t * neuron, key_t key, uint32_t neuron_index){
     }else if(currentState == 3){
         //time  = time + neuron->tn;
         //set 32nd bit if packet is eot messg. 
+        
+        nextEventTime |= (1 << 31);
         log_info("Sending EOT with key = %u, neuron_index = %u, payload = %u",key,  neuron_index, nextEventTime );
-        nextEventTime = (1 << 32) | nextEventTime;
         while (!spin1_send_mc_packet(
                         key | neuron_index, nextEventTime, WITH_PAYLOAD)) {
                     spin1_delay_us(1);
