@@ -340,8 +340,8 @@ void neuron_model_init(neuron_t *neuron){
     neuron->spikeCount = 0;
     neuron->tl = 0;
     neuron->tn = 2147483646;
-    neuron->eit = 2147483646;
-    neuron->eot = 2147483646;
+    neuron->eit = 0;
+    neuron->eot = 0;
     neuron->phase = 0;
     neuron->waitCounter = 0;
     neuron->V_membrane = neuron->V_rest;
