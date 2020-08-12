@@ -209,10 +209,11 @@ static inline void lif_update(float time, neuron_t * neuron, input_t input_this_
 
 void neuron_model_eit_update(neuron_t * neuron, float time){
 
-    if(time < neuron->eit){
+    if(neuron->eit == 0 || neuron->eit > time ){
         neuron->eit = time;
+        log_info("Updating neuron eit to %f",neuron->eit );
     }
-    log_info("Updating neuron eit to %f",neuron->eit );
+    
 }
 
 int32_t deltaExt(neuron_t * neuron, uint32_t time, int32_t threshold, input_t input) {
