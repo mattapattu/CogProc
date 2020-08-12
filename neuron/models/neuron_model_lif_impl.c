@@ -57,9 +57,7 @@ static float neuron_model_update_membrane_voltage(float time, neuron_t *neuron) 
     uint32_t simulation_timestep = 1000; //Redo later to read from PyNN
     uint32_t loopMax = delta_t/simulation_timestep;
     float exp_factor = neuron->exp_TC;
-    
-    //log_info("exp_TC  = %f, time = %u, tl = %u,  delta_t = %u, loopMax = %u, V_membrane = %f",neuron->exp_TC,time, neuron->tl,   delta_t, loopMax, neuron->V_membrane);
-   
+
     if(neuron->V_membrane > neuron->V_rest) {
           for(uint32_t k = loopMax; k > 1; k--){
  	            exp_factor = exp_factor*neuron->exp_TC;
