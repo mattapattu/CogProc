@@ -151,8 +151,9 @@ static inline bool is_something_to_do(
     cpsr = spin1_int_disable();
     // Are there any more spikes to process?
     in_spiketimes_print_buffer();
+    in_spikes_print_buffer();
     while (in_spikes_get_next_spike(spike) && in_spiketimes_get_next_spiketime(spiketime)) {
-        log_info("spiketime retreived from buffer = %u", spiketime);
+        log_info("From buffer: spike = %u, spiketime = %u", spike, spiketime);
         // Enable interrupts while looking up in the master pop table,
         // as this can be slow
         spin1_mode_restore(cpsr);
