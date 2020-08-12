@@ -208,10 +208,11 @@ static inline void lif_update(uint32_t time, neuron_t * neuron, input_t input_th
 }
 
 void neuron_model_eit_update(neuron_t * neuron, uint32_t time){
-    
+
     if(time < neuron->eit){
         neuron->eit = time;
     }
+    log_info("Updating neuron eit to %u",neuron->eit );
 }
 
 int32_t deltaExt(neuron_t * neuron, uint32_t time, int32_t threshold, input_t input) {
