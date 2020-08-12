@@ -150,16 +150,16 @@ static inline bool is_something_to_do(
     }
     cpsr = spin1_int_disable();
     // Are there any more spikes to process?
-    in_spiketimes_print_buffer();
-    in_spikes_print_buffer();
+    //in_spiketimes_print_buffer();
+    //in_spikes_print_buffer();
     while (in_spikes_get_next_spike(spike) && in_spiketimes_get_next_spiketime(spiketime)) {
-        log_info("From buffer: spike = %u, spiketime = %u", *spike, *spiketime);
+        //log_info("From buffer: spike = %u, spiketime = %u", *spike, *spiketime);
         // Enable interrupts while looking up in the master pop table,
         // as this can be slow
         spin1_mode_restore(cpsr);
         if (population_table_get_first_address(
                 *spike, row_address, n_bytes_to_transfer)) {
-            time = spiketime;        
+            time = *spiketime;        
             synaptogenesis_spike_received(time, *spike);
             *n_process_spike += 1;
             return true;
@@ -202,7 +202,7 @@ static void setup_synaptic_dma_read(dma_buffer *current_buffer,
     bool setup_done = false;
     while (!setup_done && is_something_to_do(&row_address,
             &n_bytes_to_transfer, &spike, &dma_n_rewires, &dma_n_spikes, spiketime)) {
-        log_info("spiketime = %u", spiketime);        
+        log_info("spiketime = %u", *spiketime);        
         if (current_buffer != NULL &&
                 current_buffer->sdram_writeback_address == row_address) {
             // If we can reuse the row, add on what we can use it for
@@ -217,7 +217,7 @@ static void setup_synaptic_dma_read(dma_buffer *current_buffer,
             synaptic_row_t single_fixed_synapse =
                     direct_synapses_get_direct_synapse(row_address);
             bool write_back;
-            time = spiketime; //spiketime = payload = eit bit + time
+            time = *spiketime; //spiketime = payload = eit bit + time
             synapses_process_synaptic_row(
                     time, single_fixed_synapse, &write_back);
             dma_n_rewires = 0;
@@ -332,7 +332,7 @@ static void dma_complete_callback(uint unused, uint tag) {
         // Process synaptic row, writing it back if it's the last time
         // it's going to be processed
         bool write_back_now = false;
-        time = spiketime;
+        time = *spiketime;
         if (!synapses_process_synaptic_row(
                 time, current_buffer->row, &write_back_now)) {
             log_error(
@@ -378,7 +378,7 @@ void user_event_callback(uint unused0, uint unused1) {
     } else {
         // If the DMA buffer is invalid, just do the first transfer possible
         uint32_t *spiketime;
-        setup_synaptic_dma_read(NULL, NULL, NULL,spiketime);
+        setup_synaptic_dma_read(NULL, NULL, NULL,*spiketime);
     }
 }
 
