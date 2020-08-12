@@ -256,7 +256,7 @@ int32_t deltaInt(neuron_t * neuron) {
     
 }
 
-int32_t neuron_model_update_membrane_voltage(float time, neuron_t *neuron) {
+float neuron_model_update_membrane_voltage(float time, neuron_t *neuron) {
     
     //Check this again!!!! -> Do we update neuron membrane voltage after every state transition ( at t= tl) ?????
 
