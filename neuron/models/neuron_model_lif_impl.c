@@ -294,14 +294,15 @@ bool neuron_model_add_spike(neuron_t * neuron, uint32_t  spikeTime){
    }else{
        uint32_t i;
        for(i = 0; i < 9; i++){
-           if(neuron->spike_times[i] < spikeTime){
-               log_info("Adding new spike: spike_times[%u] = %u ", i,neuron->spike_times[i]);
-               continue;
-           }else{
+           if(spikeTime < neuron->spike_times[i]){
+               log_info("Adding new spike: spike_times[%u] = %u ", neuron->spike_times[i],i);
                for(uint32_t j = 9; j >= i; j--){
                       neuron->spike_times[j] =  neuron->spike_times[j-1];      
                }
                neuron->spike_times[i]  = spikeTime;
+               break;
+           }else{
+                continue;
            }
        }
        log_info("Adding new spike at time = %u at index = %u", spikeTime,i);
