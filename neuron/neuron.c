@@ -165,7 +165,7 @@ void neuron_pdevs_update(uint32_t time, index_t neuron_index, bool eit){
     //     neuron_recording_setup_for_next_recording();
 
     // }
-    int32_t ret = neuron_impl_neuron_update(time, neuron_index, external_bias,key,eit);
+    int32_t ret = neuron_impl_neuron_update(time, neuron_index, external_bias,key,eit,use_key);
     
     if(ret == 0){
         log_info("Neuron %u has no more events to process", neuron_index);

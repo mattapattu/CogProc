@@ -286,7 +286,7 @@ static void  neuron_impl_neuron_eit_update(uint32_t time, index_t neuron_index) 
 }
 
 static int32_t  neuron_impl_neuron_update(uint32_t time, index_t neuron_index,
-        input_t external_bias, key_t key,  bool eit) {
+        input_t external_bias, key_t key,  bool eit, bool use_key) {
     // Get the neuron itself
     
     if(eit){
@@ -311,7 +311,7 @@ static int32_t  neuron_impl_neuron_update(uint32_t time, index_t neuron_index,
         //log_info("Calling neuron_model_PDevs_sim");
         //log_info("neuron %u: tl = %u", neuron_index, neuron->tl);
         nextSpikeTime = neuron->spike_times[0];
-        ret = neuron_model_PDevs_sim(neuron, threshold, nextSpikeTime, key, neuron_index, input);
+        ret = neuron_model_PDevs_sim(neuron, threshold, nextSpikeTime, key, neuron_index, input,use_key);
         log_info("neuron_model_PDevs_sim returns %u", ret);
         if(ret == 1){
             continue;

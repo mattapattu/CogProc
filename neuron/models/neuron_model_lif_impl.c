@@ -49,11 +49,12 @@ static uint32_t ta(neuron_t * neuron){
     }
 }
 
-void lambda(neuron_t * neuron, key_t key, uint32_t neuron_index){
+void lambda(neuron_t * neuron, key_t key, uint32_t neuron_index, bool use_key){
     state_t currentState  = neuron->phase;
     uint32_t nextEventTime = neuron->eot;
-
-    if(currentState == 2){
+    
+    if(use_key){
+        if(currentState == 2){
         //clear 32nd bit if packet is spike 
         //nextEventTime = nextEventTime & (~(1 << 31));
         log_info("Sending Spike with key = %u, neuron_index = %u, payload = %u",key,  neuron_index, nextEventTime );
@@ -72,6 +73,8 @@ void lambda(neuron_t * neuron, key_t key, uint32_t neuron_index){
                     spin1_delay_us(1000);
                 }
     }
+    }
+    
 }
 
 int32_t neuron_model_check_pending_ev(neuron_t * neuron){
@@ -94,18 +97,18 @@ int32_t neuron_model_check_pending_ev(neuron_t * neuron){
 
 
 //DEVS PDEVS  simulator
-int32_t neuron_model_PDevs_sim(neuron_t * neuron, int32_t threshold,  uint32_t nextSpikeTime, key_t key, uint32_t neuron_index, input_t input){
+int32_t neuron_model_PDevs_sim(neuron_t * neuron, int32_t threshold,  uint32_t nextSpikeTime, key_t key, uint32_t neuron_index, input_t input, bool use_key){
     if(neuron->tn <= neuron->eit && neuron->tn <=  nextSpikeTime ){
         //Call deltaInt()
         log_info("Executing internal event  at time = %u", neuron->tn);
-        neuron_model_Devs_sim(neuron, 1,nextSpikeTime, threshold, key, neuron_index, input );
+        neuron_model_Devs_sim(neuron, 1,nextSpikeTime, threshold, key, neuron_index, input, use_key);
         
         
     }else if(nextSpikeTime <= neuron->eit &&  nextSpikeTime < neuron->tn ){
         //Call deltaExt()
         neuron->waitCounter = 0;
         log_info("Executing external event at time = %u", nextSpikeTime);
-        neuron_model_Devs_sim(neuron, 2,nextSpikeTime,  threshold, key, neuron_index, input);
+        neuron_model_Devs_sim(neuron, 2,nextSpikeTime,  threshold, key, neuron_index, input, use_key);
         neuron_model_spiketime_pop(neuron);
     }
     // an expected spike has been delayed
@@ -144,10 +147,10 @@ int32_t neuron_model_PDevs_sim(neuron_t * neuron, int32_t threshold,  uint32_t n
 }
 
 //DEVS atomic simulator
-void neuron_model_Devs_sim(neuron_t * neuron, int16_t event_type, uint32_t nextSpikeTime, int32_t threshold, key_t key, uint32_t neuron_index, input_t input){
+void neuron_model_Devs_sim(neuron_t * neuron, int16_t event_type, uint32_t nextSpikeTime, int32_t threshold, key_t key, uint32_t neuron_index, input_t input, bool use_key){
     //event_type 1 - Internal event
     if(event_type == 1 ){
-        lambda(neuron, key, neuron_index);
+        lambda(neuron, key, neuron_index, use_key);
         log_info("Internal event = phase %d expired",neuron->phase);
         neuron->phase  = deltaInt(neuron);
         log_info("New phase after deltaInt = phase %d",neuron->phase);

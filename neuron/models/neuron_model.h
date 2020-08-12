@@ -96,15 +96,15 @@ bool neuron_model_add_spike(neuron_t * neuron, uint32_t  spikeTime);
 
 uint32_t neuron_model_spiketime_pop(neuron_t * neuron);
 
-int32_t neuron_model_PDevs_sim(neuron_t * neuron, int32_t threshold,  uint32_t nextSpikeTime, key_t key, uint32_t neuron_index, input_t input);
+int32_t neuron_model_PDevs_sim(neuron_t * neuron, int32_t threshold,  uint32_t nextSpikeTime, key_t key, uint32_t neuron_index, input_t input, bool use_key);
+
+void neuron_model_Devs_sim(neuron_t * neuron, int16_t event_type, uint32_t nextSpikeTime, int32_t threshold, key_t key, uint32_t neuron_index, input_t input, bool use_key);
 
 void neuron_model_eit_update(neuron_pointer_t neuron, uint32_t time);
 
 int32_t deltaInt(neuron_t * neuron);
 
 int32_t deltaExt(neuron_t * neuron, uint32_t time, int32_t threshold, input_t input);
-
-void neuron_model_Devs_sim(neuron_t * neuron, int16_t event_type, uint32_t nextSpikeTime, int32_t threshold, key_t key, uint32_t neuron_index, input_t input);
 
 void neuron_model_init(neuron_t * neuron);
 
