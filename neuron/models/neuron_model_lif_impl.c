@@ -36,7 +36,7 @@ void neuron_model_set_global_neuron_params(
     // Does Nothing - no params
 }
 
-static uint32_t ta(neuron_t * neuron){
+static float ta(neuron_t * neuron){
     if(neuron->phase == 0){
         return(2147483646);
     }else if(neuron->phase == 1){
@@ -178,7 +178,7 @@ void neuron_model_Devs_sim(neuron_t * neuron, int16_t event_type, uint32_t nextS
         log_info("External event = spike with neuron in phase %d",neuron->phase);
         neuron->phase = deltaExt(neuron, nextSpikeTime, threshold, input);
         log_info("New neuron phase = %d",neuron->phase);
-        neuron->tl = nextSpikeTime;
+        neuron->tl = (float) nextSpikeTime;
         if(ta(neuron) == 2147483646){
             neuron->tn = 2147483646;
         }else{
@@ -212,7 +212,7 @@ void neuron_model_eit_update(neuron_t * neuron, float time){
     if(time < neuron->eit){
         neuron->eit = time;
     }
-    log_info("Updating neuron eit to %u",neuron->eit );
+    log_info("Updating neuron eit to %f",neuron->eit );
 }
 
 int32_t deltaExt(neuron_t * neuron, uint32_t time, int32_t threshold, input_t input) {
