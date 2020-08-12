@@ -102,9 +102,9 @@ bool neuron_initialise(address_t address, address_t recording_address, // EXPORT
 
     // output if this model is expecting to transmit
     if (!use_key) {
-        log_debug("\tThis model is not expecting to transmit as it has no key");
+        log_info("\tThis model is not expecting to transmit as it has no key");
     } else {
-        log_debug("\tThis model is expected to transmit with key = %08x", key);
+        log_info("\tThis model is expected to transmit with key = %u", key);
     }
 
     // Read the neuron details
