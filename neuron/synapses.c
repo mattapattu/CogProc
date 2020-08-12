@@ -203,6 +203,7 @@ static inline void process_fixed_synapses(
     uint32_t time  = -1;  
     uint8_t eit =   -1;
     if(payload == 0){
+        log_info("payload  = 0. Consider as spike from spikearray ");
         //pkt came from sourcearray and is a spike at time t =0
         time = 0;
         eit = 0;

@@ -150,6 +150,7 @@ static inline bool is_something_to_do(
     }
     cpsr = spin1_int_disable();
     // Are there any more spikes to process?
+    in_spiketimes_print_buffer();
     while (in_spikes_get_next_spike(spike) && in_spiketimes_get_next_spiketime(spiketime)) {
         // Enable interrupts while looking up in the master pop table,
         // as this can be slow
@@ -264,7 +265,7 @@ static inline void setup_synaptic_dma_write(
 void multicast_packet_received_callback(uint key, uint payload) {
     //use(payload);
     
-    log_info("Received spike %x with payload %d, DMA Busy = %d", key, payload, dma_busy);
+    log_info("Received spike %x with payload =  %d, DMA Busy = %d", key, payload, dma_busy);
     
      // If there was space to add spike to incoming spike queue
     if (in_spikes_add_spike(key) && in_spiketimes_add_spiketime(payload)) {
