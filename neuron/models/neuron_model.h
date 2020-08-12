@@ -75,16 +75,7 @@ void neuron_model_has_spiked(neuron_t *restrict neuron);
 //!     all the parameters for a specific neuron
 //! \return the membrane voltage for a given neuron with the neuron
 //!     parameters specified in neuron
-float neuron_model_update_membrane_voltage(float time, neuron_t *neuron);
 
-state_t neuron_model_get_voltage(neuron_t *neuron);
-
-
-
-//! \brief printout of state variables i.e. those values that might change
-//! \param[in] neuron: a pointer to a neuron parameter struct which contains all
-//!     the parameters for a specific neuron
-void neuron_model_print_state_variables(const neuron_t *neuron);
 
 //! \brief printout of parameters i.e. those values that don't change
 //! \param[in] neuron: a pointer to a neuron parameter struct which contains all

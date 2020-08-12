@@ -49,7 +49,30 @@ static float ta(neuron_t * neuron){
     }
 }
 
-void lambda(neuron_t * neuron, key_t key, uint32_t neuron_index, bool use_key){
+static float neuron_model_update_membrane_voltage(float time, neuron_t *neuron) {
+    
+    //Check this again!!!! -> Do we update neuron membrane voltage after every state transition ( at t= tl) ?????
+
+    float delta_t = time - neuron->tl;
+    uint32_t simulation_timestep = 1000; //Redo later to read from PyNN
+    uint32_t loopMax = delta_t/simulation_timestep;
+    float exp_factor = neuron->exp_TC;
+    
+    //log_info("exp_TC  = %f, time = %u, tl = %u,  delta_t = %u, loopMax = %u, V_membrane = %f",neuron->exp_TC,time, neuron->tl,   delta_t, loopMax, neuron->V_membrane);
+   
+    if(neuron->V_membrane > neuron->V_rest) {
+          for(uint32_t k = loopMax; k > 1; k--){
+ 	            exp_factor = exp_factor*neuron->exp_TC;
+           }  
+          //log_info("exp_factor = %f, V_membrane = %f", exp_factor, neuron->V_membrane); 
+          neuron->V_membrane = neuron->V_membrane * (2-exp_factor); //Membrane potential is always less than 0, so decay factor > 1 : -45*(2-0.9) = -49.5 
+          //log_info("Updated V_membrane = %f, delta_t = %u, exp_factor = %f", neuron->V_membrane, delta_t, exp_factor);
+    }
+   
+    return(neuron->V_membrane);
+}
+
+static void lambda(neuron_t * neuron, key_t key, uint32_t neuron_index, bool use_key){
     state_t currentState  = neuron->phase;
     uint32_t nextEventTime = neuron->eot;
     
@@ -124,7 +147,6 @@ int32_t neuron_model_PDevs_sim(neuron_t * neuron, int32_t threshold,  uint32_t n
         if(neuron->waitCounter > 30){
             
             log_info("New event has not arrived after waitCounter> 30. Set neuron phase to ERR");
-            //Add graceful exit here
             neuron->phase = 5;
             return(-1);
         }
@@ -136,20 +158,12 @@ int32_t neuron_model_PDevs_sim(neuron_t * neuron, int32_t threshold,  uint32_t n
         log_info("tn = %u, eit = %u, nextSpikeTime = %u", neuron->tn, neuron->eit, nextSpikeTime);
         return(-2);
     }
-    //uint32_t lookahead = 0;
 
-    //REDO with bitmasks
     if(neuron->eit < neuron->tn ){
-        neuron->eot = neuron->eit; //
+        neuron->eot = neuron->eit; 
     }else{
-        neuron->eot  = neuron->tn; // Infinity
+        neuron->eot  = neuron->tn; 
     }
-    // if(neuron->eot == 2147483646){
-    //     //IF next event is at time = infinity, stop PDevs while loop
-    //     return(0);
-    // }else{
-    //     return(1);
-    // }
     return(neuron_model_check_pending_ev(neuron));
 }
 
@@ -257,49 +271,10 @@ int32_t deltaInt(neuron_t * neuron) {
     
 }
 
-float neuron_model_update_membrane_voltage(float time, neuron_t *neuron) {
-    
-    //Check this again!!!! -> Do we update neuron membrane voltage after every state transition ( at t= tl) ?????
-
-    float delta_t = time - neuron->tl;
-    uint32_t simulation_timestep = 1000; //Redo later to read from PyNN
-    uint32_t loopMax = delta_t/simulation_timestep;
-    float exp_factor = neuron->exp_TC;
-    
-    //log_info("exp_TC  = %f, time = %u, tl = %u,  delta_t = %u, loopMax = %u, V_membrane = %f",neuron->exp_TC,time, neuron->tl,   delta_t, loopMax, neuron->V_membrane);
-   
-    if(neuron->V_membrane > neuron->V_rest) {
-          for(uint32_t k = loopMax; k > 1; k--){
- 	            exp_factor = exp_factor*neuron->exp_TC;
-           }  
-          //log_info("exp_factor = %f, V_membrane = %f", exp_factor, neuron->V_membrane); 
-          neuron->V_membrane = neuron->V_membrane * (2-exp_factor); //Membrane potential is always less than 0, so decay factor > 1 : -45*(2-0.9) = -49.5 
-          //log_info("Updated V_membrane = %f, delta_t = %u, exp_factor = %f", neuron->V_membrane, delta_t, exp_factor);
-    }
-   
-    return(neuron->V_membrane);
-}
-
-/* void neuron_model_has_spiked(neuron_t *restrict neuron) {
-    // reset membrane voltage
-    neuron->V_membrane = neuron->V_reset;
-
-    // reset refractory timer
-    //neuron->refract_timer  = neuron->T_refract;
-} */
-
-state_t neuron_model_get_voltage(neuron_t * neuron) {
-    return neuron->V_membrane;
-}
-
 bool neuron_model_add_spike(neuron_t * neuron, uint32_t  spikeTime){
    neuron->spikeCount++;
-   log_info("spikeCount = %u, time = %u", neuron->spikeCount, spikeTime);
    if(neuron->spikeCount > 10){
        log_error("spikeCount = %u, error storing new spike at time = %u. Exiting simulation", neuron->spikeCount, spikeTime);
-    //    for(int32_t k =0;k<10;k++){
-    //        log_info("neuron->spike_times[k]  = %u", neuron->spike_times[k] );
-    //    }
        return FALSE;
    }else if(spikeTime >= neuron->spike_times[neuron->spikeCount-1] ){
        log_info("Adding new spike time = %f at the end of array", spikeTime);
@@ -309,7 +284,6 @@ bool neuron_model_add_spike(neuron_t * neuron, uint32_t  spikeTime){
        uint32_t i;
        for(i = 0; i < 9; i++){
            if(spikeTime < neuron->spike_times[i]){
-               //log_info("Adding new spike: spike_times[%u] = %u ", neuron->spike_times[i],i);
                for(uint32_t j = 9; j >= i; j--){
                       neuron->spike_times[j] =  neuron->spike_times[j-1];      
                }
@@ -357,10 +331,6 @@ int32_t neuron_model_get_phase(neuron_t * neuron){
     return(neuron->phase);
 }
 
-void neuron_model_print_state_variables(const neuron_t *neuron) {
-    log_debug("V membrane    = %11.4k mv", neuron->V_membrane);
-}
-
 void neuron_model_print_parameters(const neuron_t *neuron) {
 
     log_info("V reset       = %11.4k mv", neuron->V_reset);
@@ -371,7 +341,7 @@ void neuron_model_print_parameters(const neuron_t *neuron) {
 
     log_info("exp(-ms/(RC)) = %11.4k [.]", neuron->exp_TC);
 
-    log_info("T refract     = %u timesteps", neuron->T_refract);
+    log_info("T refract  neuron_model_print_state_variables   = %u timesteps", neuron->T_refract);
     log_info("V_membrane     = %f ", neuron->V_membrane);
     
 }
