@@ -224,9 +224,9 @@ int32_t deltaExt(neuron_t * neuron, uint32_t time, int32_t threshold, input_t in
         //log_info("Ignore input as neuron is in threshold/refractory phase");
         return(neuron->phase);
     }else{
-        log_info("external input = %f", input);
+        //log_info("external input = %f", input);
         lif_update(time, neuron, input);
-        log_info("New V_membrane after lif_update = %f, threshold = %f",  neuron->V_membrane,threshold);
+        //log_info("New V_membrane after lif_update = %f, threshold = %f",  neuron->V_membrane,threshold);
         if(neuron->V_membrane >= -50){ //do not hard-code, change this
         //log_info("New neuron state = %d",  2);    
             return(2);
@@ -297,9 +297,9 @@ bool neuron_model_add_spike(neuron_t * neuron, uint32_t  spikeTime){
    log_info("spikeCount = %u, time = %u", neuron->spikeCount, spikeTime);
    if(neuron->spikeCount > 10){
        log_error("spikeCount = %u, error storing new spike at time = %u. Exiting simulation", neuron->spikeCount, spikeTime);
-       for(int32_t k =0;k<10;k++){
-           log_info("neuron->spike_times[k]  = %u", neuron->spike_times[k] );
-       }
+    //    for(int32_t k =0;k<10;k++){
+    //        log_info("neuron->spike_times[k]  = %u", neuron->spike_times[k] );
+    //    }
        return FALSE;
    }else if(spikeTime >= neuron->spike_times[neuron->spikeCount-1] ){
        log_info("Adding new spike time = %f at the end of array", spikeTime);
