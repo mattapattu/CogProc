@@ -208,8 +208,8 @@ static inline void process_fixed_synapses(
         time = 0;
         eit = 0;
     }else{
-        time = payload &  4294967295; 
-        eit =   (payload >> 32) & 1;
+        time = payload &  2147483648; 
+        eit =   (payload >> 31) & 1;
     }
  
     register uint32_t *synaptic_words =
