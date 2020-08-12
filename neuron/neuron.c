@@ -168,10 +168,10 @@ void neuron_do_timestep_update( // EXPORTED
 
         // call the implementation function (boolean for spike)
         bool spike = neuron_impl_do_timestep_update(neuron_index, external_bias);
-
+        log_info("bool spike = %d",spike);
         // If the neuron has spiked
         if (spike) {
-            log_debug("neuron %u spiked at time %u", neuron_index, time);
+            log_info("neuron %u spiked at time %u", neuron_index, time);
 
             // Do any required synapse processing
             synapse_dynamics_process_post_synaptic_event(time, neuron_index);

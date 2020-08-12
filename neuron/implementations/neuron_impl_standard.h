@@ -324,12 +324,13 @@ static bool neuron_impl_do_timestep_update(index_t neuron_index,
                 external_bias, this_neuron);
 
         // determine if a spike should occur
-        log_info("result = %d",result);
+        
  
         bool spike_now =
                 threshold_type_is_above_threshold(result, the_threshold_type);
 
         // If spike occurs, communicate to relevant parts of model
+        log_info("spike_now = %d",spike_now);
         if (spike_now) {
             has_spiked = true;
 
