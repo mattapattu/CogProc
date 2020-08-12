@@ -171,7 +171,7 @@ void neuron_do_timestep_update( // EXPORTED
         log_info("bool spike = %d",spike);
         // If the neuron has spiked
         if (spike) {
-            log_info("neuron %u spiked at time %u", neuron_index, time);
+            log_info("neuron %u key = %u spiked at time %u", neuron_index,key,  time);
 
             // Do any required synapse processing
             synapse_dynamics_process_post_synaptic_event(time, neuron_index);
