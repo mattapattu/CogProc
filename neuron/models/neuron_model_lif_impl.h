@@ -54,22 +54,22 @@ typedef struct neuron_t {
     uint32_t  T_refract;
 
     //! LIF incoming spike times: overwrite after 10 spikes
-    uint32_t spike_times[10];
+    float spike_times[10];
 
     //! LIF incoming spike count
     uint32_t spikeCount;
 
     //! next internal event time
-    uint32_t tn;
+    float tn;
 
     //! last event time
-    uint32_t tl;
+    float tl;
 
     //! EIT
-    uint32_t eit;
+    float eit;
 
     //!EOT
-    uint32_t eot;
+    float eot;
 
     //! Neuron Phases: 0 = Resting,  1 = Subthreshold, 2 = Threshold, 3 = Refractory, 4 = Idle (or Exit), 5 = Error
     uint16_t phase;

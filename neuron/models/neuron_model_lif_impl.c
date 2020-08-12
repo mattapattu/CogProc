@@ -174,7 +174,7 @@ void neuron_model_Devs_sim(neuron_t * neuron, int16_t event_type, uint32_t nextS
         
     }//event_type 2 - External event
     else if(event_type == 2){
-        uint32_t e = nextSpikeTime  - neuron->tl;
+        //uint32_t e = nextSpikeTime  - neuron->tl;
         log_info("External event = spike with neuron in phase %d",neuron->phase);
         neuron->phase = deltaExt(neuron, nextSpikeTime, threshold, input);
         log_info("New neuron phase = %d",neuron->phase);
@@ -190,7 +190,7 @@ void neuron_model_Devs_sim(neuron_t * neuron, int16_t event_type, uint32_t nextS
 }
 
 
-static inline void lif_update(uint32_t time, neuron_t * neuron, input_t input_this_timestep) {
+static inline void lif_update(float time, neuron_t * neuron, input_t input_this_timestep) {
 
     // update membrane voltage
     REAL alpha = input_this_timestep * neuron->R_membrane + neuron->V_rest;
@@ -207,7 +207,7 @@ static inline void lif_update(uint32_t time, neuron_t * neuron, input_t input_th
 
 }
 
-void neuron_model_eit_update(neuron_t * neuron, uint32_t time){
+void neuron_model_eit_update(neuron_t * neuron, float time){
 
     if(time < neuron->eit){
         neuron->eit = time;
@@ -256,11 +256,11 @@ int32_t deltaInt(neuron_t * neuron) {
     
 }
 
-int32_t neuron_model_update_membrane_voltage(uint32_t time, neuron_t *neuron) {
+int32_t neuron_model_update_membrane_voltage(float time, neuron_t *neuron) {
     
     //Check this again!!!! -> Do we update neuron membrane voltage after every state transition ( at t= tl) ?????
 
-    uint32_t delta_t = time - neuron->tl;
+    float delta_t = time - neuron->tl;
     uint32_t simulation_timestep = 1000; //Redo later to read from PyNN
     uint32_t loopMax = delta_t/simulation_timestep;
     float exp_factor = neuron->exp_TC;
@@ -301,7 +301,7 @@ bool neuron_model_add_spike(neuron_t * neuron, uint32_t  spikeTime){
        }
        return FALSE;
    }else if(spikeTime >= neuron->spike_times[neuron->spikeCount-1] ){
-       log_info("Adding new spike time = %u at the end of array", spikeTime);
+       log_info("Adding new spike time = %f at the end of array", spikeTime);
        neuron->spike_times[neuron->spikeCount] = spikeTime;
        return TRUE;
    }else{
@@ -318,7 +318,7 @@ bool neuron_model_add_spike(neuron_t * neuron, uint32_t  spikeTime){
                 continue;
            }
        }
-       log_info("Adding new spike at time = %u at index = %u", spikeTime,i);
+       log_info("Adding new spike at time = %f at index = %u", spikeTime,i);
        return TRUE;
    }
 }
@@ -332,7 +332,7 @@ uint32_t neuron_model_spiketime_pop(neuron_t * neuron){
     }
     neuron->spike_times[9] = 2147483646  ;   
     neuron->spikeCount--;
-    log_info("Removing spike from spike_times = %u, nextspiketime = %u", nextSpike,neuron->spike_times[0]);
+    log_info("Removing spike from spike_times = %f, nextspiketime = %f", nextSpike,neuron->spike_times[0]);
     return(nextSpike);	
 }
 
@@ -348,7 +348,7 @@ void neuron_model_init(neuron_t *neuron){
     for(uint32_t i = 0; i < 10; i++){
         neuron->spike_times[i] = 2147483646;
     }
-    log_info("Initializing neuron params,spikeCount = %u, tl = %u", neuron->spikeCount, neuron->tl);
+    log_info("Initializing neuron params,spikeCount = %u, tl = %f", neuron->spikeCount, neuron->tl);
 
 }
 
