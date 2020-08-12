@@ -267,7 +267,7 @@ static inline void setup_synaptic_dma_write(
 void multicast_packet_received_callback(uint key, uint payload) {
     //use(payload);
     
-    log_info("Received spike %x with payload =  %d, DMA Busy = %d", key, payload, dma_busy);
+    log_info("Received spike %d with payload =  %d, DMA Busy = %d", key, payload, dma_busy);
     
      // If there was space to add spike to incoming spike queue
     if (in_spikes_add_spike(key) && in_spiketimes_add_spiketime(payload)) {
