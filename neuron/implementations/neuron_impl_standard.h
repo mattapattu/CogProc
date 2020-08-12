@@ -290,7 +290,9 @@ static int32_t  neuron_impl_neuron_update(uint32_t time, index_t neuron_index,
          if(!neuron_impl_add_spike(neuron_index, time)){
             log_error("Unable to add spike to neuron %u at time = %u", neuron_index, time);
         }
-        neuron_model_eit_update(neuron, (time+0.1)); //Next input on this synapse can at the earliest occur only after curr_time + refractory_period
+        float eit = (float) time+0.1;
+        log_info("New eit = %f",eit );
+        neuron_model_eit_update(neuron, eit); //Next input on this synapse can at the earliest occur only after curr_time + refractory_period
     }
 
     threshold_type_pointer_t threshold_type =
