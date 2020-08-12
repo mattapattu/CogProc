@@ -73,10 +73,18 @@ void lambda(neuron_t * neuron, key_t key, uint32_t neuron_index){
 }
 
 int32_t neuron_model_check_pending_ev(neuron_t * neuron){
-    log_info("phase = %u, tn = %u, eit = %u, spikeCount = %u", neuron->phase, neuron->tn, neuron->eit, neuron->spikeCount);
-    if(neuron->tn != 2147483646 || neuron->spikeCount > 0 || neuron->eit != 2147483646 ){
+    //log_info("phase = %u, tn = %u, eit = %u, spikeCount = %u", neuron->phase, neuron->tn, neuron->eit, neuron->spikeCount);
+    if(neuron->tn != 2147483646 ||  ||  ){
+        log_info("Next Internal Event < Infinity, continue PDEVS loop");
+        return 1;
+    }else if(neuron->spikeCount > 0){
+        log_info("spikeCount > 0, continue PDEVS loop");
+        return 1;
+    }else if(neuron->eit != 2147483646){
+        log_info("earliest Input Time < Infinity, continue PDEVS loop");
         return 1;
     }else{
+        log_info("no events to process, exit PDEVS loop");
         neuron->phase = 4;
         return 0;
     }
@@ -87,14 +95,14 @@ int32_t neuron_model_check_pending_ev(neuron_t * neuron){
 int32_t neuron_model_PDevs_sim(neuron_t * neuron, int32_t threshold,  uint32_t nextSpikeTime, key_t key, uint32_t neuron_index, input_t input){
     if(neuron->tn <= neuron->eit && neuron->tn <=  nextSpikeTime ){
         //Call deltaInt()
-        log_info("Process internal event  at time = %u", neuron->eit);
+        log_info("Executing internal event  at time = %u", neuron->tn);
         neuron_model_Devs_sim(neuron, 1,nextSpikeTime, threshold, key, neuron_index, input );
         
         
     }else if(nextSpikeTime <= neuron->eit &&  nextSpikeTime < neuron->tn ){
         //Call deltaExt()
         neuron->waitCounter = 0;
-        log_info("Process spike at time = %u", nextSpikeTime);
+        log_info("Executing external event at time = %u", nextSpikeTime);
         neuron_model_Devs_sim(neuron, 2,nextSpikeTime,  threshold, key, neuron_index, input);
         neuron_model_spiketime_pop(neuron);
     }
@@ -139,6 +147,7 @@ void neuron_model_Devs_sim(neuron_t * neuron, int16_t event_type, uint32_t nextS
     if(event_type == 1 ){
         lambda(neuron, key, neuron_index);
         neuron->phase  = deltaInt(neuron);
+        log_info("New neuron phase = %u",neuron->phase);
         neuron->tl = neuron->tn;
         if(ta(neuron) == 2147483646){
             neuron->tn = 2147483646;
@@ -147,18 +156,20 @@ void neuron_model_Devs_sim(neuron_t * neuron, int16_t event_type, uint32_t nextS
             neuron->tn = neuron->tl + ta(neuron);
         }
         
-        log_info("Event 1 , new tl = %u, new tn = %u",neuron->tl,  neuron->tn);
+        //log_info("Event 1 , new tl = %u, new tn = %u",neuron->tl,  neuron->tn);
+        
     }//event_type 2 - External event
     else if(event_type == 2){
         uint32_t e = nextSpikeTime  - neuron->tl;
         neuron->phase = deltaExt(neuron, nextSpikeTime, threshold, input);
+        log_info("New neuron phase = %u",neuron->phase);
         neuron->tl = nextSpikeTime;
         if(ta(neuron) == 2147483646){
             neuron->tn = 2147483646;
         }else{
             neuron->tn = neuron->tl + ta(neuron);
         }
-        log_info("Event 2 , new tl = %u, new tn = %u",neuron->tl,  neuron->tn);
+        //log_info("Event 2 , new tl = %u, new tn = %u",neuron->tl,  neuron->tn);
     }
 
 }
@@ -193,16 +204,17 @@ int32_t deltaExt(neuron_t * neuron, uint32_t time, int32_t threshold, input_t in
 	//log_info("Inh 1: %12.6k, Inh 2: %12.6k", inh_input[0], inh_input[1]);
 
     if(neuron->phase == 2 || neuron->phase == 3){
-        log_info("Ignore input as neuron is in threshold/refractory phase");
+        //log_info("Ignore input as neuron is in threshold/refractory phase");
         return(neuron->phase);
     }else{
         log_info("external input = %f", input);
         lif_update(time, neuron, input);
         log_info("New V_membrane after lif_update = %f, threshold = %d",  neuron->V_membrane,threshold);
         if(neuron->V_membrane >= -50){ //do not hard-code, change this
-            
+        //log_info("New neuron state = %d",  2);    
             return(2);
         }else{
+        //log_info("New neuron state = %d",  1);        
             return(1);
         }
     }
@@ -265,7 +277,7 @@ state_t neuron_model_get_voltage(neuron_t * neuron) {
 
 bool neuron_model_add_spike(neuron_t * neuron, uint32_t  spikeTime){
    neuron->spikeCount++;
-   log_error("spikeCount = %u, time = %u", neuron->spikeCount, spikeTime);
+   log_info("spikeCount = %u, time = %u", neuron->spikeCount, spikeTime);
    if(neuron->spikeCount > 10){
        log_error("spikeCount = %u, error storing new spike at time = %u. Exiting simulation", neuron->spikeCount, spikeTime);
        for(int32_t k =0;k<10;k++){
