@@ -153,7 +153,7 @@ static inline bool is_something_to_do(
     in_spiketimes_print_buffer();
     in_spikes_print_buffer();
     while (in_spikes_get_next_spike(spike) && in_spiketimes_get_next_spiketime(spiketime)) {
-        log_info("From buffer: spike = %u, spiketime = %u", spike, spiketime);
+        log_info("From buffer: spike = %u, spiketime = %u", *spike, *spiketime);
         // Enable interrupts while looking up in the master pop table,
         // as this can be slow
         spin1_mode_restore(cpsr);
