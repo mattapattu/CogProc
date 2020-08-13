@@ -277,7 +277,7 @@ void mc_pkt_recvd_callback(uint key, uint payload) {
 
     uint32_t time = payload &  2147483647; 
     
-    log_info("Received spike %u with payload %u at time = %u", key, payload, time);
+    log_info("Received mc_pkt %u with payload %u at time = %u", key, payload, time);
     multicast_packet_received_callback(key, payload);
        
 }

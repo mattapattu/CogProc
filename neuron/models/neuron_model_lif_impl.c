@@ -121,7 +121,7 @@ int32_t neuron_model_check_pending_ev(neuron_t * neuron){
     //     return 1;
     // }
     else{
-        log_info("eit = %u, no more events to process, set phase to IDLE", neuron->eit);
+        log_info("eit = %f, no more events to process, set phase to IDLE", neuron->eit);
         neuron->phase = 4;
         return 0;
     }
