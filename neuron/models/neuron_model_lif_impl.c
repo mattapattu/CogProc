@@ -23,6 +23,8 @@
 #include <debug.h>
 
 //static int32_t last_update_time = 0;
+#define INFINITY  2147483646
+
 
 //! \brief simple Leaky I&F ODE
 //! \param[in,out] neuron: The neuron to update
@@ -38,9 +40,9 @@ void neuron_model_set_global_neuron_params(
 
 static float ta(neuron_t * neuron){
     if(neuron->phase == 0){
-        return(2147483646);
+        return(INFINITY);
     }else if(neuron->phase == 1){
-        return(2147483646);
+        return(INFINITY);
     }else if(neuron->phase == 2){
         return(0);
     }else if(neuron->phase == 3){
@@ -107,13 +109,13 @@ static void lambda(neuron_t * neuron, key_t key, uint32_t neuron_index, bool use
 
 int32_t neuron_model_check_pending_ev(neuron_t * neuron){
     //log_info("phase = %u, tn = %u, eit = %u, spikeCount = %u", neuron->phase, neuron->tn, neuron->eit, neuron->spikeCount);
-    if(neuron->tn < 2147483646){
+    if(neuron->tn < INFINITY){
         log_info("Next Internal Event < Infinity, continue PDEVS loop");
         return 1;
     }else if(neuron->spikeCount > 0){
         log_info("spikeCount > 0, continue PDEVS loop");
         return 1;
-    }else if(neuron->eit < 2147483646){
+    }else if(neuron->eit < INFINITY){
         log_info("earliest Input Time < Infinity, continue PDEVS loop");
         return 1;
     }else{
@@ -128,7 +130,7 @@ int32_t neuron_model_check_pending_ev(neuron_t * neuron){
 int32_t neuron_model_PDevs_sim(neuron_t * neuron, int32_t threshold,  uint32_t nextSpikeTime, key_t key, uint32_t neuron_index, input_t input, bool use_key){
     if(neuron->tn <= neuron->eit && neuron->tn <=  nextSpikeTime ){
         //Call deltaInt()
-        log_info("Executing internal event  at time = %u", neuron->tn);
+        log_info("Executing internal event =  phase %u expired at time = %u",neuron->phase,  neuron->tn);
         neuron_model_Devs_sim(neuron, 1,nextSpikeTime, threshold, key, neuron_index, input, use_key);
         
         
@@ -141,7 +143,7 @@ int32_t neuron_model_PDevs_sim(neuron_t * neuron, int32_t threshold,  uint32_t n
     }
     // an expected spike has been delayed
     else if(nextSpikeTime > neuron->eit){
-        log_info("New event has not arrived after X clock cycles");
+        //log_info("New event has not arrived after X clock cycles");
         if(neuron->waitCounter > 30){
             
             log_info("New event has not arrived after waitCounter> 30. Set neuron phase to ERR");
@@ -175,11 +177,13 @@ void neuron_model_Devs_sim(neuron_t * neuron, int16_t event_type, uint32_t nextS
         log_info("New phase after deltaInt = phase %d",neuron->phase);
         
         neuron->tl = neuron->tn;
-        if(ta(neuron) == 2147483646){
-            neuron->tn = 2147483646;
+        if(ta(neuron) >= INFINITY){
+            neuron->tn = INFINITY;
+            log_info("Neuron %u next internal event at INFINITY", neuron_index);
         }else{
             //Next phase change = last event time + time-advance(current-phase)
             neuron->tn = neuron->tl + ta(neuron);
+            log_info("Neuron %u next internal event at %u", neuron_index,neuron->tn);
         }
         
         //log_info("Event 1 , new tl = %u, new tn = %u",neuron->tl,  neuron->tn);
@@ -187,14 +191,16 @@ void neuron_model_Devs_sim(neuron_t * neuron, int16_t event_type, uint32_t nextS
     }//event_type 2 - External event
     else if(event_type == 2){
         //uint32_t e = nextSpikeTime  - neuron->tl;
-        log_info("External event = spike with neuron in phase %d",neuron->phase);
+        log_info("External event at time = %f with neuron in phase %d",neuron->phase);
         neuron->phase = deltaExt(neuron, nextSpikeTime, threshold, input);
         log_info("New neuron phase = %d",neuron->phase);
         neuron->tl = (float) nextSpikeTime;
-        if(ta(neuron) == 2147483646){
-            neuron->tn = 2147483646;
+        if(ta(neuron) >= INFINITY){
+            neuron->tn = INFINITY;
+            log_info("Neuron %u next internal event at INFINITY", neuron_index);
         }else{
             neuron->tn = neuron->tl + ta(neuron);
+            log_info("Neuron %u next internal event at %u", neuron_index,neuron->tn);
         }
         //log_info("Event 2 , new tl = %u, new tn = %u",neuron->tl,  neuron->tn);
     }
@@ -303,7 +309,7 @@ uint32_t neuron_model_spiketime_pop(neuron_t * neuron){
     for(uint32_t i = 0; i < 9; i++){
         neuron->spike_times[i] = neuron->spike_times[i+1];
     }
-    neuron->spike_times[9] = 2147483646  ;   
+    neuron->spike_times[9] = INFINITY  ;   
     neuron->spikeCount--;
     log_info("Removing spike from spike_times = %f, nextspiketime = %f", nextSpike,neuron->spike_times[0]);
     return(nextSpike);	
@@ -312,14 +318,14 @@ uint32_t neuron_model_spiketime_pop(neuron_t * neuron){
 void neuron_model_init(neuron_t *neuron){
     neuron->spikeCount = 0;
     neuron->tl = 0;
-    neuron->tn = 2147483646;
+    neuron->tn = INFINITY;
     neuron->eit = 0;
     neuron->eot = 0;
     neuron->phase = 0;
     neuron->waitCounter = 0;
     neuron->V_membrane = neuron->V_rest;
     for(uint32_t i = 0; i < 10; i++){
-        neuron->spike_times[i] = 2147483646;
+        neuron->spike_times[i] = INFINITY;
     }
     log_info("Initializing neuron params,spikeCount = %u, tl = %f", neuron->spikeCount, neuron->tl);
 
