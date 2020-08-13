@@ -336,6 +336,7 @@ static void dma_complete_callback(uint unused, uint tag) {
         // it's going to be processed
         bool write_back_now = false;
         time = *spiketime;
+        log_info("Processing mc_pkt (%u,%u) after dma read", current_buffer->originating_spike, time);
         if (!synapses_process_synaptic_row(
                 time, current_buffer->row, &write_back_now)) {
             log_error(
