@@ -235,7 +235,9 @@ static void setup_synaptic_dma_read(dma_buffer *current_buffer,
 
     if(setup_done){
         log_info("setup_done = TRUE, process synaptic row");    
-         //dma_buffer *next_buffer = &dma_buffers[next_buffer_to_fill];            
+         //dma_buffer *next_buffer = &dma_buffers[next_buffer_to_fill]; 
+        uint32_t current_buffer_index = buffer_being_read;
+        dma_buffer *current_buffer = &dma_buffers[current_buffer_index];            
             bool write_back;
             time = *spiketime; //spiketime = payload = eit bit + time
             synapses_process_synaptic_row(
