@@ -153,7 +153,7 @@ static inline bool is_something_to_do(
     //in_spiketimes_print_buffer();
     //in_spikes_print_buffer();
     while (in_spikes_get_next_spike(spike) && in_spiketimes_get_next_spiketime(spiketime)) {
-        //log_info("From buffer: spike = %u, spiketime = %u", *spike, *spiketime);
+        log_info("From buffer: spike = %u, spiketime = %u", *spike, *spiketime);
         // Enable interrupts while looking up in the master pop table,
         // as this can be slow
         spin1_mode_restore(cpsr);
@@ -212,7 +212,7 @@ static void setup_synaptic_dma_read(dma_buffer *current_buffer,
             *n_synapse_processes += dma_n_spikes;
             dma_n_rewires = 0;
             dma_n_spikes = 0;
-            log_info("Reusing row to process mc_pkt"); 
+            //log_info("Reusing row to process mc_pkt"); 
         } else if (n_bytes_to_transfer == 0) {
             log_info("Processing mc_pkt, row is in DTCM"); 
             // If the row is in DTCM, process the row now
