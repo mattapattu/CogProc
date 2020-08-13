@@ -293,9 +293,9 @@ static int32_t  neuron_impl_neuron_update(uint32_t time, index_t neuron_index,
             log_error("Unable to add spike to neuron %u at time = %u", neuron_index, time);
         }
         //Next input on this synapse can at the earliest occur only after curr_time + refractory_period
-        float eit = (float) time + 0.1; // Do not hardcode refraactory period, change this
-        log_info("New eit = %f",eit );
-        neuron_model_eit_update(neuron, eit); 
+        //float eit = (float) time + 0.1; // Do not hardcode refraactory period, change this
+        //log_info("New eit = %f",eit );
+        //neuron_model_eit_update(neuron, eit); 
     }
 
     threshold_type_pointer_t threshold_type =

@@ -115,10 +115,12 @@ int32_t neuron_model_check_pending_ev(neuron_t * neuron){
     }else if(neuron->spikeCount > 0){
         log_info("spikeCount > 0, continue PDEVS loop");
         return 1;
-    }else if(neuron->eit < INFINITY){
-        log_info("earliest Input Time = %f < INFINITY, continue PDEVS loop",neuron->eit );
-        return 1;
-    }else{
+    }
+    // else if(neuron->eit < INFINITY){
+    //     log_info("earliest Input Time = %f < INFINITY, continue PDEVS loop",neuron->eit );
+    //     return 1;
+    // }
+    else{
         log_info("eit = %u, no more events to process, set phase to IDLE", neuron->eit);
         neuron->phase = 4;
         return 0;
