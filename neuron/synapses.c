@@ -230,7 +230,7 @@ static inline void process_fixed_synapses(
         // (should auto increment pointer in single instruction)
         uint32_t synaptic_word = *synaptic_words++;
 
-        //log_info("synaptic_word  = %u", synaptic_word);
+        log_info("synaptic_word  = %u", synaptic_word);
 
         // Extract components from this word
         uint32_t delay =

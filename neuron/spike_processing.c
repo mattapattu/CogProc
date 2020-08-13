@@ -234,14 +234,18 @@ static void setup_synaptic_dma_read(dma_buffer *current_buffer,
     }
 
     if(setup_done){
+        log_info("setup_done = TRUE, process synaptic row");    
         synaptic_row_t single_fixed_synapse =
                     direct_synapses_get_direct_synapse(row_address);
+                
             bool write_back;
             time = *spiketime; //spiketime = payload = eit bit + time
             synapses_process_synaptic_row(
                     time, single_fixed_synapse, &write_back);
+    }else{
+        log_info("setup_done = FALSE, go back to dma_complete_callback"); 
     }
-    
+
     spike_processing_count++;
 }
 
