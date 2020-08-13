@@ -203,7 +203,7 @@ static void setup_synaptic_dma_read(dma_buffer *current_buffer,
     while (!setup_done && is_something_to_do(&row_address,
             &n_bytes_to_transfer, &spike, &dma_n_rewires, &dma_n_spikes, spiketime)) {
         log_info("While loop: mc_pkt (%u,%u)", spike, *spiketime);        
-        if (current_buffer != NULL &&
+        /* if (current_buffer != NULL &&
                 current_buffer->sdram_writeback_address == row_address) {
             // If we can reuse the row, add on what we can use it for
             // Note that only one of these will have a value of 1 with the
@@ -212,9 +212,10 @@ static void setup_synaptic_dma_read(dma_buffer *current_buffer,
             *n_synapse_processes += dma_n_spikes;
             dma_n_rewires = 0;
             dma_n_spikes = 0;
-            //log_info("Reusing row to process mc_pkt"); 
-        } else if (n_bytes_to_transfer == 0) {
-            log_info("Processing mc_pkt, row is in DTCM"); 
+            log_info("Reusing row to process mc_pkt. Exiting setup_synaptic_dma_read"); 
+        } */
+         if (n_bytes_to_transfer == 0) {
+            log_info("Processing mc_pkt, row is in DTCM. Exiting setup_synaptic_dma_read"); 
             // If the row is in DTCM, process the row now
             synaptic_row_t single_fixed_synapse =
                     direct_synapses_get_direct_synapse(row_address);
@@ -225,7 +226,7 @@ static void setup_synaptic_dma_read(dma_buffer *current_buffer,
             dma_n_rewires = 0;
             dma_n_spikes = 0;
         } else {
-            log_info("Start DMA for mc_pkt"); 
+            log_info("Start DMA for mc_pkt. Exiting setup_synaptic_dma_read"); 
             // If the row is in SDRAM, set up the transfer and we are done
             do_dma_read(row_address, n_bytes_to_transfer, spike);
             setup_done = true;
@@ -299,7 +300,8 @@ static void dma_complete_callback(uint unused, uint tag) {
     // increment the dma complete count for provenance generation
     dma_complete_count++;
 
-    log_debug("DMA transfer complete at time %u with tag %u", time, tag);
+    //log_debug("DMA transfer complete at time %u with tag %u", time, tag);
+    log_info("DMA transfer complete at time %u with tag %u", time, tag);
 
     // Get pointer to current buffer
     uint32_t current_buffer_index = buffer_being_read;
@@ -336,7 +338,7 @@ static void dma_complete_callback(uint unused, uint tag) {
         // it's going to be processed
         bool write_back_now = false;
         time = *spiketime;
-        log_info("Processing mc_pkt (%u,%u) after dma read", current_buffer->originating_spike, time);
+        log_info("Processing mc_pkt (%u,%u) after dma read, n_spikes = %u", current_buffer->originating_spike, time,n_spikes);
         if (!synapses_process_synaptic_row(
                 time, current_buffer->row, &write_back_now)) {
             log_error(
