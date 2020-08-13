@@ -208,7 +208,7 @@ static inline void process_fixed_synapses(
         time = 0;
         eit = 0;
     }else{
-        time = payload &  2147483648; 
+        time = payload &  2147483647; 
         eit =   (payload >> 31) & 1;
     }
  
