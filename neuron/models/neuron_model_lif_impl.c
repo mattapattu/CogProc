@@ -191,7 +191,7 @@ void neuron_model_Devs_sim(neuron_t * neuron, int16_t event_type, uint32_t nextS
     }//event_type 2 - External event
     else if(event_type == 2){
         //uint32_t e = nextSpikeTime  - neuron->tl;
-        log_info("External event at time = %f with neuron in phase %d",neuron->phase);
+        log_info("External event at time = %f with neuron in phase %d",nextSpikeTime, neuron->phase);
         neuron->phase = deltaExt(neuron, nextSpikeTime, threshold, input);
         log_info("New neuron phase = %d",neuron->phase);
         neuron->tl = (float) nextSpikeTime;
