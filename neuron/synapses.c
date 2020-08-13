@@ -31,6 +31,9 @@
 #include "profile_tags.h"
 #endif //PROFILER_ENABLED
 
+#define TIME_CONV 2147483647
+
+
 //! Globals required for synapse benchmarking to work.
 uint32_t  num_fixed_pre_synaptic_events = 0;
 
@@ -208,7 +211,7 @@ static inline void process_fixed_synapses(
         time = 0;
         eit = 0;
     }else{
-        time = payload &  2147483647; 
+        time = payload &  TIME_CONV; 
         eit =   (payload >> 31) & 1;
     }
  
@@ -374,7 +377,7 @@ uint32_t synapses_get_ring_buffer_input(uint32_t time, uint32_t neuron_index){
 bool synapses_process_synaptic_row(
         uint32_t payload, synaptic_row_t row, bool *write_back) {
 
-    uint32_t time = payload &  4294967295; 
+    uint32_t time = payload &  TIME_CONV; 
 
 
     // Get address of non-plastic region from row
