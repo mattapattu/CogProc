@@ -222,7 +222,7 @@ static inline void process_fixed_synapses(
 
     num_fixed_pre_synaptic_events += fixed_synapse;
 
-    log_info("New MC pkt: eit = %u, time = %u,  payload = %u", eit, time, payload);
+    log_info("New mc_pkt (%u,%u): eit = %u, time = %u", payload, eit, time);
 
     
     for (; fixed_synapse > 0; fixed_synapse--) {

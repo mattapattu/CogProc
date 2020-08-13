@@ -202,7 +202,7 @@ static void setup_synaptic_dma_read(dma_buffer *current_buffer,
     bool setup_done = false;
     while (!setup_done && is_something_to_do(&row_address,
             &n_bytes_to_transfer, &spike, &dma_n_rewires, &dma_n_spikes, spiketime)) {
-        log_info("While loop: mc_pkt = %u, payload = %u", spike, *spiketime);        
+        log_info("While loop: mc_pkt (%u,%u)", spike, *spiketime);        
         if (current_buffer != NULL &&
                 current_buffer->sdram_writeback_address == row_address) {
             // If we can reuse the row, add on what we can use it for
@@ -212,7 +212,7 @@ static void setup_synaptic_dma_read(dma_buffer *current_buffer,
             *n_synapse_processes += dma_n_spikes;
             dma_n_rewires = 0;
             dma_n_spikes = 0;
-            log_info("Not processing mc_pkt"); 
+            log_info("Reusing row to process mc_pkt"); 
         } else if (n_bytes_to_transfer == 0) {
             log_info("Processing mc_pkt, row is in DTCM"); 
             // If the row is in DTCM, process the row now
@@ -225,7 +225,7 @@ static void setup_synaptic_dma_read(dma_buffer *current_buffer,
             dma_n_rewires = 0;
             dma_n_spikes = 0;
         } else {
-            log_info("Processing mc_pkt"); 
+            log_info("Start DMA for mc_pkt"); 
             // If the row is in SDRAM, set up the transfer and we are done
             do_dma_read(row_address, n_bytes_to_transfer, spike);
             setup_done = true;
@@ -270,7 +270,7 @@ static inline void setup_synaptic_dma_write(
 void multicast_packet_received_callback(uint key, uint payload) {
     //use(payload);
     
-    log_info("Processing mc_pkt %u with payload =  %u, DMA Busy = %d", key, payload, dma_busy);
+    log_info("Processing mc_pkt (%u,%u), DMA Busy = %d", key, payload, dma_busy);
     
      // If there was space to add spike to incoming spike queue
     if (in_spikes_add_spike(key) && in_spiketimes_add_spiketime(payload)) {
