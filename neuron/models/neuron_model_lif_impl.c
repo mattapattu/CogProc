@@ -75,7 +75,7 @@ static float neuron_model_update_membrane_voltage(float time, neuron_t *neuron) 
 static void lambda(neuron_t * neuron, key_t key, uint32_t neuron_index, bool use_key){
     state_t currentState  = neuron->phase;
     uint32_t nextEventTime = (uint32_t) neuron->eot;
-    
+    log_info("lambda: neuron %u currentState = %u, nextEventTime = %u",neuron_index,  currentState, nextEventTime );
     if(use_key){
         if(currentState == 2){
         //clear 32nd bit if packet is spike 
@@ -116,7 +116,7 @@ int32_t neuron_model_check_pending_ev(neuron_t * neuron){
         log_info("spikeCount > 0, continue PDEVS loop");
         return 1;
     }else if(neuron->eit < INFINITY){
-        log_info("earliest Input Time < INFINITY, continue PDEVS loop");
+        log_info("earliest Input Time = %f < INFINITY, continue PDEVS loop",neuron->eit );
         return 1;
     }else{
         log_info("eit = %u, no more events to process, set phase to IDLE", neuron->eit);
@@ -319,7 +319,7 @@ void neuron_model_init(neuron_t *neuron){
     neuron->spikeCount = 0;
     neuron->tl = 0;
     neuron->tn = INFINITY;
-    neuron->eit = 0;
+    neuron->eit = INFINITY;
     neuron->eot = 0;
     neuron->phase = 0;
     neuron->waitCounter = 0;
