@@ -242,42 +242,41 @@ static inline void process_fixed_synapses(
         
         
         uint32_t neuron_index = combined_synapse_neuron_index & 255;
-        log_info("neuron_index = %u, combined_synapse_neuron_index  = %u, time = %u,  delay = %u, weight = %u",neuron_index, combined_synapse_neuron_index, time, delay, weight);
+        
         time = time+delay;
-        //msg is spike
         
             
-            // Convert into ring buffer offset
-            uint32_t ring_buffer_index = synapses_get_ring_buffer_index_combined(
-                time, combined_synapse_neuron_index,
-                synapse_type_index_bits);
-        
-            //
-            // Add weight to current ring buffer value
-            uint32_t accumulation = ring_buffers[ring_buffer_index] + weight;
+        // Convert into ring buffer offset
+        uint32_t ring_buffer_index = synapses_get_ring_buffer_index_combined(
+            time, combined_synapse_neuron_index,
+            synapse_type_index_bits);
+        log_info("Setting ring_buffer_index  = %u for neuron_index = %u,  time = %u,  delay = %u, weight = %u", ring_buffer_index, neuron_index, time, delay, weight);
+        //
+        // Add weight to current ring buffer value
+        uint32_t accumulation = ring_buffers[ring_buffer_index] + weight;
 
-            // If 17th bit is set, saturate accumulator at UINT16_MAX (0xFFFF)
-            // **NOTE** 0x10000 can be expressed as an ARM literal,
-            //          but 0xFFFF cannot.  Therefore, we use (0x10000 - 1)
-            //          to obtain this value
-            uint32_t sat_test = accumulation & 0x10000;
-            if (sat_test) {
-                accumulation = sat_test - 1;
-                saturation_count++;
-            }
+        // If 17th bit is set, saturate accumulator at UINT16_MAX (0xFFFF)
+        // **NOTE** 0x10000 can be expressed as an ARM literal,
+        //          but 0xFFFF cannot.  Therefore, we use (0x10000 - 1)
+        //          to obtain this value
+        uint32_t sat_test = accumulation & 0x10000;
+        if (sat_test) {
+            accumulation = sat_test - 1;
+            saturation_count++;
+        }
 
-            // Store saturated value back in ring-buffer
-            ring_buffers[ring_buffer_index] = accumulation;
-            log_info("Calling neuron_pdevs_update at time  = %u", time);
-            if(eit == 0){
-                neuron_pdevs_update(time, neuron_index,FALSE);
-            } //msg is EIT 
-            else if(eit == 1){
-                //log_info("Calling neuron_eit_update at time  = %u", time);
-                neuron_pdevs_update(time, neuron_index,TRUE);
-            } else{
-                log_error("Unknown message recevied");
-            }
+        // Store saturated value back in ring-buffer
+        ring_buffers[ring_buffer_index] = accumulation;
+        log_info("Calling PDEVS_Sim() at time  = %u", time);
+        if(eit == 0){
+            neuron_pdevs_update(time, neuron_index,FALSE);
+        } //msg is EIT 
+        else if(eit == 1){
+            //log_info("Calling neuron_eit_update at time  = %u", time);
+            neuron_pdevs_update(time, neuron_index,TRUE);
+        } else{
+            log_error("Unknown message recevied");
+        }
     
 
     }
@@ -365,7 +364,7 @@ uint32_t synapses_get_ring_buffer_input(uint32_t time, uint32_t neuron_index){
                             ring_buffers[ring_buffer_index],
                             ring_buffer_to_input_left_shifts[0]);
     ring_buffers[ring_buffer_index] = 0;                                        
-    log_info("state = %u, ring_buffer_index = %u, input = %u",state, ring_buffer_index, input );
+    log_info("Fetching ring_buffer_index = %u, input = %u",ring_buffer_index, input );
     // Re-enable the interrupts
     spin1_mode_restore(state);
 
