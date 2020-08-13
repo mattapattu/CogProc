@@ -130,14 +130,14 @@ int32_t neuron_model_check_pending_ev(neuron_t * neuron){
 int32_t neuron_model_PDevs_sim(neuron_t * neuron, int32_t threshold,  uint32_t nextSpikeTime, key_t key, uint32_t neuron_index, input_t input, bool use_key){
     if(neuron->tn <= neuron->eit && neuron->tn <=  nextSpikeTime ){
         //Call deltaInt()
-        log_info("Executing internal event =  phase %u expired at tn = %u",neuron->phase,  neuron->tn);
+        //log_info("Executing internal event =  phase %u expired at tn = %u",neuron->phase,  neuron->tn);
         neuron_model_Devs_sim(neuron, 1,nextSpikeTime, threshold, key, neuron_index, input, use_key);
         
         
     }else if(nextSpikeTime <= neuron->eit &&  nextSpikeTime < neuron->tn ){
         //Call deltaExt()
         neuron->waitCounter = 0;
-        log_info("Executing external event at time = %u", nextSpikeTime);
+        //log_info("Executing external event at time = %u", nextSpikeTime);
         neuron_model_Devs_sim(neuron, 2,nextSpikeTime,  threshold, key, neuron_index, input, use_key);
         neuron_model_spiketime_pop(neuron);
     }
@@ -172,7 +172,7 @@ void neuron_model_Devs_sim(neuron_t * neuron, int16_t event_type, uint32_t nextS
     //event_type 1 - Internal event
     if(event_type == 1 ){
         lambda(neuron, key, neuron_index, use_key);
-        log_info("Neuron %u internal event: phase %d expired at tn=%u",neuron_index, neuron->phase, neuron->tn);
+        log_info("Neuron %u internal event: phase %d expired at tn=%f",neuron_index, neuron->phase, neuron->tn);
         neuron->phase  = deltaInt(neuron);
         //log_info("New phase after deltaInt = phase %d",neuron->phase);
         
@@ -183,7 +183,7 @@ void neuron_model_Devs_sim(neuron_t * neuron, int16_t event_type, uint32_t nextS
         }else{
             //Next phase change = last event time + time-advance(current-phase)
             neuron->tn = neuron->tl + ta(neuron);
-            log_info("Neuron %u: update tn = %u", neuron_index,neuron->tn);
+            log_info("Neuron %u: update tn = %f", neuron_index,neuron->tn);
         }
         
         //log_info("Event 1 , new tl = %u, new tn = %u",neuron->tl,  neuron->tn);
@@ -200,7 +200,7 @@ void neuron_model_Devs_sim(neuron_t * neuron, int16_t event_type, uint32_t nextS
             log_info("Neuron %u: update tn = INFINITY", neuron_index);
         }else{
             neuron->tn = neuron->tl + ta(neuron);
-            log_info("Neuron %u: update tn = %u", neuron_index,neuron->tn);
+            log_info("Neuron %u: update tn = %f", neuron_index,neuron->tn);
         }
         //log_info("Event 2 , new tl = %u, new tn = %u",neuron->tl,  neuron->tn);
     }
