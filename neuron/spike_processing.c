@@ -313,10 +313,7 @@ static void dma_complete_callback(uint unused, uint tag) {
     // to 1 here, with the other being 0.  We take a copy of the count and this
     // is the value added to for this processing, as setup_synaptic_dma will
     // count repeats of the current spike
-    uint32_t n_rewires = dma_n_rewires;
-    uint32_t n_spikes = dma_n_spikes;
-    uint32_t *spiketime;
-    setup_synaptic_dma_read(current_buffer, &n_rewires, &n_spikes, spiketime);
+    
 
     // Assume no write back but assume any write back is plastic only
     bool write_back = false;
@@ -330,9 +327,34 @@ static void dma_complete_callback(uint unused, uint tag) {
             n_successful_rewires++;
         }
     }
+    time = *spiketime;
+    log_info("Processing mc_pkt (%u,%u) after dma read, n_spikes = %u", current_buffer->originating_spike, time,n_spikes);
+    if (!synapses_process_synaptic_row(
+            time, current_buffer->row, &write_back_now)) {
+        log_error(
+                "Error processing spike 0x%.8x for address 0x%.8x"
+                " (local=0x%.8x)",
+                current_buffer->originating_spike,
+                current_buffer->sdram_writeback_address,
+                current_buffer->row);
+
+        // Print out the row for debugging
+        for (uint32_t i = 0;
+                i < (current_buffer->n_bytes_transferred >> 2); i++) {
+            log_error("%u: 0x%.8x", i, current_buffer->row[i]);
+        }
+        rt_error(RTE_SWERR);
+    }
+
+    write_back |= write_back_now;
+
+    uint32_t n_rewires = dma_n_rewires;
+    uint32_t n_spikes = dma_n_spikes;
+    uint32_t *spiketime;
+    setup_synaptic_dma_read(current_buffer, &n_rewires, &n_spikes, spiketime);
 
     // Process synaptic row repeatedly for any upcoming spikes
-    while (n_spikes > 0) {
+    /* while (n_spikes > 0) {
 
         // Process synaptic row, writing it back if it's the last time
         // it's going to be processed
@@ -358,7 +380,7 @@ static void dma_complete_callback(uint unused, uint tag) {
 
         write_back |= write_back_now;
         n_spikes--;
-    }
+    } */
 
     if (write_back) {
         setup_synaptic_dma_write(current_buffer_index, plastic_only);
