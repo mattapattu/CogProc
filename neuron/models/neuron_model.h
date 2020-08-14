@@ -26,7 +26,6 @@
 #define _NEURON_MODEL_H_
 
 #include <common/neuron-typedefs.h>
-#include <neuron/threshold_types/threshold_type.h>
 
 //! Forward declaration of neuron type (creates a definition for a pointer to a
 //! neuron parameter struct

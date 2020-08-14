@@ -17,8 +17,6 @@
 //! \file
 //! \brief Leaky Integrate and Fire neuron implementation
 #include "neuron_model_lif_impl.h"
-#include <neuron/threshold_types/threshold_type.h>
-
 
 #include <debug.h>
 

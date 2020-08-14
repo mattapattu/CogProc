@@ -95,7 +95,7 @@ static uint32_t n_successful_rewires = 0;
 //! \param[in] row_address: Where in SDRAM to read the row from
 //! \param[in] n_bytes_to_transfer: The size of the synaptic row
 //! \param[in] spike: The spike that triggered this read
-static void do_dma_read(
+static inline void do_dma_read(
         address_t row_address, size_t n_bytes_to_transfer, spike_t spike) {
     // Write the SDRAM address of the plastic region and the
     // Key of the originating spike to the beginning of DMA buffer
@@ -252,7 +252,7 @@ static void setup_synaptic_dma_read(dma_buffer *current_buffer,
 //! \param[in] dma_buffer_index: Index of DMA buffer to use
 //! \param[in] plastic_only: If false, write the whole synaptic row.
 //!     If true, only write the plastic data region of the synaptic row.
-static void setup_synaptic_dma_write(
+static inlie void setup_synaptic_dma_write(
         uint32_t dma_buffer_index, bool plastic_only) {
     // Get pointer to current buffer
     dma_buffer *buffer = &dma_buffers[dma_buffer_index];
