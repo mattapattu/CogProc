@@ -252,7 +252,7 @@ static void setup_synaptic_dma_read(dma_buffer *current_buffer,
 //! \param[in] dma_buffer_index: Index of DMA buffer to use
 //! \param[in] plastic_only: If false, write the whole synaptic row.
 //!     If true, only write the plastic data region of the synaptic row.
-static inlie void setup_synaptic_dma_write(
+static inline void setup_synaptic_dma_write(
         uint32_t dma_buffer_index, bool plastic_only) {
     // Get pointer to current buffer
     dma_buffer *buffer = &dma_buffers[dma_buffer_index];
