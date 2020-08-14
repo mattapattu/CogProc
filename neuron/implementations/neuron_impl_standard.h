@@ -56,6 +56,8 @@ enum bitfield_recording_indices {
 // This import depends on variables defined above
 #include <neuron/neuron_recording.h>
 
+#define deltaT 1 // 1 millisecond
+
 //! Array of neuron states
 static neuron_t *neuron_array;
 
@@ -289,7 +291,7 @@ static int32_t  neuron_impl_neuron_update(uint32_t time, index_t neuron_index,
         log_info("New eit = %f",eit );
         neuron_model_eit_update(neuron, time);
     }else{
-         if(!neuron_impl_add_spike(neuron_index, time)){
+        if(!neuron_impl_add_spike(neuron_index, time)){
             log_error("Unable to add spike to neuron %u at time = %u", neuron_index, time);
         }
         //Next input on this synapse can at the earliest occur only after curr_time + refractory_period
@@ -312,6 +314,9 @@ static int32_t  neuron_impl_neuron_update(uint32_t time, index_t neuron_index,
         //log_info("Calling neuron_model_PDevs_sim");
         //log_info("neuron %u: tl = %u", neuron_index, neuron->tl);
         nextSpikeTime = neuron->spike_times[0];
+        if(neuron->lastProcessedSpikeTime - nextSpikeTime < deltaT){
+             nextSpikeTime  = neuron->lastProcessedSpikeTime + deltaT;
+         }
         ret = neuron_model_PDevs_sim(neuron, threshold, nextSpikeTime, key, neuron_index, input,use_key);
         log_info("neuron_model_PDevs_sim returns %u", ret);
         if(ret == 1){

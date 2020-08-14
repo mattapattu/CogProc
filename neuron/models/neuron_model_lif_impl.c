@@ -141,7 +141,7 @@ int32_t neuron_model_PDevs_sim(neuron_t * neuron, int32_t threshold,  uint32_t n
         neuron->waitCounter = 0;
         //log_info("Executing external event at time = %u", nextSpikeTime);
         neuron_model_Devs_sim(neuron, 2,nextSpikeTime,  threshold, key, neuron_index, input, use_key);
-        neuron_model_spiketime_pop(neuron);
+        neuron->lastProcessedSpikeTime = neuron->neuron_model_spiketime_pop(neuron);
     }
     // an expected spike has been delayed
     else if(nextSpikeTime > neuron->eit){
@@ -326,6 +326,7 @@ void neuron_model_init(neuron_t *neuron){
     neuron->phase = 0;
     neuron->waitCounter = 0;
     neuron->V_membrane = neuron->V_rest;
+    neuron->lastProcessedSpikeTime = 0;
     for(uint32_t i = 0; i < 10; i++){
         neuron->spike_times[i] = INFINITY;
     }
