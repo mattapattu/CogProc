@@ -312,7 +312,7 @@ void neuron_model_init(neuron_t *neuron){
 
 }
 
-int32_t neuron_model_get_phase(neuron_t * neuron){
+uint8_t neuron_model_get_phase(neuron_t * neuron){
     return(neuron->phase);
 }
 
