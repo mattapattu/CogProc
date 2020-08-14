@@ -157,8 +157,8 @@ int32_t neuron_model_PDevs_sim(neuron_t * neuron, int32_t threshold,  uint32_t n
         
     } */
     else{
-        log_info("Cannot process nextspike or next internal event");
-        log_info("tn = %f, eit = %f, nextSpikeTime = %f", neuron->tn, neuron->eit, nextSpikeTime);
+        log_info("Cannot process nextspike or the next internal event");
+        log_info("tn = %f, eit = %f, nextSpikeTime = %f, spikeCount = %u", neuron->tn, neuron->eit, nextSpikeTime, neuron->spikeCount);
         return(-1);
     }
 
