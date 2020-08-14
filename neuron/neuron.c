@@ -102,9 +102,9 @@ bool neuron_initialise(address_t address, address_t recording_address, // EXPORT
 
     // output if this model is expecting to transmit
     if (!use_key) {
-        log_info("\tThis model is not expecting to transmit as it has no key");
+        //log_info("\tThis model is not expecting to transmit as it has no key");
     } else {
-        log_info("\tThis model is expected to transmit with key = %u", key);
+        //log_info("\tThis model is expected to transmit with key = %u", key);
     }
 
     // Read the neuron details
@@ -167,11 +167,9 @@ void neuron_pdevs_update(uint32_t time, index_t neuron_index, bool eit){
     // }
     int32_t ret = neuron_impl_neuron_update(time, neuron_index, external_bias,key,eit,use_key);
     
-    if(ret == 0){
-        log_info("Neuron %u has no more events to process", neuron_index);
-    }else if(ret == -1){
-        log_info("An expected input msg on neuron %u has not arrived on time", neuron_index);
-    }
+    // if(ret == 0){
+    //     log_info("Neuron %u has no more events to process", neuron_index);
+    // }
         
     if(neuron_impl_check_sim_end(n_neurons)){
         log_info("Calling end_sim for graceful exit");
