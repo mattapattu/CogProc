@@ -257,31 +257,34 @@ for (index_t n = 0; n < n_neurons; n++) {
 
 static bool neuron_impl_check_sim_end(uint32_t n_neurons){
     bool endSim = false;
-    bool err = false;
+    //bool err = false;
     if(in_spiketimes_not_empty()){
-        log("in_spiketimes is not empty. Checking for neuron IDLE states");
-        
+        log("in_spiketimes is not empty. ");
+        return(false);
     }else{
         log("in_spiketimes is empty. Checking for neuron IDLE states");
         endSim = true;
         for (index_t n = 0; n < n_neurons; n++) {
-        if(neuron_model_get_phase(&neuron_array[n]) == 4){
-            endSim = endSim && true;
-        }else if(neuron_model_get_phase(&neuron_array[n]) == 5){ // Remove ERR ? Check later.
+            if(neuron_model_get_phase(&neuron_array[n]) == 4){
+                endSim = endSim && true;
+            }
+        /* else if(neuron_model_get_phase(&neuron_array[n]) == 5){ // Remove ERR ? Check later.
             err = true;
             break;
+        } */
+        if(err){
+            log_info("Call end sim as neuron in Error phase");
+            return(err);
+        }else if(endSim){
+            log_info("All neurons in Idle state. Call end_sim");
+            return(endSim);
+        }
+        }else{
+            log_info("Not all neurons in Idle state.");
+            return(false);
         }
     }
-    if(err){
-        log_info("Call end sim as neuron in Error phase");
-        return(err);
-    }else if(endSim){
-        log_info("All neurons in Idle state. Call end_sim");
-        return(endSim);
-    }
-    }else{
-        return(false);
-    }
+    
     
 }
 
