@@ -82,29 +82,18 @@ static void lambda(neuron_t * neuron, key_t key, uint32_t neuron_index, bool use
         if(neuron->phase == 2){
         //clear 32nd bit if packet is spike 
         //nextEventTime = nextEventTime & (~(1 << 31));
-       log_info("Sending Spike with key = %u, neuron_index = %u, payload = %u",key,  neuron_index, nextEventTime );
-        while (!spin1_send_mc_packet(
-                        key | neuron_index, nextEventTime, WITH_PAYLOAD)) {
-                    spin1_delay_us(1000);
-                }
+         log_info("Sending Spike with key = %u, neuron_index = %u, payload = %u",key,  neuron_index, nextEventTime );
         }
         else if(neuron->phase == 0||neuron->phase == 1 || neuron->phase == 3){
           
             nextEventTime |= (1 << 31);
             log_info("Phase = %u, Sending EOT with key = %u, neuron_index = %u, payload = %u",neuron->phase, key,  neuron_index, nextEventTime );
-            while (!spin1_send_mc_packet(
-                            key | neuron_index, nextEventTime, WITH_PAYLOAD)) {
-                        spin1_delay_us(1000);
-                    }
+           
         }
-        // else if(neuron->phase == 0||neuron->phase == 1){
-        //     nextEventTime |= (1 << 31);
-        //     log_info("Phase = %u, Sending EOT with key = %u, neuron_index = %u, payload = %u",currentState, key,  neuron_index, nextEventTime );
-        //     while (!spin1_send_mc_packet(
-        //                     key | neuron_index, nextEventTime, WITH_PAYLOAD)) {
-        //                 spin1_delay_us(1000);
-        //             }
-        // }
+        while (!spin1_send_mc_packet(
+                        key | neuron_index, nextEventTime, WITH_PAYLOAD)) {
+                    spin1_delay_us(1000);
+        }
     }
     
 }
