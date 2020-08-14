@@ -132,20 +132,20 @@ int32_t neuron_model_check_pending_ev(neuron_t * neuron){
 int32_t neuron_model_PDevs_sim(neuron_t * neuron, int32_t threshold,  uint32_t nextSpikeTime, key_t key, uint32_t neuron_index, input_t input, bool use_key){
     if(neuron->tn <= neuron->eit && neuron->tn <=  nextSpikeTime ){
         //Call deltaInt()
-        //log_info("Executing internal event =  phase %u expired at tn = %u",neuron->phase,  neuron->tn);
+        log_info("Executing internal event =  phase %u expired at tn = %u",neuron->phase,  neuron->tn);
         neuron_model_Devs_sim(neuron, 1,nextSpikeTime, threshold, key, neuron_index, input, use_key);
         
         
     }else if(nextSpikeTime <= neuron->eit &&  nextSpikeTime < neuron->tn ){
         //Call deltaExt()
         neuron->waitCounter = 0;
-        //log_info("Executing external event at time = %u", nextSpikeTime);
+        log_info("Executing external event at time = %u", nextSpikeTime);
         neuron_model_Devs_sim(neuron, 2,nextSpikeTime,  threshold, key, neuron_index, input, use_key);
         neuron->lastProcessedSpikeTime = neuron_model_spiketime_pop(neuron);
     }
     // an expected spike has been delayed
     else if(nextSpikeTime > neuron->eit){
-        //log_info("New event has not arrived after X clock cycles");
+        log_info("New event has not arrived after X clock cycles");
         if(neuron->waitCounter > 30){
             
             log_info("New event has not arrived after waitCounter> 30. Set neuron phase to ERR");
