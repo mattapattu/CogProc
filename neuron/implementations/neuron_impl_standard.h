@@ -267,14 +267,7 @@ static bool neuron_impl_check_sim_end(uint32_t n_neurons){
                 endSim = endSim && true;
             }
         }
-        // if(endSim){
-        //     log_info("All neurons in Idle state. Call end_sim");
-        //     return(endSim);
-        // }else{
-        //     //log_info("Not all neurons in Idle state.");
-        //     return(false);
-        // }
-       
+              
     }
     
     return(endSim);
@@ -325,22 +318,22 @@ static int32_t  neuron_impl_neuron_update(uint32_t time, index_t neuron_index,
         
         ret = neuron_model_PDevs_sim(neuron, threshold, nextSpikeTime, key, neuron_index, input,use_key);
         log_info("neuron_model_PDevs_sim returns %d", ret);
-        if(ret == 1){
-            continue;
-        }else{
-            //log_info("Exiting while loop");
-            break;
-        }
+        // if(ret == 1){
+        //     continue;
+        // }else{
+        //     //log_info("Exiting while loop");
+        //     break;
+        // }
         
     }
-    if( ret == 0){
-        //log_info("No event to process. Wait for new spike");
-        return 0;
-    }else if(ret == -1){
-        //log_info("New event has not arrived after X clock cycles");
-        return -1;
-    }
-
+    // if( ret == 0){
+    //     //log_info("No event to process. Wait for new spike");
+    //     return 0;
+    // }else if(ret == -1){
+    //     //log_info("New event has not arrived after X clock cycles");
+    //     return -1;
+    // }
+    return(ret);
 
     // Return the boolean to the model timestep update
     

@@ -37,6 +37,7 @@ void neuron_model_set_global_neuron_params(
 
 static float ta(neuron_t * neuron){
     float timeadvance = 0;
+    
     if(neuron->phase == 0 || neuron->phase == 1 ){
         timeadvance = INFINITY;
     }
