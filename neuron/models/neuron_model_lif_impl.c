@@ -143,7 +143,7 @@ int32_t neuron_model_PDevs_sim(neuron_t * neuron, int32_t threshold,  uint32_t n
         neuron_model_Devs_sim(neuron, 2,nextSpikeTime,  threshold, key, neuron_index, input, use_key);
         neuron->lastProcessedSpikeTime = neuron_model_spiketime_pop(neuron);
     }
-    // an expected spike has been delayed
+    /* // an expected spike has been delayed
     else if(nextSpikeTime > neuron->eit){
         log_info("New event has not arrived after X clock cycles");
         if(neuron->waitCounter > 30){
@@ -155,7 +155,8 @@ int32_t neuron_model_PDevs_sim(neuron_t * neuron, int32_t threshold,  uint32_t n
         neuron->waitCounter++;
         spin1_delay_us(1000);
         
-    }else{
+    } */
+    else{
         log_info("Unknown condition. Check");
         log_info("tn = %u, eit = %u, nextSpikeTime = %u", neuron->tn, neuron->eit, nextSpikeTime);
         return(-2);
