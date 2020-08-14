@@ -321,7 +321,7 @@ static int32_t  neuron_impl_neuron_update(uint32_t time, index_t neuron_index,
         log_info("neuron %u: lastProcessedSpikeTime = %f, nextSpikeTime = %f", neuron_index, neuron->lastProcessedSpikeTime, nextSpikeTime);
         if(neuron->lastProcessedSpikeTime - nextSpikeTime < deltaT){
              nextSpikeTime  = neuron->lastProcessedSpikeTime + deltaT;
-             log_info("neuron %u: nextSpikeTime = %f after update", neuron_index, nextSpikeTime); 
+             //log_info("neuron %u: nextSpikeTime = %f after update", neuron_index, nextSpikeTime); 
          }
         
         ret = neuron_model_PDevs_sim(neuron, threshold, nextSpikeTime, key, neuron_index, input,use_key);
