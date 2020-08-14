@@ -47,7 +47,8 @@ static REAL ta(neuron_t * neuron){
         return(0);
     }else if(neuron->phase == 3){
         //return(neuron->T_refract);
-        return(0.1); //Fix this, do not hardcode
+        REAL refractory = 0.1;
+        return(refractory); //Fix this, do not hardcode
     }
 }
 
