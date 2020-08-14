@@ -212,7 +212,7 @@ void neuron_model_eit_update(neuron_t * neuron, float time){
 
     if(neuron->eit == 0 || neuron->eit > time ){
         neuron->eit = time;
-        log_info("Updating neuron eit to %f",neuron->eit );
+        //log_info("Updating neuron eit to %f",neuron->eit );
     }
     
 }
