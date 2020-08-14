@@ -258,7 +258,7 @@ int32_t deltaInt(neuron_t * neuron) {
 
 bool neuron_model_add_spike(neuron_t * neuron, uint32_t  spikeTime){
    neuron->spikeCount++;
-   if(neuron->spikeCount > 10){
+   if(neuron->spikeCount > 5){
        log_error("spikeCount = %u, error storing new spike at time = %u. Exiting simulation", neuron->spikeCount, spikeTime);
        return FALSE;
    }else if(spikeTime >= neuron->spike_times[neuron->spikeCount-1] ){
@@ -266,10 +266,10 @@ bool neuron_model_add_spike(neuron_t * neuron, uint32_t  spikeTime){
        neuron->spike_times[neuron->spikeCount] = spikeTime;
        return TRUE;
    }else{
-       uint32_t i;
-       for(i = 0; i < 9; i++){
+       uint8_t i;
+       for(i = 0; i < 4; i++){
            if(spikeTime < neuron->spike_times[i]){
-               for(uint32_t j = 9; j >= i; j--){
+               for(uint8_t j = 4; j >= i; j--){
                       neuron->spike_times[j] =  neuron->spike_times[j-1];      
                }
                neuron->spike_times[i]  = spikeTime;
@@ -287,10 +287,10 @@ bool neuron_model_add_spike(neuron_t * neuron, uint32_t  spikeTime){
 uint32_t neuron_model_spiketime_pop(neuron_t * neuron){
 
     uint32_t nextSpike = neuron->spike_times[0];
-    for(uint32_t i = 0; i < 9; i++){
+    for(uint8_t i = 0; i < 5; i++){
         neuron->spike_times[i] = neuron->spike_times[i+1];
     }
-    neuron->spike_times[9] = INFINITY;   
+    neuron->spike_times[4] = INFINITY;   
     neuron->spikeCount--;
     //log_info("Removing spike from spike_times = %f, spikeCount = %u", nextSpike,neuron->spikeCount);
     return(nextSpike);	
@@ -305,7 +305,7 @@ void neuron_model_init(neuron_t *neuron){
     neuron->phase = 0;
     neuron->V_membrane = neuron->V_rest;
     neuron->lastProcessedSpikeTime = 0;
-    for(uint32_t i = 0; i < 10; i++){
+    for(uint32_t i = 0; i < 5; i++){
         neuron->spike_times[i] = INFINITY;
     }
     //log_info("Initializing neuron params,spikeCount = %u, tl = %f", neuron->spikeCount, neuron->tl);

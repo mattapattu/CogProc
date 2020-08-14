@@ -54,7 +54,7 @@ typedef struct neuron_t {
     uint32_t  T_refract;
 
     //! LIF incoming spike times: overwrite after 10 spikes
-    float spike_times[10];
+    float spike_times[5];
 
     //! LIF incoming spike count
     uint32_t spikeCount;
