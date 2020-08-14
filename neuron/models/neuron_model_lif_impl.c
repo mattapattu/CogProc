@@ -109,7 +109,7 @@ static void lambda(neuron_t * neuron, key_t key, uint32_t neuron_index, bool use
     
 }
 
-int32_t neuron_model_check_pending_ev(neuron_t * neuron){
+static int32_t neuron_model_check_pending_ev(neuron_t * neuron){
     //log_info("phase = %u, tn = %u, eit = %u, spikeCount = %u", neuron->phase, neuron->tn, neuron->eit, neuron->spikeCount);
     if(neuron->tn < INFINITY){
         log_info("Next Internal Event = %f < INFINITY, continue PDEVS loop",neuron->tn);
@@ -126,7 +126,7 @@ int32_t neuron_model_check_pending_ev(neuron_t * neuron){
 
 
 //DEVS PDEVS  simulator
-int32_t neuron_model_PDevs_sim(neuron_t * neuron, int32_t threshold,  uint32_t nextSpikeTime, key_t key, uint32_t neuron_index, input_t input, bool use_key){
+static int32_t neuron_model_PDevs_sim(neuron_t * neuron, int32_t threshold,  uint32_t nextSpikeTime, key_t key, uint32_t neuron_index, input_t input, bool use_key){
     if(neuron->tn <= neuron->eit && neuron->tn <=  nextSpikeTime ){
         //Call deltaInt()
         //log_info("Executing internal event =  phase %u expired at tn = %u",neuron->phase,  neuron->tn);
@@ -156,7 +156,7 @@ int32_t neuron_model_PDevs_sim(neuron_t * neuron, int32_t threshold,  uint32_t n
 }
 
 //DEVS atomic simulator
-void neuron_model_Devs_sim(neuron_t * neuron, int16_t event_type, uint32_t nextSpikeTime, int32_t threshold, key_t key, uint32_t neuron_index, input_t input, bool use_key){
+static void neuron_model_Devs_sim(neuron_t * neuron, int16_t event_type, uint32_t nextSpikeTime, int32_t threshold, key_t key, uint32_t neuron_index, input_t input, bool use_key){
     //event_type 1 - Internal event
     if(event_type == 1 ){
         lambda(neuron, key, neuron_index, use_key);
@@ -196,7 +196,7 @@ void neuron_model_Devs_sim(neuron_t * neuron, int16_t event_type, uint32_t nextS
 }
 
 
-static inline void lif_update(float time, neuron_t * neuron, input_t input_this_timestep) {
+static void lif_update(float time, neuron_t * neuron, input_t input_this_timestep) {
 
     // update membrane voltage
     REAL alpha = input_this_timestep * neuron->R_membrane + neuron->V_rest;
@@ -208,7 +208,7 @@ static inline void lif_update(float time, neuron_t * neuron, input_t input_this_
 
 }
 
-void neuron_model_eit_update(neuron_t * neuron, float time){
+static void neuron_model_eit_update(neuron_t * neuron, float time){
 
     if(neuron->eit == 0 || neuron->eit > time ){
         neuron->eit = time;
@@ -217,7 +217,7 @@ void neuron_model_eit_update(neuron_t * neuron, float time){
     
 }
 
-int32_t deltaExt(neuron_t * neuron, uint32_t time, int32_t threshold, input_t input) {
+static int32_t deltaExt(neuron_t * neuron, uint32_t time, int32_t threshold, input_t input) {
 
     if(neuron->phase == 2 || neuron->phase == 3){
         //log_info("Ignore input as neuron is in threshold/refractory phase");
@@ -238,7 +238,7 @@ int32_t deltaExt(neuron_t * neuron, uint32_t time, int32_t threshold, input_t in
     
 }
 
-int32_t deltaInt(neuron_t * neuron) {
+static int32_t deltaInt(neuron_t * neuron) {
 	
 	//log_info("Inh 1: %12.6k, Inh 2: %12.6k", inh_input[0], inh_input[1]);
 
@@ -256,7 +256,7 @@ int32_t deltaInt(neuron_t * neuron) {
     
 }
 
-bool neuron_model_add_spike(neuron_t * neuron, uint32_t  spikeTime){
+static bool neuron_model_add_spike(neuron_t * neuron, uint32_t  spikeTime){
    neuron->spikeCount++;
    if(neuron->spikeCount > 5){
        log_error("spikeCount = %u, Exiting simulation", neuron->spikeCount);
@@ -284,7 +284,7 @@ bool neuron_model_add_spike(neuron_t * neuron, uint32_t  spikeTime){
 }
 
 
-uint32_t neuron_model_spiketime_pop(neuron_t * neuron){
+static uint32_t neuron_model_spiketime_pop(neuron_t * neuron){
 
     uint32_t nextSpike = neuron->spike_times[0];
     for(uint8_t i = 0; i < 5; i++){
@@ -296,7 +296,7 @@ uint32_t neuron_model_spiketime_pop(neuron_t * neuron){
     return(nextSpike);	
 }
 
-void neuron_model_init(neuron_t *neuron){
+static void neuron_model_init(neuron_t *neuron){
     neuron->spikeCount = 0;
     neuron->tl = 0;
     neuron->tn = INFINITY;
@@ -312,7 +312,7 @@ void neuron_model_init(neuron_t *neuron){
 
 }
 
-uint8_t neuron_model_get_phase(neuron_t * neuron){
+static uint8_t neuron_model_get_phase(neuron_t * neuron){
     return(neuron->phase);
 }
 
