@@ -39,17 +39,19 @@ void neuron_model_set_global_neuron_params(
 }
 
 static REAL ta(neuron_t * neuron){
+    REAL timeadvance = 0;
     if(neuron->phase == 0){
-        return(INFINITY);
+        timeadvance = INFINITY;
     }else if(neuron->phase == 1){
-        return(INFINITY);
+        timeadvance = INFINITY;
     }else if(neuron->phase == 2){
-        return(0);
+        timeadvance = 0;
     }else if(neuron->phase == 3){
         //return(neuron->T_refract);
-        REAL refractory = 0.1;
-        return(refractory); //Fix this, do not hardcode
+        timeadvance = 0.1;  //Fix this, do not hardcode
     }
+    return(timeadvance);
+
 }
 
 static REAL neuron_model_update_membrane_voltage(REAL time, neuron_t *neuron) {
