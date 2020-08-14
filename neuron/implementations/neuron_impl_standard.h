@@ -295,7 +295,7 @@ static int32_t  neuron_impl_neuron_update(uint32_t time, index_t neuron_index,
     neuron_pointer_t neuron = &neuron_array[neuron_index];
 
     if(eit){
-        REAL eit = (REAL) time;
+        float eit = (float) time;
         log_info("New eit = %f",eit );
         neuron_model_eit_update(neuron, time);
     }else{
@@ -309,7 +309,7 @@ static int32_t  neuron_impl_neuron_update(uint32_t time, index_t neuron_index,
     int32_t threshold = threshold_type->threshold_value;
     //neuron_pointer_t neuron = &neuron_array[neuron_index];
 
-    REAL nextSpikeTime = neuron->spike_times[0];
+    float nextSpikeTime = neuron->spike_times[0];
     input_t input = synapses_get_ring_buffer_input(nextSpikeTime,neuron_index );
     //log_info("nextSpikeTime = %u, input = %u", nextSpikeTime, input);
     
