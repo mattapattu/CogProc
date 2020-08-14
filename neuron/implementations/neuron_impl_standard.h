@@ -258,27 +258,26 @@ static void neuron_impl_load_neuron_parameters(
 static bool neuron_impl_check_sim_end(uint32_t n_neurons){
     bool endSim = false;
     //bool err = false;
-    if(in_spiketimes_not_empty()){
+    if(!in_spiketimes_not_empty()){
         //log("in_spiketimes is not empty. ");
-        return(false);
-    }else{
-        log("in_spiketimes is empty. Checking neuron states");
+        // log("in_spiketimes is empty. Checking neuron states");
         endSim = true;
         for (index_t n = 0; n < n_neurons; n++) {
             if(neuron_model_get_phase(&neuron_array[n]) == 4){
                 endSim = endSim && true;
             }
         }
-        if(endSim){
-            log_info("All neurons in Idle state. Call end_sim");
-            return(endSim);
-        }else{
-            //log_info("Not all neurons in Idle state.");
-            return(false);
-        }
+        // if(endSim){
+        //     log_info("All neurons in Idle state. Call end_sim");
+        //     return(endSim);
+        // }else{
+        //     //log_info("Not all neurons in Idle state.");
+        //     return(false);
+        // }
+       
     }
     
-    
+    return(endSim);
 }
 
 
