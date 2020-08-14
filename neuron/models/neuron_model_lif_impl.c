@@ -23,7 +23,7 @@
 #include <debug.h>
 
 //static int32_t last_update_time = 0;
-#define INFINITY  2147483646
+#define INFINITY  32767
 #define deltaT 1 
 
 //! \brief simple Leaky I&F ODE
@@ -292,7 +292,7 @@ uint32_t neuron_model_spiketime_pop(neuron_t * neuron){
     for(uint32_t i = 0; i < 9; i++){
         neuron->spike_times[i] = neuron->spike_times[i+1];
     }
-    neuron->spike_times[9] = INFINITY  ;   
+    neuron->spike_times[9] = INFINITY;   
     neuron->spikeCount--;
     log_info("Removing spike from spike_times = %f, spikeCount = %u", nextSpike,neuron->spikeCount);
     return(nextSpike);	
