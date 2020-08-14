@@ -54,6 +54,10 @@ static inline bool in_spiketimes_initialize_spike_buffer(uint32_t size) {
     return buffer2 != 0;
 }
 
+static inline bool in_spiketimes_empty() {
+    return _circular_buffer_not_empty(buffer2);
+}
+
 //! \brief Adds a spike to the input spike buffer.
 //! \param[in] spike: The spike to add
 //! \return True if the spike was added
