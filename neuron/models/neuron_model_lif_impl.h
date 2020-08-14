@@ -76,7 +76,7 @@ typedef struct neuron_t {
 
     uint16_t waitCounter;
 
-    uint32_t lastProcessedSpikeTime; // Used for discrete event implemtation of input spikes
+    float lastProcessedSpikeTime; // Used for discrete event implemtation of input spikes
 
 
 } neuron_t;

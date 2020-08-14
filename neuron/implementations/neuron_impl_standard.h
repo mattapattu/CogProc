@@ -314,9 +314,11 @@ static int32_t  neuron_impl_neuron_update(uint32_t time, index_t neuron_index,
         //log_info("Calling neuron_model_PDevs_sim");
         //log_info("neuron %u: tl = %u", neuron_index, neuron->tl);
         nextSpikeTime = neuron->spike_times[0];
+        log_info("neuron %u: nextSpikeTime = %f", neuron_index, nextSpikeTime);
         if(neuron->lastProcessedSpikeTime - nextSpikeTime < deltaT){
              nextSpikeTime  = neuron->lastProcessedSpikeTime + deltaT;
          }
+        log_info("neuron %u: nextSpikeTime = %f after update", neuron_index, nextSpikeTime); 
         ret = neuron_model_PDevs_sim(neuron, threshold, nextSpikeTime, key, neuron_index, input,use_key);
         log_info("neuron_model_PDevs_sim returns %u", ret);
         if(ret == 1){
