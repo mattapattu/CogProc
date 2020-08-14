@@ -38,7 +38,7 @@ void neuron_model_set_global_neuron_params(
     // Does Nothing - no params
 }
 
-static float ta(neuron_t * neuron){
+static REAL ta(neuron_t * neuron){
     if(neuron->phase == 0){
         return(INFINITY);
     }else if(neuron->phase == 1){
@@ -51,14 +51,14 @@ static float ta(neuron_t * neuron){
     }
 }
 
-static float neuron_model_update_membrane_voltage(float time, neuron_t *neuron) {
+static REAL neuron_model_update_membrane_voltage(REAL time, neuron_t *neuron) {
     
     //Check this again!!!! -> Do we update neuron membrane voltage after every state transition ( at t= tl) ?????
 
-    float delta_t = time - neuron->tl;
+    REAL delta_t = time - neuron->tl;
     uint32_t simulation_timestep = 1000; //Redo later to read from PyNN
     uint32_t loopMax = delta_t/simulation_timestep;
-    float exp_factor = neuron->exp_TC;
+    REAL exp_factor = neuron->exp_TC;
 
     if(neuron->V_membrane > neuron->V_rest) {
           for(uint32_t k = loopMax; k > 1; k--){
@@ -181,7 +181,7 @@ void neuron_model_Devs_sim(neuron_t * neuron, int16_t event_type, uint32_t nextS
         log_info("Neuron %u external event: at time = %f in phase %d",neuron_index, nextSpikeTime, neuron->phase);
         neuron->phase = deltaExt(neuron, nextSpikeTime, threshold, input);
         log_info("New neuron phase = %d",neuron->phase);
-        neuron->tl = (float) nextSpikeTime + deltaT; //deltaExt lasts for deltaT milliseconds.
+        neuron->tl = (REAL) nextSpikeTime + deltaT; //deltaExt lasts for deltaT milliseconds.
         if(ta(neuron) >= INFINITY){
             neuron->tn = INFINITY;
             log_info("Neuron %u: update tn = INFINITY", neuron_index);
@@ -195,7 +195,7 @@ void neuron_model_Devs_sim(neuron_t * neuron, int16_t event_type, uint32_t nextS
 }
 
 
-static inline void lif_update(float time, neuron_t * neuron, input_t input_this_timestep) {
+static inline void lif_update(REAL time, neuron_t * neuron, input_t input_this_timestep) {
 
     // update membrane voltage
     REAL alpha = input_this_timestep * neuron->R_membrane + neuron->V_rest;
@@ -207,11 +207,11 @@ static inline void lif_update(float time, neuron_t * neuron, input_t input_this_
 
 }
 
-void neuron_model_eit_update(neuron_t * neuron, float time){
+void neuron_model_eit_update(neuron_t * neuron, REAL time){
 
     if(neuron->eit == 0 || neuron->eit > time ){
         neuron->eit = time;
-        //log_info("Updating neuron eit to %f",neuron->eit );
+        log_info("Updating neuron eit to %f",neuron->eit );
     }
     
 }
