@@ -35,7 +35,7 @@ void neuron_model_set_global_neuron_params(
     // Does Nothing - no params
 }
 
-static float ta(neuron_t * neuron){
+float ta(neuron_t * neuron){
     float timeadvance = 0;
 
     if(neuron->phase == 0 || neuron->phase == 1 ){
@@ -54,7 +54,7 @@ static float ta(neuron_t * neuron){
 
 }
 
-static float neuron_model_update_membrane_voltage(float time, neuron_t *neuron) {
+float neuron_model_update_membrane_voltage(float time, neuron_t *neuron) {
     
     //Check this again!!!! -> Do we update neuron membrane voltage after every state transition ( at t= tl) ?????
 
@@ -75,7 +75,7 @@ static float neuron_model_update_membrane_voltage(float time, neuron_t *neuron) 
     return(neuron->V_membrane);
 }
 
-static void lambda(neuron_t * neuron, key_t key, uint32_t neuron_index, bool use_key){
+void lambda(neuron_t * neuron, key_t key, uint32_t neuron_index, bool use_key){
     //uint16_t currentState  = neuron->phase;
     uint32_t nextEventTime = (uint32_t) neuron->eot;
     //log_info("lambda: neuron %u currentState = %u, nextEventTime = %u",neuron_index,  currentState, nextEventTime );
@@ -189,7 +189,7 @@ void neuron_model_Devs_sim(neuron_t * neuron, int16_t event_type, uint32_t nextS
 }
 
 
-static void lif_update(float time, neuron_t * neuron, input_t input_this_timestep) {
+void lif_update(float time, neuron_t * neuron, input_t input_this_timestep) {
 
     // update membrane voltage
     REAL alpha = input_this_timestep * neuron->R_membrane + neuron->V_rest;
