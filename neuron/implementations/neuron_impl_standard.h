@@ -259,7 +259,7 @@ static bool neuron_impl_check_sim_end(uint32_t n_neurons){
     bool endSim = false;
     //bool err = false;
     if(in_spiketimes_not_empty()){
-        log("in_spiketimes is not empty. ");
+        //log("in_spiketimes is not empty. ");
         return(false);
     }else{
         log("in_spiketimes is empty. Checking for neuron IDLE states");

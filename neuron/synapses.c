@@ -230,7 +230,7 @@ static inline void process_fixed_synapses(
         // (should auto increment pointer in single instruction)
         uint32_t synaptic_word = *synaptic_words++;
 
-        log_info("synaptic_word  = %u", synaptic_word);
+        //log_info("synaptic_word  = %u", synaptic_word);
 
         // Extract components from this word
         uint32_t delay =
@@ -250,7 +250,7 @@ static inline void process_fixed_synapses(
         uint32_t ring_buffer_index = synapses_get_ring_buffer_index_combined(
             time, combined_synapse_neuron_index,
             synapse_type_index_bits);
-        log_info("Setting ring_buffer_index  = %u for neuron_index = %u,  time = %u,  delay = %u, weight = %u", ring_buffer_index, neuron_index, time, delay, weight);
+        //log_info("Setting ring_buffer_index  = %u for neuron_index = %u,  time = %u,  delay = %u, weight = %u", ring_buffer_index, neuron_index, time, delay, weight);
         //
         // Add weight to current ring buffer value
         uint32_t accumulation = ring_buffers[ring_buffer_index] + weight;
@@ -364,7 +364,7 @@ uint32_t synapses_get_ring_buffer_input(uint32_t time, uint32_t neuron_index){
                             ring_buffers[ring_buffer_index],
                             ring_buffer_to_input_left_shifts[0]);
     ring_buffers[ring_buffer_index] = 0;                                        
-    log_info("Fetching ring_buffer_index = %u, input = %u",ring_buffer_index, input );
+    //log_info("Fetching ring_buffer_index = %u, input = %u",ring_buffer_index, input );
     // Re-enable the interrupts
     spin1_mode_restore(state);
 
