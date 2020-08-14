@@ -317,7 +317,7 @@ uint32_t neuron_model_spiketime_pop(neuron_t * neuron){
     }
     neuron->spike_times[9] = INFINITY  ;   
     neuron->spikeCount--;
-    log_info("Removing spike from spike_times = %f, nextspiketime = %f", nextSpike,neuron->spike_times[0]);
+    log_info("Removing spike from spike_times = %f, neuron->spikeCount = %u", nextSpike,neuron->spikeCount);
     return(nextSpike);	
 }
 
