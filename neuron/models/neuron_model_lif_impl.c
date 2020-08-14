@@ -115,12 +115,7 @@ int32_t neuron_model_check_pending_ev(neuron_t * neuron){
     }else if(neuron->spike_times[0] < INFINITY){
         log_info("spikeCount = %u > 0, continue PDEVS loop", neuron->spikeCount);
         return 1;
-    }
-    // else if(neuron->eit < INFINITY){
-    //     log_info("earliest Input Time = %f < INFINITY, continue PDEVS loop",neuron->eit );
-    //     return 1;
-    // }
-    else{
+    }else{
         log_info("eit = %f, no more events to process, set phase to IDLE", neuron->eit);
         neuron->phase = 4;
         return 0;
@@ -142,21 +137,7 @@ int32_t neuron_model_PDevs_sim(neuron_t * neuron, int32_t threshold,  uint32_t n
         log_info("Executing external event at time = %u", nextSpikeTime);
         neuron_model_Devs_sim(neuron, 2,nextSpikeTime,  threshold, key, neuron_index, input, use_key);
         neuron->lastProcessedSpikeTime = neuron_model_spiketime_pop(neuron);
-    }
-    /* // an expected spike has been delayed
-    else if(nextSpikeTime > neuron->eit){
-        log_info("New event has not arrived after X clock cycles");
-        if(neuron->waitCounter > 30){
-            
-            log_info("New event has not arrived after waitCounter> 30. Set neuron phase to ERR");
-            neuron->phase = 5;
-            return(-1);
-        }
-        neuron->waitCounter++;
-        spin1_delay_us(1000);
-        
-    } */
-    else if(nextSpikeTime == INFINITY && neuron->tn == INFINITY){
+    }else if(nextSpikeTime == INFINITY && neuron->tn == INFINITY){
         log_info("No more events to process, nextSpikeTime = INFINITY and tn = INFINITY");
     }
     else{
