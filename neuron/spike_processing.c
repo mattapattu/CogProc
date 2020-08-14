@@ -95,7 +95,7 @@ static uint32_t n_successful_rewires = 0;
 //! \param[in] row_address: Where in SDRAM to read the row from
 //! \param[in] n_bytes_to_transfer: The size of the synaptic row
 //! \param[in] spike: The spike that triggered this read
-static inline void do_dma_read(
+static void do_dma_read(
         address_t row_address, size_t n_bytes_to_transfer, spike_t spike) {
     // Write the SDRAM address of the plastic region and the
     // Key of the originating spike to the beginning of DMA buffer
