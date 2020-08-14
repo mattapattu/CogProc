@@ -21,7 +21,7 @@
 #define _NEURON_IMPL_STANDARD_H_
 
 #include "neuron_impl.h"
-//#include <common/in_spiketimes.h>
+#include <common/in_spiketimes.h>
 
 
 // Includes for model parts used in this implementation

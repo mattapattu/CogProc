@@ -37,11 +37,13 @@ void neuron_model_set_global_neuron_params(
 
 static float ta(neuron_t * neuron){
     float timeadvance = 0;
-    if(neuron->phase == 0){
+    if(neuron->phase == 0 || neuron->phase == 1 ){
         timeadvance = INFINITY;
-    }else if(neuron->phase == 1){
-        timeadvance = INFINITY;
-    }else if(neuron->phase == 2){
+    }
+    // else if(neuron->phase == 1){
+    //     timeadvance = INFINITY;
+    // }
+    else if(neuron->phase == 2){
         timeadvance = 0;
     }else if(neuron->phase == 3){
         //return(neuron->T_refract);
@@ -55,13 +57,13 @@ static float neuron_model_update_membrane_voltage(float time, neuron_t *neuron) 
     
     //Check this again!!!! -> Do we update neuron membrane voltage after every state transition ( at t= tl) ?????
 
-    float delta_t = time - neuron->tl;
-    uint32_t simulation_timestep = 1000; //Redo later to read from PyNN
-    uint32_t loopMax = delta_t/simulation_timestep;
+    uint32_t delta_t = time - neuron->tl;
+    //uint32_t simulation_timestep = 1000; //Redo later to read from PyNN
+    //uint32_t loopMax = delta_t/simulation_timestep;
     float exp_factor = neuron->exp_TC;
 
     if(neuron->V_membrane > neuron->V_rest) {
-          for(uint32_t k = loopMax; k > 1; k--){
+          for(uint32_t k = delta_t; k > 1; k--){
  	            exp_factor = exp_factor*neuron->exp_TC;
            }  
           //log_info("exp_factor = %f, V_membrane = %f", exp_factor, neuron->V_membrane); 
@@ -73,11 +75,11 @@ static float neuron_model_update_membrane_voltage(float time, neuron_t *neuron) 
 }
 
 static void lambda(neuron_t * neuron, key_t key, uint32_t neuron_index, bool use_key){
-    uint16_t currentState  = neuron->phase;
+    //uint16_t currentState  = neuron->phase;
     uint32_t nextEventTime = (uint32_t) neuron->eot;
     //log_info("lambda: neuron %u currentState = %u, nextEventTime = %u",neuron_index,  currentState, nextEventTime );
     if(use_key){
-        if(currentState == 2){
+        if(neuron->phase == 2){
         //clear 32nd bit if packet is spike 
         //nextEventTime = nextEventTime & (~(1 << 31));
        log_info("Sending Spike with key = %u, neuron_index = %u, payload = %u",key,  neuron_index, nextEventTime );
@@ -85,38 +87,41 @@ static void lambda(neuron_t * neuron, key_t key, uint32_t neuron_index, bool use
                         key | neuron_index, nextEventTime, WITH_PAYLOAD)) {
                     spin1_delay_us(1000);
                 }
-        }else if(currentState == 3){
-            //time  = time + neuron->tn;
-            //set 32nd bit if packet is eot messg. 
-            
+        }
+        else if(neuron->phase == 0||neuron->phase == 1 || neuron->phase == 3){
+          
             nextEventTime |= (1 << 31);
-            log_info("Phase = 3, Sending EOT with key = %u, neuron_index = %u, payload = %u",key,  neuron_index, nextEventTime );
-            while (!spin1_send_mc_packet(
-                            key | neuron_index, nextEventTime, WITH_PAYLOAD)) {
-                        spin1_delay_us(1000);
-                    }
-        }else if(currentState == 0||currentState == 1){
-            nextEventTime |= (1 << 31);
-            log_info("Phase = %u, Sending EOT with key = %u, neuron_index = %u, payload = %u",currentState, key,  neuron_index, nextEventTime );
+            log_info("Phase = %u, Sending EOT with key = %u, neuron_index = %u, payload = %u",neuron->phase, key,  neuron_index, nextEventTime );
             while (!spin1_send_mc_packet(
                             key | neuron_index, nextEventTime, WITH_PAYLOAD)) {
                         spin1_delay_us(1000);
                     }
         }
+        // else if(neuron->phase == 0||neuron->phase == 1){
+        //     nextEventTime |= (1 << 31);
+        //     log_info("Phase = %u, Sending EOT with key = %u, neuron_index = %u, payload = %u",currentState, key,  neuron_index, nextEventTime );
+        //     while (!spin1_send_mc_packet(
+        //                     key | neuron_index, nextEventTime, WITH_PAYLOAD)) {
+        //                 spin1_delay_us(1000);
+        //             }
+        // }
     }
     
 }
 
 int32_t neuron_model_check_pending_ev(neuron_t * neuron){
     //log_info("phase = %u, tn = %u, eit = %u, spikeCount = %u", neuron->phase, neuron->tn, neuron->eit, neuron->spikeCount);
-    if(neuron->tn < INFINITY){
-        log_info("Next Internal Event = %f < INFINITY, continue PDEVS loop",neuron->tn);
+    if(neuron->tn < INFINITY || neuron->spike_times[0] < INFINITY ){
+        //log_info("tn = %f < INFINITY, repeat PDEVS",neuron->tn);
+        log_info("tn = %f, spikeCount = %u, repeat PDEVS", neuron->tn, neuron->spikeCount);
         return 1;
-    }else if(neuron->spike_times[0] < INFINITY){
-        log_info("spikeCount = %u > 0, continue PDEVS loop", neuron->spikeCount);
-        return 1;
-    }else{
-        log_info("eit = %f, no more events to process, set phase to IDLE", neuron->eit);
+    }
+    // else if(neuron->spike_times[0] < INFINITY){
+    //     log_info("spikeCount = %u > 0, repeat PDEVS", neuron->spikeCount);
+    //     return 1;
+    // }
+    else{
+        log_info("set phase to IDLE");
         neuron->phase = 4;
         return 0;
     }
@@ -137,11 +142,11 @@ int32_t neuron_model_PDevs_sim(neuron_t * neuron, int32_t threshold,  uint32_t n
         neuron_model_Devs_sim(neuron, 2,nextSpikeTime,  threshold, key, neuron_index, input, use_key);
         neuron->lastProcessedSpikeTime = neuron_model_spiketime_pop(neuron);
     }else if(nextSpikeTime == INFINITY && neuron->tn == INFINITY){
-        log_info("No more events to process, nextSpikeTime = INFINITY and tn = INFINITY");
+        log_info("Stop, nextSpikeTime & tn = INFINITY");
     }
     else{
-        log_info("Cannot process nextspike or the next internal event");
-        log_info("tn = %f, eit = %f, nextSpikeTime = %f, spikeCount = %u", neuron->tn, neuron->eit, nextSpikeTime, neuron->spikeCount);
+        //log_info("Cannot process nextspike or the next internal event");
+        log_info("Unknown cond: tn = %f, eit = %f, nextSpikeTime = %f, spikeCount = %u", neuron->tn, neuron->eit, nextSpikeTime, neuron->spikeCount);
         return(-1);
     }
 
