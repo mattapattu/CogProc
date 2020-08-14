@@ -272,7 +272,7 @@ static inline void process_fixed_synapses(
             neuron_pdevs_update(time, neuron_index,FALSE);
         } //msg is EIT 
         else if(eit == 1){
-            //log_info("Calling neuron_eit_update at time  = %u", time);
+            log_info("EIT update for neuron %u at time  = %u", neuron_index, time);
             neuron_pdevs_update(time, neuron_index,TRUE);
         } else{
             log_error("Unknown message recevied");
