@@ -112,8 +112,8 @@ int32_t neuron_model_check_pending_ev(neuron_t * neuron){
     if(neuron->tn < INFINITY){
         log_info("Next Internal Event = %f < INFINITY, continue PDEVS loop",neuron->tn);
         return 1;
-    }else if(neuron->spikeCount > 0){
-        log_info("spikeCount > 0, continue PDEVS loop");
+    }else if(neuron->spike_times[0] < INFINITY){
+        log_info("spikeCount = %u > 0, continue PDEVS loop", neuron->spikeCount);
         return 1;
     }
     // else if(neuron->eit < INFINITY){
