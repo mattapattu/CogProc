@@ -206,7 +206,7 @@ static inline void process_fixed_synapses(
     uint32_t time  = -1;  
     uint8_t eit =   -1;
     if(payload == 0){
-        log_info("payload  = 0. Consider as spike from spikearray ");
+        //log_info("payload  = 0. Consider as spike from spikearray ");
         //pkt came from sourcearray and is a spike at time t =0
         time = 0;
         eit = 0;
@@ -267,12 +267,12 @@ static inline void process_fixed_synapses(
 
         // Store saturated value back in ring-buffer
         ring_buffers[ring_buffer_index] = accumulation;
-        log_info("Calling PDEVS_Sim() at time  = %u", time);
+        log_info("PDEVS_Sim at time  = %u", time);
         if(eit == 0){
             neuron_pdevs_update(time, neuron_index,FALSE);
         } //msg is EIT 
         else if(eit == 1){
-            log_info("EIT update for neuron %u at time  = %u", neuron_index, time);
+            log_info("EIT msg: neuron %u, time  = %u", neuron_index, time);
             neuron_pdevs_update(time, neuron_index,TRUE);
         } else{
             log_error("Unknown message recevied");

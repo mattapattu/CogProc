@@ -188,7 +188,7 @@ static void neuron_impl_load_neuron_parameters(
     // Read the number of steps per timestep
     n_steps_per_timestep = address[next++];
     if (n_steps_per_timestep > 1) {
-        log_info("Looping over %u steps each timestep", n_steps_per_timestep);
+        //log_info("Looping over %u steps each timestep", n_steps_per_timestep);
     } else if (n_steps_per_timestep == 0) {
         log_error("bad number of steps per timestep: 0");
     }
@@ -262,7 +262,7 @@ static bool neuron_impl_check_sim_end(uint32_t n_neurons){
         //log("in_spiketimes is not empty. ");
         return(false);
     }else{
-        log("in_spiketimes is empty. Checking for neuron IDLE states");
+        log("in_spiketimes is empty. Checking neuron states");
         endSim = true;
         for (index_t n = 0; n < n_neurons; n++) {
             if(neuron_model_get_phase(&neuron_array[n]) == 4){
@@ -273,7 +273,7 @@ static bool neuron_impl_check_sim_end(uint32_t n_neurons){
             log_info("All neurons in Idle state. Call end_sim");
             return(endSim);
         }else{
-            log_info("Not all neurons in Idle state.");
+            //log_info("Not all neurons in Idle state.");
             return(false);
         }
     }
@@ -296,7 +296,7 @@ static int32_t  neuron_impl_neuron_update(uint32_t time, index_t neuron_index,
 
     if(eit){
         float eit = (float) time;
-        log_info("New eit = %f",eit );
+        //log_info("New eit = %f",eit );
         neuron_model_eit_update(neuron, time);
     }else{
         if(!neuron_impl_add_spike(neuron_index, time)){
@@ -318,7 +318,7 @@ static int32_t  neuron_impl_neuron_update(uint32_t time, index_t neuron_index,
         //log_info("Calling neuron_model_PDevs_sim");
         //log_info("neuron %u: tl = %u", neuron_index, neuron->tl);
         nextSpikeTime = neuron->spike_times[0];
-        log_info("neuron %u: lastProcessedSpikeTime = %f, nextSpikeTime = %f", neuron_index, neuron->lastProcessedSpikeTime, nextSpikeTime);
+        //log_info("neuron %u: lastProcessedSpikeTime = %f, nextSpikeTime = %f", neuron_index, neuron->lastProcessedSpikeTime, nextSpikeTime);
         if(neuron->lastProcessedSpikeTime - nextSpikeTime < deltaT){
              nextSpikeTime  = neuron->lastProcessedSpikeTime + deltaT;
              //log_info("neuron %u: nextSpikeTime = %f after update", neuron_index, nextSpikeTime); 
@@ -329,7 +329,7 @@ static int32_t  neuron_impl_neuron_update(uint32_t time, index_t neuron_index,
         if(ret == 1){
             continue;
         }else{
-            log_info("Exiting while loop");
+            //log_info("Exiting while loop");
             break;
         }
         
