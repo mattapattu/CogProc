@@ -156,6 +156,9 @@ int32_t neuron_model_PDevs_sim(neuron_t * neuron, int32_t threshold,  uint32_t n
         spin1_delay_us(1000);
         
     } */
+    else if(nextSpikeTime == INFINITY && neuron->tn == INFINITY){
+        log_info("No more events to process, nextSpikeTime = INFINITY and tn = INFINITY");
+    }
     else{
         log_info("Cannot process nextspike or the next internal event");
         log_info("tn = %f, eit = %f, nextSpikeTime = %f, spikeCount = %u", neuron->tn, neuron->eit, nextSpikeTime, neuron->spikeCount);
