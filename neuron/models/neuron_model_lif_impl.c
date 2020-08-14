@@ -218,13 +218,8 @@ static inline void lif_update(float time, neuron_t * neuron, input_t input_this_
 
     // update membrane voltage
     REAL alpha = input_this_timestep * neuron->R_membrane + neuron->V_rest;
-    //log_info("alpha = %u, time = %u, tl = %u",  alpha, time, neuron->tl);
     // update membrane voltage
     REAL V_prev = neuron_model_update_membrane_voltage(time, neuron);
-    //log_info("V_prev = %f",  V_prev);
-    // if(V_prev < neuron->V_rest){
-    //     V_prev = neuron->V_rest;
-    // }
     neuron->V_membrane = alpha - (neuron->exp_TC * (alpha - V_prev));
     
     
@@ -241,8 +236,6 @@ void neuron_model_eit_update(neuron_t * neuron, float time){
 }
 
 int32_t deltaExt(neuron_t * neuron, uint32_t time, int32_t threshold, input_t input) {
-	//log_info("Exc 1: %12.6k", exc_input[0]);
-	//log_info("Inh 1: %12.6k, Inh 2: %12.6k", inh_input[0], inh_input[1]);
 
     if(neuron->phase == 2 || neuron->phase == 3){
         //log_info("Ignore input as neuron is in threshold/refractory phase");

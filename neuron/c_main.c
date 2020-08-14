@@ -291,16 +291,6 @@ void c_main(void) {
         rt_error(RTE_API);
     }
 
-    // Start the time at "-1" so that the first tick will be 0
-    //time = UINT32_MAX;
-
-    // Set timer tick (in microseconds)
-    // log_debug("setting timer tick callback for %d microseconds",
-    //           timer_period);
-    //spin1_set_timer_tick_and_phase(timer_period, timer_offset);
-
-    // Set up the timer tick callback (others are handled elsewhere)
-    //spin1_callback_on(TIMER_TICK, timer_callback, TIMER);
     spin1_callback_on(MCPL_PACKET_RECEIVED,
             mc_pkt_recvd_callback, -1);
     spin1_callback_on(MC_PACKET_RECEIVED,
