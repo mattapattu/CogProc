@@ -24,7 +24,7 @@
 
 //static int32_t last_update_time = 0;
 #define INFINITY  2147483646
-
+#define deltaT 1 
 
 //! \brief simple Leaky I&F ODE
 //! \param[in,out] neuron: The neuron to update
