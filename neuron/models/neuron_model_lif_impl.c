@@ -287,7 +287,7 @@ bool neuron_model_add_spike(neuron_t * neuron, uint32_t  spikeTime){
        log_error("spikeCount = %u, error storing new spike at time = %u. Exiting simulation", neuron->spikeCount, spikeTime);
        return FALSE;
    }else if(spikeTime >= neuron->spike_times[neuron->spikeCount-1] ){
-       log_info("Adding new spike time = %f at the end of array", spikeTime);
+       log_info("Adding new spike time = %f at the end of array, spikeCount = %u", spikeTime,neuron->spikeCount);
        neuron->spike_times[neuron->spikeCount] = spikeTime;
        return TRUE;
    }else{
@@ -303,7 +303,7 @@ bool neuron_model_add_spike(neuron_t * neuron, uint32_t  spikeTime){
                 continue;
            }
        }
-       log_info("Adding new spike at time = %f at index = %u", spikeTime,i);
+       log_info("Adding new spike at time = %f at index = %u, spikeCount = %u", spikeTime,i,neuron->spikeCount);
        return TRUE;
    }
 }
@@ -317,7 +317,7 @@ uint32_t neuron_model_spiketime_pop(neuron_t * neuron){
     }
     neuron->spike_times[9] = INFINITY  ;   
     neuron->spikeCount--;
-    log_info("Removing spike from spike_times = %f, neuron->spikeCount = %u", nextSpike,neuron->spikeCount);
+    log_info("Removing spike from spike_times = %f, spikeCount = %u", nextSpike,neuron->spikeCount);
     return(nextSpike);	
 }
 
