@@ -75,7 +75,7 @@ static float neuron_model_update_membrane_voltage(float time, neuron_t *neuron) 
 static void lambda(neuron_t * neuron, key_t key, uint32_t neuron_index, bool use_key){
     uint16_t currentState  = neuron->phase;
     uint32_t nextEventTime = (uint32_t) neuron->eot;
-    log_info("lambda: neuron %u currentState = %u, nextEventTime = %u",neuron_index,  currentState, nextEventTime );
+    //log_info("lambda: neuron %u currentState = %u, nextEventTime = %u",neuron_index,  currentState, nextEventTime );
     if(use_key){
         if(currentState == 2){
         //clear 32nd bit if packet is spike 
@@ -127,14 +127,14 @@ int32_t neuron_model_check_pending_ev(neuron_t * neuron){
 int32_t neuron_model_PDevs_sim(neuron_t * neuron, int32_t threshold,  uint32_t nextSpikeTime, key_t key, uint32_t neuron_index, input_t input, bool use_key){
     if(neuron->tn <= neuron->eit && neuron->tn <=  nextSpikeTime ){
         //Call deltaInt()
-        log_info("Executing internal event =  phase %u expired at tn = %u",neuron->phase,  neuron->tn);
+        //log_info("Executing internal event =  phase %u expired at tn = %u",neuron->phase,  neuron->tn);
         neuron_model_Devs_sim(neuron, 1,nextSpikeTime, threshold, key, neuron_index, input, use_key);
         
         
     }else if(nextSpikeTime <= neuron->eit &&  nextSpikeTime < neuron->tn ){
         //Call deltaExt()
         neuron->waitCounter = 0;
-        log_info("Executing external event at time = %u", nextSpikeTime);
+        //log_info("Executing external event at time = %u", nextSpikeTime);
         neuron_model_Devs_sim(neuron, 2,nextSpikeTime,  threshold, key, neuron_index, input, use_key);
         neuron->lastProcessedSpikeTime = neuron_model_spiketime_pop(neuron);
     }else if(nextSpikeTime == INFINITY && neuron->tn == INFINITY){
@@ -211,7 +211,7 @@ void neuron_model_eit_update(neuron_t * neuron, float time){
 
     if(neuron->eit == 0 || neuron->eit > time ){
         neuron->eit = time;
-        log_info("Updating neuron eit to %f",neuron->eit );
+        //log_info("Updating neuron eit to %f",neuron->eit );
     }
     
 }
@@ -318,7 +318,7 @@ int32_t neuron_model_get_phase(neuron_t * neuron){
 
 void neuron_model_print_parameters(const neuron_t *neuron) {
 
-    log_info("V reset       = %11.4k mv", neuron->V_reset);
+    /* log_info("V reset       = %11.4k mv", neuron->V_reset);
     log_info("V rest        = %11.4k mv", neuron->V_rest);
 
     log_info("I offset      = %11.4k nA", neuron->I_offset);
@@ -328,5 +328,5 @@ void neuron_model_print_parameters(const neuron_t *neuron) {
 
     log_info("T refract  neuron_model_print_state_variables   = %u timesteps", neuron->T_refract);
     log_info("V_membrane     = %f ", neuron->V_membrane);
-    
+     */
 }

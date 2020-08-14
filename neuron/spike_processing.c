@@ -215,7 +215,7 @@ static void setup_synaptic_dma_read(dma_buffer *current_buffer,
             log_info("Reusing row to process mc_pkt. Exiting setup_synaptic_dma_read"); 
         } */
          if (n_bytes_to_transfer == 0) {
-            log_info("Processing mc_pkt, row is in DTCM. Exiting setup_synaptic_dma_read"); 
+            //log_info("Processing mc_pkt, row is in DTCM. Exiting setup_synaptic_dma_read"); 
             // If the row is in DTCM, process the row now
             synaptic_row_t single_fixed_synapse =
                     direct_synapses_get_direct_synapse(row_address);
@@ -233,7 +233,7 @@ static void setup_synaptic_dma_read(dma_buffer *current_buffer,
     }
 
     if(setup_done){
-        log_info("setup_done = TRUE, process synaptic row");    
+        //log_info("setup_done = TRUE, process synaptic row");    
          //dma_buffer *next_buffer = &dma_buffers[next_buffer_to_fill]; 
         uint32_t current_buffer_index = buffer_being_read;
         dma_buffer *current_buffer = &dma_buffers[current_buffer_index];            
@@ -242,7 +242,7 @@ static void setup_synaptic_dma_read(dma_buffer *current_buffer,
             synapses_process_synaptic_row(
                     time, current_buffer->row, &write_back);
     }else{
-        log_info("setup_done = FALSE, go back to dma_complete_callback"); 
+        //log_info("setup_done = FALSE, go back to dma_complete_callback"); 
     }
 
     spike_processing_count++;
@@ -314,7 +314,7 @@ static void dma_complete_callback(uint unused, uint tag) {
     dma_complete_count++;
 
     //log_debug("DMA transfer complete at time %u with tag %u", time, tag);
-    log_info("DMA transfer complete at time %u with tag %u", time, tag);
+    //log_info("DMA transfer complete at time %u with tag %u", time, tag);
 
     // Get pointer to current buffer
     uint32_t current_buffer_index = buffer_being_read;
