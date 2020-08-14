@@ -269,14 +269,6 @@ static bool neuron_impl_check_sim_end(uint32_t n_neurons){
                 endSim = endSim && true;
             }
         }
-        /* else if(neuron_model_get_phase(&neuron_array[n]) == 5){ // Remove ERR ? Check later.
-            err = true;
-            break;
-        } */
-        // if(err){
-        //     log_info("Call end sim as neuron in Error phase");
-        //     return(err);
-        // }else
         if(endSim){
             log_info("All neurons in Idle state. Call end_sim");
             return(endSim);
