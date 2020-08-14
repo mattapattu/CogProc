@@ -21,6 +21,8 @@
 #define _NEURON_IMPL_STANDARD_H_
 
 #include "neuron_impl.h"
+#include <common/in_spiketimes.h>
+
 
 // Includes for model parts used in this implementation
 #include <neuron/models/neuron_model.h>
@@ -256,7 +258,8 @@ for (index_t n = 0; n < n_neurons; n++) {
 static bool neuron_impl_check_sim_end(uint32_t n_neurons){
     bool endSim = true;
     bool err = false;
-    for (index_t n = 0; n < n_neurons; n++) {
+    if(in_spiketimes_empty()){
+        for (index_t n = 0; n < n_neurons; n++) {
         if(neuron_model_get_phase(&neuron_array[n]) == 4){
             endSim = endSim && true;
         }else if(neuron_model_get_phase(&neuron_array[n]) == 5){
@@ -271,6 +274,10 @@ static bool neuron_impl_check_sim_end(uint32_t n_neurons){
         log_info("All neurons in Idle state. Call end_sim");
         return(endSim);
     }
+    }else{
+        return(false);
+    }
+    
 }
 
 
