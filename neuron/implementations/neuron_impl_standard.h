@@ -281,7 +281,7 @@ static bool neuron_impl_add_spike(index_t neuron_index, uint32_t time) {
     return(neuron_model_add_spike(neuron, time));
 }
 
-static int32_t  neuron_impl_neuron_update(uint32_t time, index_t neuron_index,
+static void  neuron_impl_neuron_update(uint32_t time, index_t neuron_index,
         input_t external_bias, key_t key,  bool eit, bool use_key) {
     // Get the neuron itself
     neuron_pointer_t neuron = &neuron_array[neuron_index];
@@ -317,7 +317,7 @@ static int32_t  neuron_impl_neuron_update(uint32_t time, index_t neuron_index,
          }
         
         ret = neuron_model_PDevs_sim(neuron, threshold, nextSpikeTime, key, neuron_index, input,use_key);
-        log_info("neuron_model_PDevs_sim returns %d", ret);
+        log_info("PDEVS returns %d", ret);
         // if(ret == 1){
         //     continue;
         // }else{
@@ -333,7 +333,7 @@ static int32_t  neuron_impl_neuron_update(uint32_t time, index_t neuron_index,
     //     //log_info("New event has not arrived after X clock cycles");
     //     return -1;
     // }
-    return(ret);
+    //return(ret);
 
     // Return the boolean to the model timestep update
     
