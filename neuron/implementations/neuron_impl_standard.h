@@ -272,10 +272,11 @@ static bool neuron_impl_check_sim_end(uint32_t n_neurons){
             err = true;
             break;
         } */
-        if(err){
-            log_info("Call end sim as neuron in Error phase");
-            return(err);
-        }else if(endSim){
+        // if(err){
+        //     log_info("Call end sim as neuron in Error phase");
+        //     return(err);
+        // }else
+        if(endSim){
             log_info("All neurons in Idle state. Call end_sim");
             return(endSim);
         }
