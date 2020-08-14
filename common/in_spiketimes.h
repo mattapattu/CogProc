@@ -54,7 +54,7 @@ static inline bool in_spiketimes_initialize_spike_buffer(uint32_t size) {
     return buffer2 != 0;
 }
 
-static inline bool in_spiketimes_empty() {
+static inline bool in_spiketimes_not_empty() {
     return _circular_buffer_not_empty(buffer2);
 }
 
