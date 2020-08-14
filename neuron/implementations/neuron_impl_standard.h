@@ -259,7 +259,7 @@ static bool neuron_impl_check_sim_end(uint32_t n_neurons){
     bool endSim = false;
     //bool err = false;
     if(!in_spiketimes_not_empty()){
-        //log("in_spiketimes is not empty. ");
+        log("in_spiketimes is empty");
         // log("in_spiketimes is empty. Checking neuron states");
         endSim = true;
         for (index_t n = 0; n < n_neurons; n++) {

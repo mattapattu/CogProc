@@ -132,13 +132,13 @@ int32_t neuron_model_check_pending_ev(neuron_t * neuron){
 int32_t neuron_model_PDevs_sim(neuron_t * neuron, int32_t threshold,  uint32_t nextSpikeTime, key_t key, uint32_t neuron_index, input_t input, bool use_key){
     if(neuron->tn <= neuron->eit && neuron->tn <=  nextSpikeTime ){
         //Call deltaInt()
-        //log_info("Executing internal event =  phase %u expired at tn = %u",neuron->phase,  neuron->tn);
+        log_info("Executing internal event =  phase %u expired at tn = %u",neuron->phase,  neuron->tn);
         neuron_model_Devs_sim(neuron, 1,nextSpikeTime, threshold, key, neuron_index, input, use_key);
         
         
     }else if(nextSpikeTime <= neuron->eit &&  nextSpikeTime < neuron->tn ){
         //Call deltaExt()
-        //log_info("Executing external event at time = %u", nextSpikeTime);
+        log_info("Executing external event at time = %u", nextSpikeTime);
         neuron_model_Devs_sim(neuron, 2,nextSpikeTime,  threshold, key, neuron_index, input, use_key);
         neuron->lastProcessedSpikeTime = neuron_model_spiketime_pop(neuron);
     }else if(nextSpikeTime == INFINITY && neuron->tn == INFINITY){
