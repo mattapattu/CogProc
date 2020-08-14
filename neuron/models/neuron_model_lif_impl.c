@@ -197,7 +197,7 @@ void neuron_model_Devs_sim(neuron_t * neuron, int16_t event_type, uint32_t nextS
         log_info("Neuron %u external event: at time = %f in phase %d",neuron_index, nextSpikeTime, neuron->phase);
         neuron->phase = deltaExt(neuron, nextSpikeTime, threshold, input);
         log_info("New neuron phase = %d",neuron->phase);
-        neuron->tl = (float) nextSpikeTime;
+        neuron->tl = (float) nextSpikeTime + deltaT; //deltaExt lasts for deltaT milliseconds.
         if(ta(neuron) >= INFINITY){
             neuron->tn = INFINITY;
             log_info("Neuron %u: update tn = INFINITY", neuron_index);
