@@ -99,6 +99,20 @@ static void lambda(neuron_t * neuron, key_t key, uint32_t neuron_index, bool use
     
 }
 
+
+
+static void lif_update(float time, neuron_t * neuron, input_t input_this_timestep) {
+
+    // update membrane voltage
+    REAL alpha = input_this_timestep * neuron->R_membrane + neuron->V_rest;
+    // update membrane voltage
+    REAL V_prev = neuron_model_update_membrane_voltage(time, neuron);
+    neuron->V_membrane = alpha - (neuron->exp_TC * (alpha - V_prev));
+    
+    
+
+}
+
 static int32_t deltaExt(neuron_t * neuron, uint32_t time, int32_t threshold, input_t input) {
 
     if(neuron->phase == 2 || neuron->phase == 3){
@@ -187,19 +201,6 @@ static void neuron_model_Devs_sim(neuron_t * neuron, int16_t event_type, uint32_
         }
         //log_info("Event 2 , new tl = %u, new tn = %u",neuron->tl,  neuron->tn);
     }
-
-}
-
-
-static void lif_update(float time, neuron_t * neuron, input_t input_this_timestep) {
-
-    // update membrane voltage
-    REAL alpha = input_this_timestep * neuron->R_membrane + neuron->V_rest;
-    // update membrane voltage
-    REAL V_prev = neuron_model_update_membrane_voltage(time, neuron);
-    neuron->V_membrane = alpha - (neuron->exp_TC * (alpha - V_prev));
-    
-    
 
 }
 
