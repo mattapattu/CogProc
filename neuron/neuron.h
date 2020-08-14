@@ -73,7 +73,7 @@ void neuron_eit_update(uint32_t time, index_t neuron_index);
 //! \param[in] address: the address where the neuron parameters are stored
 //!                     in SDRAM
 //! \return bool which is true if the resume was successful or not
-bool neuron_resume(address_t address);
+//bool neuron_resume(address_t address);
 
 //! \brief Perform steps needed before pausing a simulation.
 //! \details Stores neuron parameters back into SDRAM.
