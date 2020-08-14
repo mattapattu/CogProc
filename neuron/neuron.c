@@ -73,15 +73,15 @@ static bool neuron_load_neuron_parameters(address_t address) {
     return true;
 }
 
-// /* bool neuron_resume(address_t address) { // EXPORTED
-//     if (!neuron_recording_reset(n_neurons)){
-//         log_error("failed to reload the neuron recording parameters");
-//         return false;
-//     }
+bool neuron_resume(address_t address) { // EXPORTED
+    if (!neuron_recording_reset(n_neurons)){
+        log_error("failed to reload the neuron recording parameters");
+        return false;
+    }
 
-//     log_debug("neuron_reloading_neuron_parameters: starting");
-//     return neuron_load_neuron_parameters(address);
-// } */
+    log_debug("neuron_reloading_neuron_parameters: starting");
+    return neuron_load_neuron_parameters(address);
+}
 
 bool neuron_initialise(address_t address, address_t recording_address, // EXPORTED
         uint32_t *n_neurons_value, uint32_t *n_synapse_types_value,

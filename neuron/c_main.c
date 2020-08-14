@@ -246,26 +246,26 @@ static bool initialise(void) {
     return true;
 }
 
-// //! \brief the function to call when resuming a simulation
-// void resume_callback(void) {
-//     data_specification_metadata_t *ds_regions =
-//             data_specification_get_data_address();
+//! \brief the function to call when resuming a simulation
+void resume_callback(void) {
+    data_specification_metadata_t *ds_regions =
+            data_specification_get_data_address();
 
-//     // try resuming neuron
-//     if (!neuron_resume(
-//             data_specification_get_region(NEURON_PARAMS_REGION, ds_regions))) {
-//         log_error("failed to resume neuron.");
-//         rt_error(RTE_SWERR);
-//     }
+    // try resuming neuron
+    if (!neuron_resume(
+            data_specification_get_region(NEURON_PARAMS_REGION, ds_regions))) {
+        log_error("failed to resume neuron.");
+        rt_error(RTE_SWERR);
+    }
 
-//     // If the time has been reset to zero then the ring buffers need to be
-//     // flushed in case there is a delayed spike left over from a previous run
-//     // NOTE: at reset, time is set to UINT_MAX ahead of timer_callback(...)
-//     if ((time+1) == 0) {
-//     	synapses_flush_ring_buffers();
-//     }
+    // If the time has been reset to zero then the ring buffers need to be
+    // flushed in case there is a delayed spike left over from a previous run
+    // NOTE: at reset, time is set to UINT_MAX ahead of timer_callback(...)
+    if ((time+1) == 0) {
+    	synapses_flush_ring_buffers();
+    }
 
-// }
+}
 
 
 
