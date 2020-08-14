@@ -99,53 +99,55 @@ static void lambda(neuron_t * neuron, key_t key, uint32_t neuron_index, bool use
     
 }
 
-int32_t neuron_model_check_pending_ev(neuron_t * neuron){
-    //log_info("phase = %u, tn = %u, eit = %u, spikeCount = %u", neuron->phase, neuron->tn, neuron->eit, neuron->spikeCount);
-    if(neuron->tn < INFINITY || neuron->spike_times[0] < INFINITY ){
-        //log_info("tn = %f < INFINITY, repeat PDEVS",neuron->tn);
-        log_info("tn = %f, spikeCount = %u, repeat PDEVS", neuron->tn, neuron->spikeCount);
-        return 1;
+static int32_t deltaExt(neuron_t * neuron, uint32_t time, int32_t threshold, input_t input) {
+
+    if(neuron->phase == 2 || neuron->phase == 3){
+        //log_info("Ignore input as neuron is in threshold/refractory phase");
+        return(neuron->phase);
+    }else{
+        //log_info("external input = %f", input);
+        lif_update(time, neuron, input);
+        //log_info("New V_membrane after lif_update = %f, threshold = %f",  neuron->V_membrane,threshold);
+        if(neuron->V_membrane >= -50){ //do not hard-code, change this
+        //log_info("New neuron state = %d",  2);    
+            return(2);
+        }else{
+        //log_info("New neuron state = %d",  1);        
+            return(1);
+        }
     }
-    // else if(neuron->spike_times[0] < INFINITY){
-    //     log_info("spikeCount = %u > 0, repeat PDEVS", neuron->spikeCount);
-    //     return 1;
-    // }
-    else{
-        log_info("set phase to IDLE");
-        neuron->phase = 4;
-        return 0;
-    }
+
+    
 }
 
+static int32_t deltaInt(neuron_t * neuron) {
+	
+	//log_info("Inh 1: %12.6k, Inh 2: %12.6k", inh_input[0], inh_input[1]);
 
-//DEVS PDEVS  simulator
-int32_t neuron_model_PDevs_sim(neuron_t * neuron, int32_t threshold,  uint32_t nextSpikeTime, key_t key, uint32_t neuron_index, input_t input, bool use_key){
-    if(neuron->tn <= neuron->eit && neuron->tn <=  nextSpikeTime ){
-        //Call deltaInt()
-        log_info("Executing tn =  phase %u expired at tn = %u",neuron->phase,  neuron->tn);
-        neuron_model_Devs_sim(neuron, 1,nextSpikeTime, threshold, key, neuron_index, input, use_key);
-        
-        
-    }else if(nextSpikeTime <= neuron->eit &&  nextSpikeTime < neuron->tn ){
-        //Call deltaExt()
-        log_info("Executing ext. event at time = %u", nextSpikeTime);
-        neuron_model_Devs_sim(neuron, 2,nextSpikeTime,  threshold, key, neuron_index, input, use_key);
-        neuron->lastProcessedSpikeTime = neuron_model_spiketime_pop(neuron);
-    }else if(nextSpikeTime == INFINITY && neuron->tn == INFINITY){
-        log_info("Stop nextSpikeTime & tn = INFINITY");
-    }
-    else{
-        //log_info("Cannot process nextspike or the next internal event");
-        log_info("Unknown cond: tn = %f, eit = %f, nextSpikeTime = %f, spikeCount = %u", neuron->tn, neuron->eit, nextSpikeTime, neuron->spikeCount);
-        return(-1);
+    if(neuron->phase == 0 || neuron->phase == 1){
+        //log_info("Neuron in phase 0/1, no neuron phase change ");
+        return(neuron->phase);
+    }else if(neuron->phase == 2){
+        //log_info("Neuron in phase 2, reset V_memb and change to phase 3");
+        neuron->V_membrane = neuron->V_reset;
+        return(3);
+    }else if(neuron->phase == 3){
+        return(1);
     }
 
-    if(neuron->eit < neuron->tn ){
-        neuron->eot = neuron->eit; 
-    }else{
-        neuron->eot  = neuron->tn; 
+    
+}
+
+static uint32_t neuron_model_spiketime_pop(neuron_t * neuron){
+
+    uint32_t nextSpike = neuron->spike_times[0];
+    for(uint8_t i = 0; i < 5; i++){
+        neuron->spike_times[i] = neuron->spike_times[i+1];
     }
-    return(neuron_model_check_pending_ev(neuron));
+    neuron->spike_times[4] = INFINITY;   
+    neuron->spikeCount--;
+    //log_info("Removing spike from spike_times = %f, spikeCount = %u", nextSpike,neuron->spikeCount);
+    return(nextSpike);	
 }
 
 //DEVS atomic simulator
@@ -201,6 +203,57 @@ static void lif_update(float time, neuron_t * neuron, input_t input_this_timeste
 
 }
 
+int32_t neuron_model_check_pending_ev(neuron_t * neuron){
+    //log_info("phase = %u, tn = %u, eit = %u, spikeCount = %u", neuron->phase, neuron->tn, neuron->eit, neuron->spikeCount);
+    if(neuron->tn < INFINITY || neuron->spike_times[0] < INFINITY ){
+        //log_info("tn = %f < INFINITY, repeat PDEVS",neuron->tn);
+        log_info("tn = %f, spikeCount = %u, repeat PDEVS", neuron->tn, neuron->spikeCount);
+        return 1;
+    }
+    // else if(neuron->spike_times[0] < INFINITY){
+    //     log_info("spikeCount = %u > 0, repeat PDEVS", neuron->spikeCount);
+    //     return 1;
+    // }
+    else{
+        log_info("set phase to IDLE");
+        neuron->phase = 4;
+        return 0;
+    }
+}
+
+
+//DEVS PDEVS  simulator
+int32_t neuron_model_PDevs_sim(neuron_t * neuron, int32_t threshold,  uint32_t nextSpikeTime, key_t key, uint32_t neuron_index, input_t input, bool use_key){
+    if(neuron->tn <= neuron->eit && neuron->tn <=  nextSpikeTime ){
+        //Call deltaInt()
+        log_info("Executing tn =  phase %u expired at tn = %u",neuron->phase,  neuron->tn);
+        neuron_model_Devs_sim(neuron, 1,nextSpikeTime, threshold, key, neuron_index, input, use_key);
+        
+        
+    }else if(nextSpikeTime <= neuron->eit &&  nextSpikeTime < neuron->tn ){
+        //Call deltaExt()
+        log_info("Executing ext. event at time = %u", nextSpikeTime);
+        neuron_model_Devs_sim(neuron, 2,nextSpikeTime,  threshold, key, neuron_index, input, use_key);
+        neuron->lastProcessedSpikeTime = neuron_model_spiketime_pop(neuron);
+    }else if(nextSpikeTime == INFINITY && neuron->tn == INFINITY){
+        log_info("Stop nextSpikeTime & tn = INFINITY");
+    }
+    else{
+        //log_info("Cannot process nextspike or the next internal event");
+        log_info("Unknown cond: tn = %f, eit = %f, nextSpikeTime = %f, spikeCount = %u", neuron->tn, neuron->eit, nextSpikeTime, neuron->spikeCount);
+        return(-1);
+    }
+
+    if(neuron->eit < neuron->tn ){
+        neuron->eot = neuron->eit; 
+    }else{
+        neuron->eot  = neuron->tn; 
+    }
+    return(neuron_model_check_pending_ev(neuron));
+}
+
+
+
 void neuron_model_eit_update(neuron_t * neuron, float time){
 
     if(neuron->eit == 0 || neuron->eit > time ){
@@ -210,44 +263,6 @@ void neuron_model_eit_update(neuron_t * neuron, float time){
     
 }
 
-static int32_t deltaExt(neuron_t * neuron, uint32_t time, int32_t threshold, input_t input) {
-
-    if(neuron->phase == 2 || neuron->phase == 3){
-        //log_info("Ignore input as neuron is in threshold/refractory phase");
-        return(neuron->phase);
-    }else{
-        //log_info("external input = %f", input);
-        lif_update(time, neuron, input);
-        //log_info("New V_membrane after lif_update = %f, threshold = %f",  neuron->V_membrane,threshold);
-        if(neuron->V_membrane >= -50){ //do not hard-code, change this
-        //log_info("New neuron state = %d",  2);    
-            return(2);
-        }else{
-        //log_info("New neuron state = %d",  1);        
-            return(1);
-        }
-    }
-
-    
-}
-
-static int32_t deltaInt(neuron_t * neuron) {
-	
-	//log_info("Inh 1: %12.6k, Inh 2: %12.6k", inh_input[0], inh_input[1]);
-
-    if(neuron->phase == 0 || neuron->phase == 1){
-        //log_info("Neuron in phase 0/1, no neuron phase change ");
-        return(neuron->phase);
-    }else if(neuron->phase == 2){
-        //log_info("Neuron in phase 2, reset V_memb and change to phase 3");
-        neuron->V_membrane = neuron->V_reset;
-        return(3);
-    }else if(neuron->phase == 3){
-        return(1);
-    }
-
-    
-}
 
 bool neuron_model_add_spike(neuron_t * neuron, uint32_t  spikeTime){
    neuron->spikeCount++;
@@ -277,17 +292,7 @@ bool neuron_model_add_spike(neuron_t * neuron, uint32_t  spikeTime){
 }
 
 
-static uint32_t neuron_model_spiketime_pop(neuron_t * neuron){
 
-    uint32_t nextSpike = neuron->spike_times[0];
-    for(uint8_t i = 0; i < 5; i++){
-        neuron->spike_times[i] = neuron->spike_times[i+1];
-    }
-    neuron->spike_times[4] = INFINITY;   
-    neuron->spikeCount--;
-    //log_info("Removing spike from spike_times = %f, spikeCount = %u", nextSpike,neuron->spikeCount);
-    return(nextSpike);	
-}
 
 void neuron_model_init(neuron_t *neuron){
     neuron->spikeCount = 0;
