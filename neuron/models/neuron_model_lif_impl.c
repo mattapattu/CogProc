@@ -156,7 +156,7 @@ int32_t neuron_model_PDevs_sim(neuron_t * neuron, int32_t threshold,  uint32_t n
     //If ext or int event has been executed,
     // check ONCE another event can be execued immediately without 
     //new pkts recvd, exit otherwise
-    return(neuron_model_check_next_ev());
+    return(neuron_model_check_next_ev(neuron));
 }
 
 //DEVS atomic simulator
