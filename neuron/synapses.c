@@ -266,7 +266,7 @@ static inline void process_fixed_synapses(
 
         // Store saturated value back in ring-buffer
         ring_buffers[ring_buffer_index] = accumulation;
-        log_info("Calling PDEVS_Sim() at time  = %u", time);
+        //log_info("Calling PDEVS_Sim() at time  = %u", time);
         if(eit == 0){
             neuron_pdevs_update(time, neuron_index,FALSE);
         } //msg is EIT 
@@ -364,7 +364,7 @@ uint32_t synapses_get_ring_buffer_input(uint32_t time, uint32_t neuron_index){
                             ring_buffers[ring_buffer_index],
                             ring_buffer_to_input_left_shifts[0]);
     ring_buffers[ring_buffer_index] = 0;                                        
-    log_info("Fetching ring_buffer_index = %u, input = %u",ring_buffer_index, input );
+    //log_info("Fetching ring_buffer_index = %u, input = %u",ring_buffer_index, input );
     // Re-enable the interrupts
     spin1_mode_restore(state);
 

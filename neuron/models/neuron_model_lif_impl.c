@@ -75,7 +75,7 @@ static float neuron_model_update_membrane_voltage(float time, neuron_t *neuron) 
 static void lambda(neuron_t * neuron, key_t key, uint32_t neuron_index, bool use_key){
     uint16_t currentState  = neuron->phase;
     uint32_t nextEventTime = (uint32_t) neuron->eot;
-    log_info("lambda: neuron %u currentState = %u, nextEventTime = %u",neuron_index,  currentState, nextEventTime );
+    //log_info("lambda: neuron %u currentState = %u, nextEventTime = %u",neuron_index,  currentState, nextEventTime );
     if(use_key){
         if(currentState == 2){
         //clear 32nd bit if packet is spike 
@@ -142,20 +142,9 @@ int32_t neuron_model_PDevs_sim(neuron_t * neuron, int32_t threshold,  uint32_t n
         log_info("Executing external event at time = %u", nextSpikeTime);
         neuron_model_Devs_sim(neuron, 2,nextSpikeTime,  threshold, key, neuron_index, input, use_key);
         neuron_model_spiketime_pop(neuron);
-    }
-    // // an expected spike has been delayed
-    // else if(nextSpikeTime > neuron->eit){
-    //     //log_info("New event has not arrived after X clock cycles");
-    //     if(neuron->waitCounter > 30){
-            
-    //         //log_info("New event has not arrived after waitCounter> 30. Set neuron phase to ERR");
-    //         neuron->phase = 5;
-    //         return(-1);
-    //     }
-    //     neuron->waitCounter++;
-    //     spin1_delay_us(1000);
-        
-    // }
+    }else if(nextSpikeTime == INFINITY && neuron->tn == INFINITY){
+
+    }    
     else{
         log_info("Unknown condition. Check");
         log_info("tn = %f, eit = %f, nextSpikeTime = %u", neuron->tn, neuron->eit, nextSpikeTime);

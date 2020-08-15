@@ -205,7 +205,7 @@ static void setup_synaptic_dma_read(dma_buffer *current_buffer,
     bool setup_done = false;
     while (!setup_done && is_something_to_do(&row_address,
             &n_bytes_to_transfer, &spike, &dma_n_rewires, &dma_n_spikes, spiketime)) {
-        log_info("While loop: mc_pkt (%u,%u)", spike, *spiketime);        
+        //log_info("While loop: mc_pkt (%u,%u)", spike, *spiketime);        
         /* if (current_buffer != NULL &&
                 current_buffer->sdram_writeback_address == row_address) {
             // If we can reuse the row, add on what we can use it for
@@ -230,7 +230,7 @@ static void setup_synaptic_dma_read(dma_buffer *current_buffer,
             dma_n_spikes = 0;
             spike_processing_count++;
         } else {
-            log_info("Start DMA for mc_pkt. Exiting setup_synaptic_dma_read"); 
+            //log_info("Start DMA for mc_pkt. Exiting setup_synaptic_dma_read"); 
             // If the row is in SDRAM, set up the transfer and we are done
             do_dma_read(row_address, n_bytes_to_transfer, spike);
             setup_done = true;
