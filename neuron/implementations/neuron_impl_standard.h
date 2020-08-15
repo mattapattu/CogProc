@@ -252,22 +252,42 @@ for (index_t n = 0; n < n_neurons; n++) {
 #endif // LOG_LEVEL >= LOG_DEBUG
 }
 
-static bool neuron_impl_check_sim_end(uint32_t n_neurons){
-    bool endSim = false;
-    //bool err = false;
-    // if(!check_spiketimes_not_empty()){
-        log("in_spiketimes is empty");
-        // log("in_spiketimes is empty. Checking neuron states");
-        endSim = true;
-        for (index_t n = 0; n < n_neurons; n++) {
-            if(neuron_model_get_phase(&neuron_array[n]) == 4){
-                endSim = endSim && true;
-            }
-        }
+// static bool neuron_impl_check_sim_end(uint32_t n_neurons){
+//     bool endSim = false;
+//     //bool err = false;
+//     // if(!check_spiketimes_not_empty()){
+//         log("in_spiketimes is empty");
+//         // log("in_spiketimes is empty. Checking neuron states");
+//         endSim = true;
+//         for (index_t n = 0; n < n_neurons; n++) {
+//             if(neuron_model_get_phase(&neuron_array[n]) == 4){
+//                 endSim = endSim && true;
+//             }
+//         }
               
-    // }
+//     // }
     
-    return(endSim);
+//     return(endSim);
+// }
+
+static bool neuron_impl_check_sim_end(uint32_t n_neurons){
+    bool endSim = true;
+    bool err = false;
+    for (index_t n = 0; n < n_neurons; n++) {
+        if(neuron_model_get_phase(&neuron_array[n]) == 4){
+            endSim = endSim && true;
+        }else if(neuron_model_get_phase(&neuron_array[n]) == 5){
+            err = true;
+            break;
+        }
+    }
+    if(err){
+        log_info("Call end sim as neuron in Error phase");
+        return(err);
+    }else if(endSim){
+        log_info("All neurons in Idle state. Call end_sim");
+        return(endSim);
+    }
 }
 
 
