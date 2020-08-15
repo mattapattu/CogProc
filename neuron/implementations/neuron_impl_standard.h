@@ -358,6 +358,22 @@ static uint32_t neuron_impl_update_spiketime(uint32_t time, index_t neuron_index
 
 
 
+static void neuron_impl_reset_spiked(uint32_t neuron_index){
+    neuron_pointer_t neuron = &neuron_array[neuron_index];
+    neuron->hasSpiked = false;
+}
+
+static bool neuron_impl_get_spiked(uint32_t neuron_index){
+    neuron_pointer_t neuron = &neuron_array[neuron_index];
+    return(neuron->hasSpiked);
+}
+
+static uint32_t neuron_impl_get_lastThresholdTime(uint32_t neuron_index){
+    neuron_pointer_t neuron = &neuron_array[neuron_index];
+    return(neuron->lastThresholdTime);
+}
+
+
 SOMETIMES_UNUSED // Marked unused as only used sometimes
 //! \brief Stores neuron parameters back into SDRAM
 //! \param[out] address: the address in SDRAM to start the store

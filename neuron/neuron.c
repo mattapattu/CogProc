@@ -165,12 +165,12 @@ void neuron_pdevs_update(uint32_t time, index_t neuron_index, bool eit){
     //     neuron_recording_setup_for_next_recording();
 
     // }
+    neuron_reset_spiked(neuron_index);
     neuron_impl_neuron_update(time, neuron_index, external_bias,key,eit,use_key);
-    bool has_spiked  = check_neuron_has_spiked(neuron_index);
-    if(has_spiked){
+    //bool has_spiked  = neuron_check_spiked(neuron_has_spiked);
+    if(neuron_get_spiked(neuron_index)){
         neuron_recording_record_bit(SPIKE_RECORDING_BITFIELD, neuron_index);
-
-		neuron_recording_record(neuron_get_last_processed_spiketime());
+		neuron_recording_record(neuron_get_lastProcessedSpiketime());
 
     }
     // if(ret == 0){
@@ -183,6 +183,18 @@ void neuron_pdevs_update(uint32_t time, index_t neuron_index, bool eit){
         log_info("Calling end_sim for graceful exit");
         end_simulation();
     }
+}
+
+bool neuron_reset_spiked(uint32_t neuron_index){
+    return(neuron_impl_reset_spiked(neuron_index));
+}
+
+bool neuron_get_spiked(uint32_t neuron_index){
+    return(neuron_impl_get_spiked(neuron_index));
+}
+
+bool neuron_get_lastThresholdTime(uint32_t neuron_index){
+    return(neuron_impl_get_lastThresholdTime(neuron_index));
 }
 
 uint32_t neuron_update_spiketime(uint32_t time, index_t neuron_index){

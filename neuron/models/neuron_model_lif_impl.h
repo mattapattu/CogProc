@@ -78,6 +78,10 @@ typedef struct neuron_t {
 
     uint32_t lastProcessedSpikeTime;
 
+    uint32_t lastThresholdTime;
+
+    bool hasSpiked;
+
 
 } neuron_t;
 

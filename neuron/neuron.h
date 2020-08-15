@@ -107,6 +107,13 @@ void neuron_print_synapse_parameters(void);
 const char *neuron_get_synapse_type_char(uint32_t synapse_type);
 
 uint32_t neuron_update_spiketime(uint32_t time, index_t neuron_index);
+
+bool neuron_reset_spiked(uint32_t neuron_index);
+
+bool neuron_get_spiked(uint32_t neuron_index);
+
+bool neuron_get_lastThresholdTime(uint32_t neuron_index);
+
 #endif
 
 #endif // _NEURON_H_
