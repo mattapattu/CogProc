@@ -24,6 +24,7 @@
 
 //static int32_t last_update_time = 0;
 #define INFINITY  2147483646
+#define deltaT 1 // deltaT = 1000ms
 
 
 //! \brief simple Leaky I&F ODE
@@ -107,25 +108,24 @@ static void lambda(neuron_t * neuron, key_t key, uint32_t neuron_index, bool use
     
 }
 
-// int32_t neuron_model_check_pending_ev(neuron_t * neuron){
-//     //log_info("phase = %u, tn = %u, eit = %u, spikeCount = %u", neuron->phase, neuron->tn, neuron->eit, neuron->spikeCount);
-//     if(neuron->tn < INFINITY){
-//         log_info("Next Internal Event = %f < INFINITY, continue PDEVS loop",neuron->tn);
-//         return 1;
-//     }else if(neuron->spikeCount > 0){
-//         log_info("spikeCount > 0, continue PDEVS loop");
-//         return 1;
-//     }
-//     // else if(neuron->eit < INFINITY){
-//     //     log_info("earliest Input Time = %f < INFINITY, continue PDEVS loop",neuron->eit );
-//     //     return 1;
-//     // }
-//     else{
-//         log_info("eit = %f, no more events to process, set phase to IDLE", neuron->eit);
-//         neuron->phase = 4;
-//         return 0;
-//     }
-// }
+int32_t neuron_model_check_next_ev(neuron_t * neuron){
+    //log_info("phase = %u, tn = %u, eit = %u, spikeCount = %u", neuron->phase, neuron->tn, neuron->eit, neuron->spikeCount);
+    float nextSpikeTime = neuron->spike_times[0];
+    if(nextSpikeTime == INFINITY && neuron->tn == INFINITY){
+        log_info("Next events at INFINITY");
+        return(0);
+    }else if(neuron->tn <= neuron->eit && neuron->tn <=  nextSpikeTime ){
+        log_info("tn = %f can be executed, continue PDEVS loop",neuron->tn);
+        return(1);
+    }else if(nextSpikeTime <= neuron->eit &&  nextSpikeTime < neuron->tn){
+        log_info("nextSpikeTime = %f can be executed, continue PDEVS loop",neuron->tn);
+        return(1);
+    }else{
+        log_info("eit = %f, no more events to process, set phase to IDLE", neuron->eit);
+        neuron->phase = 4;
+        return(0);
+    }
+}
 
 
 //DEVS PDEVS  simulator
@@ -135,19 +135,15 @@ int32_t neuron_model_PDevs_sim(neuron_t * neuron, int32_t threshold,  uint32_t n
         log_info("Executing internal event =  phase %u expired at tn = %f",neuron->phase,  neuron->tn);
         neuron_model_Devs_sim(neuron, 1,nextSpikeTime, threshold, key, neuron_index, input, use_key);
         
-        
     }else if(nextSpikeTime <= neuron->eit &&  nextSpikeTime < neuron->tn ){
         //Call deltaExt()
         neuron->waitCounter = 0;
         log_info("Executing external event at time = %u", nextSpikeTime);
         neuron_model_Devs_sim(neuron, 2,nextSpikeTime,  threshold, key, neuron_index, input, use_key);
         neuron_model_spiketime_pop(neuron);
-    }else if(nextSpikeTime == INFINITY && neuron->tn == INFINITY){
-        log_info("Next events at INFINITY");
-        return(0);
-    }    
+    }
     else{
-        log_info("Cannot execute any events");
+        log_info("Cannot execute any events.Check");
         log_info("tn = %f, eit = %f, nextSpikeTime = %u", neuron->tn, neuron->eit, nextSpikeTime);
         return(-1);
     }
@@ -160,7 +156,7 @@ int32_t neuron_model_PDevs_sim(neuron_t * neuron, int32_t threshold,  uint32_t n
     //If ext or int event has been executed,
     // check ONCE another event can be execued immediately without 
     //new pkts recvd, exit otherwise
-    return(1);
+    return(neuron_model_check_next_ev());
 }
 
 //DEVS atomic simulator
@@ -190,7 +186,7 @@ void neuron_model_Devs_sim(neuron_t * neuron, int16_t event_type, uint32_t nextS
         //log_info("Neuron %u external event: at time = %f in phase %d",neuron_index, nextSpikeTime, neuron->phase);
         neuron->phase = deltaExt(neuron, nextSpikeTime, threshold, input);
         //log_info("New neuron phase = %d",neuron->phase);
-        neuron->tl = (float) nextSpikeTime;
+        neuron->tl = (float) nextSpikeTime + deltaT;
         if(ta(neuron) >= INFINITY){
             neuron->tn = INFINITY;
             //log_info("Neuron %u: update tn = INFINITY", neuron_index);

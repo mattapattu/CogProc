@@ -56,6 +56,7 @@ enum bitfield_recording_indices {
 
 // This import depends on variables defined above
 #include <neuron/neuron_recording.h>
+#define INFINITY  2147483646
 
 //! Array of neuron states
 static neuron_t *neuron_array;
@@ -304,7 +305,7 @@ static bool neuron_impl_add_spike(index_t neuron_index, uint32_t time) {
     return(neuron_model_add_spike(neuron, time));
 }
 
-static int32_t  neuron_impl_neuron_update(uint32_t time, index_t neuron_index,
+static void  neuron_impl_neuron_update(uint32_t time, index_t neuron_index,
         input_t external_bias, key_t key,  bool eit, bool use_key) {
     // Get the neuron itself
     neuron_pointer_t neuron = &neuron_array[neuron_index];
@@ -317,10 +318,6 @@ static int32_t  neuron_impl_neuron_update(uint32_t time, index_t neuron_index,
          if(!neuron_impl_add_spike(neuron_index, time)){
             log_error("Unable to add spike to neuron %u at time = %u", neuron_index, time);
         }
-        //Next input on this synapse can at the earliest occur only after curr_time + refractory_period
-        //float eit = (float) time + 0.1; // Do not hardcode refraactory period, change this
-        //log_info("New eit = %f",eit );
-        //neuron_model_eit_update(neuron, eit); 
     }
 
     threshold_type_pointer_t threshold_type =
