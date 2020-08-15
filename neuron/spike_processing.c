@@ -86,6 +86,9 @@ static uint32_t dma_complete_count = 0;
 //! the number of spikes that were processed (used in provenance generation)
 static uint32_t spike_processing_count = 0;
 
+static uint32_t spike_recvd_count = 0;
+
+
 //! The number of successful rewires
 static uint32_t n_successful_rewires = 0;
 
@@ -245,6 +248,10 @@ static void setup_synaptic_dma_read(dma_buffer *current_buffer,
     spike_processing_count++;
 }
 
+static uint32_t getSpikeProcessedCount(){
+    return(spike_processing_count);
+}
+
 //! \brief Set up a DMA write of synaptic data.
 //! \param[in] dma_buffer_index: Index of DMA buffer to use
 //! \param[in] plastic_only: If false, write the whole synaptic row.
@@ -296,11 +303,15 @@ void multicast_packet_received_callback(uint key, uint payload) {
                 log_debug("Could not trigger user event\n");
             }
         }
+        spike_recvd_count++;
     } else {
         log_debug("Could not add spike");
     }
 }
 
+static uint32_t getSpikeRecvdCount(){
+    return(spike_recvd_count);
+}
 //! \brief Called when a DMA completes
 //! \param unused: unused
 //! \param[in] tag: What sort of DMA has finished?

@@ -70,9 +70,7 @@ bool spike_processing_do_rewiring(int number_of_rewires);
 
 void multicast_packet_received_callback(uint key, uint payload);
 
-static inline bool is_spiketimes_not_empty() {
-       
-    return (in_spiketimes_not_empty());
-    }
+static uint32_t getSpikeRecvdCount();
+static uint32_t getSpikeProcessedCount();
 
 #endif // _SPIKE_PROCESSING_H_

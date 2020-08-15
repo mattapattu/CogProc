@@ -54,11 +54,11 @@ static inline bool in_spiketimes_initialize_spike_buffer(uint32_t size) {
     return buffer2 != 0;
 }
 
-static inline bool in_spiketimes_not_empty() {
-    bool empty = _circular_buffer_not_empty(buffer2);
-    log_info("spiketime empty = %u", empty);
-    return(!empty); 
-}
+// static inline bool in_spiketimes_not_empty() {
+//     bool empty = _circular_buffer_not_empty(buffer2);
+//     log_info("spiketime empty = %u", empty);
+//     return(!empty); 
+// }
 
 //! \brief Adds a spike to the input spike buffer.
 //! \param[in] spike: The spike to add
