@@ -282,6 +282,7 @@ static inline void process_fixed_synapses(
     }
 }
 
+
 //! private method for doing output debug data on the synapses
 static inline void print_synapse_parameters(void) {
 // only if the models are compiled in debug mode will this method contain

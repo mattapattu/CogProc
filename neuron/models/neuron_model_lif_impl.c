@@ -255,8 +255,6 @@ int32_t deltaExt(neuron_t * neuron, uint32_t time, int32_t threshold, input_t in
             return(1);
         }
     }
-
-    
 }
 
 int32_t deltaInt(neuron_t * neuron) {
