@@ -22,6 +22,7 @@
 
 #include "neuron_impl.h"
 
+
 // Includes for model parts used in this implementation
 #include <neuron/models/neuron_model.h>
 #include <neuron/input_types/input_type.h>
@@ -29,6 +30,7 @@
 #include <neuron/threshold_types/threshold_type.h>
 #include <neuron/synapse_types/synapse_types.h>
 #include <neuron/synapses.h>
+#include <common/in_spiketimes.h>
 
 // Further includes
 #include <debug.h>
