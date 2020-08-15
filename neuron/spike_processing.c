@@ -218,7 +218,7 @@ static void setup_synaptic_dma_read(dma_buffer *current_buffer,
             log_info("Reusing row to process mc_pkt. Exiting setup_synaptic_dma_read"); 
         } */
          if (n_bytes_to_transfer == 0) {
-            log_info("Processing mc_pkt, row is in DTCM. Exiting setup_synaptic_dma_read"); 
+            log_info("Processing mc_pkt (%u,%u), row is in DTCM", spike, *spiketime); 
             // If the row is in DTCM, process the row now
             synaptic_row_t single_fixed_synapse =
                     direct_synapses_get_direct_synapse(row_address);
@@ -238,6 +238,7 @@ static void setup_synaptic_dma_read(dma_buffer *current_buffer,
     }
 
     if(setup_done){
+        log_info("Processing mc_pkt (%u,%u), row is in DTCM", spike, *spiketime); 
         synaptic_row_t single_fixed_synapse =
                     direct_synapses_get_direct_synapse(row_address);
             bool write_back;
@@ -342,51 +343,6 @@ static void dma_complete_callback(uint unused, uint tag) {
     uint32_t *spiketime;
     setup_synaptic_dma_read(current_buffer, &n_rewires, &n_spikes, spiketime);
 
-    /* // Assume no write back but assume any write back is plastic only
-    bool write_back = false;
-    bool plastic_only = true;
-
-    // If rewiring, do rewiring first
-    for (uint32_t i = 0; i < n_rewires; i++) {
-        if (synaptogenesis_row_restructure(time, current_buffer->row)) {
-            write_back = true;
-            plastic_only = false;
-            n_successful_rewires++;
-        }
-    }
-
-    // Process synaptic row repeatedly for any upcoming spikes
-    while (n_spikes > 0) {
-
-        // Process synaptic row, writing it back if it's the last time
-        // it's going to be processed
-        bool write_back_now = false;
-        time = *spiketime;
-        log_info("Processing mc_pkt (%u,%u) after dma read, n_spikes = %u", current_buffer->originating_spike, time,n_spikes);
-        if (!synapses_process_synaptic_row(
-                time, current_buffer->row, &write_back_now)) {
-            log_error(
-                    "Error processing spike 0x%.8x for address 0x%.8x"
-                    " (local=0x%.8x)",
-                    current_buffer->originating_spike,
-                    current_buffer->sdram_writeback_address,
-                    current_buffer->row);
-
-            // Print out the row for debugging
-            for (uint32_t i = 0;
-                    i < (current_buffer->n_bytes_transferred >> 2); i++) {
-                log_error("%u: 0x%.8x", i, current_buffer->row[i]);
-            }
-            rt_error(RTE_SWERR);
-        }
-
-        write_back |= write_back_now;
-        n_spikes--;
-    }
-
-    if (write_back) {
-        setup_synaptic_dma_write(current_buffer_index, plastic_only);
-    } */
 }
 
 //! \brief Called when a user event is received
