@@ -239,12 +239,15 @@ static void setup_synaptic_dma_read(dma_buffer *current_buffer,
 
     if(setup_done){
         log_info("Processing mc_pkt (%u,%u), row is in DTCM", spike, *spiketime); 
-        synaptic_row_t single_fixed_synapse =
-                    direct_synapses_get_direct_synapse(row_address);
+        // synaptic_row_t single_fixed_synapse =
+        //             direct_synapses_get_direct_synapse(row_address);
+        uint32_t current_buffer_index = buffer_being_read;
+        dma_buffer *current_buffer = &dma_buffers[current_buffer_index];
+        
             bool write_back;
             time = *spiketime; //spiketime = payload = eit bit + time
             synapses_process_synaptic_row(
-                    time, single_fixed_synapse, &write_back);
+                    time, current_buffer->row, &write_back);
         spike_processing_count++;            
         
     }
