@@ -428,9 +428,9 @@ uint32_t spike_processing_get_dma_complete_count(void) {
     return dma_complete_count;
 }
 
-// uint32_t spike_processing_get_spike_processing_count(void) {
-//     return spike_processing_count;
-// }
+uint32_t spike_processing_get_spike_processing_count(void) {
+    return spike_processing_count;
+}
 
 //! \brief get the address of the circular buffer used for buffering received
 //!     spikes before processing them
