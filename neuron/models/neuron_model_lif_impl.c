@@ -107,25 +107,25 @@ static void lambda(neuron_t * neuron, key_t key, uint32_t neuron_index, bool use
     
 }
 
-int32_t neuron_model_check_pending_ev(neuron_t * neuron){
-    //log_info("phase = %u, tn = %u, eit = %u, spikeCount = %u", neuron->phase, neuron->tn, neuron->eit, neuron->spikeCount);
-    if(neuron->tn < INFINITY){
-        log_info("Next Internal Event = %f < INFINITY, continue PDEVS loop",neuron->tn);
-        return 1;
-    }else if(neuron->spikeCount > 0){
-        log_info("spikeCount > 0, continue PDEVS loop");
-        return 1;
-    }
-    // else if(neuron->eit < INFINITY){
-    //     log_info("earliest Input Time = %f < INFINITY, continue PDEVS loop",neuron->eit );
-    //     return 1;
-    // }
-    else{
-        log_info("eit = %f, no more events to process, set phase to IDLE", neuron->eit);
-        neuron->phase = 4;
-        return 0;
-    }
-}
+// int32_t neuron_model_check_pending_ev(neuron_t * neuron){
+//     //log_info("phase = %u, tn = %u, eit = %u, spikeCount = %u", neuron->phase, neuron->tn, neuron->eit, neuron->spikeCount);
+//     if(neuron->tn < INFINITY){
+//         log_info("Next Internal Event = %f < INFINITY, continue PDEVS loop",neuron->tn);
+//         return 1;
+//     }else if(neuron->spikeCount > 0){
+//         log_info("spikeCount > 0, continue PDEVS loop");
+//         return 1;
+//     }
+//     // else if(neuron->eit < INFINITY){
+//     //     log_info("earliest Input Time = %f < INFINITY, continue PDEVS loop",neuron->eit );
+//     //     return 1;
+//     // }
+//     else{
+//         log_info("eit = %f, no more events to process, set phase to IDLE", neuron->eit);
+//         neuron->phase = 4;
+//         return 0;
+//     }
+// }
 
 
 //DEVS PDEVS  simulator
@@ -144,11 +144,12 @@ int32_t neuron_model_PDevs_sim(neuron_t * neuron, int32_t threshold,  uint32_t n
         neuron_model_spiketime_pop(neuron);
     }else if(nextSpikeTime == INFINITY && neuron->tn == INFINITY){
         log_info("Next events at INFINITY");
+        return(0);
     }    
     else{
-        log_info("Unknown condition. Check");
+        log_info("Cannot execute any events");
         log_info("tn = %f, eit = %f, nextSpikeTime = %u", neuron->tn, neuron->eit, nextSpikeTime);
-        //return(-2);
+        return(-1);
     }
 
     if(neuron->eit < neuron->tn ){
@@ -156,7 +157,10 @@ int32_t neuron_model_PDevs_sim(neuron_t * neuron, int32_t threshold,  uint32_t n
     }else{
         neuron->eot  = neuron->tn; 
     }
-    return(neuron_model_check_pending_ev(neuron));
+    //If ext or int event has been executed,
+    // check ONCE another event can be execued immediately without 
+    //new pkts recvd, exit otherwise
+    return(1);
 }
 
 //DEVS atomic simulator
