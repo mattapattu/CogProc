@@ -132,7 +132,7 @@ bool synapses_shut_down(void);
 uint32_t synapses_get_ring_buffer_input(uint32_t time, uint32_t neuron_index);
 
 static inline bool check_spiketimes_not_empty() {
-       
+      
     return (is_spiketimes_not_empty());
 }
 
