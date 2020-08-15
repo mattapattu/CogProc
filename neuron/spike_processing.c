@@ -228,6 +228,7 @@ static void setup_synaptic_dma_read(dma_buffer *current_buffer,
                     time, single_fixed_synapse, &write_back);
             dma_n_rewires = 0;
             dma_n_spikes = 0;
+            spike_processing_count++;
         } else {
             log_info("Start DMA for mc_pkt. Exiting setup_synaptic_dma_read"); 
             // If the row is in SDRAM, set up the transfer and we are done
@@ -243,9 +244,11 @@ static void setup_synaptic_dma_read(dma_buffer *current_buffer,
             time = *spiketime; //spiketime = payload = eit bit + time
             synapses_process_synaptic_row(
                     time, single_fixed_synapse, &write_back);
+        spike_processing_count++;            
+        
     }
     
-    spike_processing_count++;
+    
 }
 
 uint32_t getSpikeProcessedCount(){
