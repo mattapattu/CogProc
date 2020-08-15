@@ -165,13 +165,13 @@ void neuron_pdevs_update(uint32_t time, index_t neuron_index, bool eit){
     //     neuron_recording_setup_for_next_recording();
 
     // }
-    int32_t ret = neuron_impl_neuron_update(time, neuron_index, external_bias,key,eit,use_key);
+    neuron_impl_neuron_update(time, neuron_index, external_bias,key,eit,use_key);
     
-    if(ret == 0){
-        log_info("Neuron %u has no more events to process", neuron_index);
-    }else if(ret == -1){
-        log_info("An expected input msg on neuron %u has not arrived on time", neuron_index);
-    }
+    // if(ret == 0){
+    //     log_info("Neuron %u has no more events to process", neuron_index);
+    // }else if(ret == -1){
+    //     log_info("An expected input msg on neuron %u has not arrived on time", neuron_index);
+    // }
         
     if(neuron_impl_check_sim_end(n_neurons)){
         log_info("Calling end_sim for graceful exit");
