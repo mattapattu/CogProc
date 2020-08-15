@@ -18,7 +18,6 @@
 //! \file
 //! \brief Implementation of non-inlined API in synapses.h
 #include "synapses.h"
-#include "spike_processing.h"
 #include "neuron.h"
 #include "plasticity/synapse_dynamics.h"
 #include <profiler.h>

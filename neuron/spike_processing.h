@@ -25,6 +25,7 @@
 #include <common/in_spiketimes.h>
 #include <spin1_api.h>
 
+
 //! \brief Initialise the spike processing system
 //! \param[in] row_max_n_bytes: The maximum size of a synaptic row
 //! \param[in] mc_packet_callback_priority:

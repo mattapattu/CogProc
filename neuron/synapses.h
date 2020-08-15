@@ -23,6 +23,8 @@
 #include <common/neuron-typedefs.h>
 #include "synapse_row.h"
 #include "neuron.h"
+#include "spike_processing.h"
+
 
 //! \brief Get the index of the ring buffer for a given timestep, synapse type
 //!     and neuron index
