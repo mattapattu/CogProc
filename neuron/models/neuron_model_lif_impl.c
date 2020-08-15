@@ -78,7 +78,7 @@ static float neuron_model_update_membrane_voltage(float time, neuron_t *neuron) 
 static void lambda(neuron_t * neuron, key_t key, uint32_t neuron_index, bool use_key){
     //uint16_t currentState  = neuron->phase;
     uint32_t nextEventTime = (uint32_t) neuron->eot;
-    //log_info("lambda: neuron %u currentState = %u, nextEventTime = %u",neuron_index,  currentState, nextEventTime );
+    log_info("lambda: neuron %u currentState = %u, nextEventTime = %u",neuron_index,  currentState, nextEventTime );
     if(use_key){
         if(neuron->phase == 2){
         //clear 32nd bit if packet is spike 
@@ -171,7 +171,7 @@ static void neuron_model_Devs_sim(neuron_t * neuron, int16_t event_type, uint32_
         lambda(neuron, key, neuron_index, use_key);
         log_info("Neuron %u internal event: phase %d expired at tn=%f",neuron_index, neuron->phase, neuron->tn);
         neuron->phase  = deltaInt(neuron);
-        //log_info("New phase after deltaInt = phase %d",neuron->phase);
+        log_info("New phase after deltaInt = phase %d",neuron->phase);
         
         neuron->tl = neuron->tn;
         if(ta(neuron) >= INFINITY){
@@ -183,14 +183,14 @@ static void neuron_model_Devs_sim(neuron_t * neuron, int16_t event_type, uint32_
             log_info("Neuron %u: update tn = %f", neuron_index,neuron->tn);
         }
         
-        //log_info("Event 1 , new tl = %u, new tn = %u",neuron->tl,  neuron->tn);
+        log_info("Event 1 , new tl = %u, new tn = %u",neuron->tl,  neuron->tn);
         
     }//event_type 2 - External event
     else if(event_type == 2){
         //uint32_t e = nextSpikeTime  - neuron->tl;
         log_info("Neuron %u external event: at time = %f in phase %d",neuron_index, nextSpikeTime, neuron->phase);
         neuron->phase = deltaExt(neuron, nextSpikeTime, threshold, input);
-        //log_info("New neuron phase = %d",neuron->phase);
+        log_info("New neuron phase = %d",neuron->phase);
         neuron->tl = (float) nextSpikeTime + deltaT; //deltaExt lasts for deltaT milliseconds.
         if(ta(neuron) >= INFINITY){
             neuron->tn = INFINITY;
@@ -199,7 +199,7 @@ static void neuron_model_Devs_sim(neuron_t * neuron, int16_t event_type, uint32_
             neuron->tn = neuron->tl + ta(neuron);
             log_info("Neuron %u: update tn = %f", neuron_index,neuron->tn);
         }
-        //log_info("Event 2 , new tl = %u, new tn = %u",neuron->tl,  neuron->tn);
+        log_info("Event 2 , new tl = %u, new tn = %u",neuron->tl,  neuron->tn);
     }
 
 }

@@ -300,7 +300,7 @@ void multicast_packet_received_callback(uint key, uint payload) {
             }
         }
     } else {
-        log_debug("Could not add spike");
+        log_info("Could not add spike");
     }
 }
 
