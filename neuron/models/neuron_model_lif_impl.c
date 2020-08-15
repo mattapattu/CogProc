@@ -76,7 +76,7 @@ static float neuron_model_update_membrane_voltage(float time, neuron_t *neuron) 
 }
 
 static void lambda(neuron_t * neuron, key_t key, uint32_t neuron_index, bool use_key){
-    //uint16_t currentState  = neuron->phase;
+    uint16_t currentState  = neuron->phase;
     uint32_t nextEventTime = (uint32_t) neuron->eot;
     log_info("lambda: neuron %u currentState = %u, nextEventTime = %u",neuron_index,  currentState, nextEventTime );
     if(use_key){
