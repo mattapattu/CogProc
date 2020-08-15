@@ -248,7 +248,7 @@ static void setup_synaptic_dma_read(dma_buffer *current_buffer,
     spike_processing_count++;
 }
 
-static uint32_t getSpikeProcessedCount(){
+uint32_t getSpikeProcessedCount(){
     return(spike_processing_count);
 }
 
@@ -309,7 +309,7 @@ void multicast_packet_received_callback(uint key, uint payload) {
     }
 }
 
-static uint32_t getSpikeRecvdCount(){
+uint32_t getSpikeRecvdCount(){
     return(spike_recvd_count);
 }
 //! \brief Called when a DMA completes
