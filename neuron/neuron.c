@@ -158,6 +158,23 @@ static void end_simulation(){
     return;    
 } 
 
+void neuron_reset_spiked(uint32_t neuron_index){
+    neuron_impl_reset_spiked(neuron_index);
+}
+
+bool neuron_get_spiked(uint32_t neuron_index){
+    return(neuron_impl_get_spiked(neuron_index));
+}
+
+bool neuron_get_lastThresholdTime(uint32_t neuron_index){
+    return(neuron_impl_get_lastThresholdTime(neuron_index));
+}
+
+uint32_t neuron_update_spiketime(uint32_t time, index_t neuron_index){
+    return(neuron_impl_update_spiketime(time, neuron_index));
+}
+
+
 void neuron_pdevs_update(uint32_t time, index_t neuron_index, bool eit){
     input_t external_bias = 0;
     
@@ -183,22 +200,6 @@ void neuron_pdevs_update(uint32_t time, index_t neuron_index, bool eit){
         log_info("Calling end_sim for graceful exit");
         end_simulation();
     }
-}
-
-bool neuron_reset_spiked(uint32_t neuron_index){
-    return(neuron_impl_reset_spiked(neuron_index));
-}
-
-bool neuron_get_spiked(uint32_t neuron_index){
-    return(neuron_impl_get_spiked(neuron_index));
-}
-
-bool neuron_get_lastThresholdTime(uint32_t neuron_index){
-    return(neuron_impl_get_lastThresholdTime(neuron_index));
-}
-
-uint32_t neuron_update_spiketime(uint32_t time, index_t neuron_index){
-    return(neuron_impl_update_spiketime(time, neuron_index));
 }
 
 
