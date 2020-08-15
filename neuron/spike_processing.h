@@ -70,7 +70,7 @@ bool spike_processing_do_rewiring(int number_of_rewires);
 
 void multicast_packet_received_callback(uint key, uint payload);
 
-static uint32_t getSpikeRecvdCount();
-static uint32_t getSpikeProcessedCount();
+uint32_t getSpikeRecvdCount();
+uint32_t getSpikeProcessedCount();
 
 #endif // _SPIKE_PROCESSING_H_
