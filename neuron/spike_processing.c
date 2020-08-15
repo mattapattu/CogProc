@@ -219,6 +219,8 @@ static void setup_synaptic_dma_read(dma_buffer *current_buffer,
         } */
          if (n_bytes_to_transfer == 0) {
             log_info("Processing mc_pkt (%u,%u), row is in DTCM", spike, *spiketime); 
+            spike_processing_count++;
+            log_info("spike_processing_count = %u", spike_processing_count);
             // If the row is in DTCM, process the row now
             synaptic_row_t single_fixed_synapse =
                     direct_synapses_get_direct_synapse(row_address);
@@ -228,8 +230,7 @@ static void setup_synaptic_dma_read(dma_buffer *current_buffer,
                     time, single_fixed_synapse, &write_back);
             dma_n_rewires = 0;
             dma_n_spikes = 0;
-            spike_processing_count++;
-            log_info("spike_processing_count = %u", spike_processing_count);
+            
         } else {
             //log_info("Start DMA for mc_pkt. Exiting setup_synaptic_dma_read"); 
             // If the row is in SDRAM, set up the transfer and we are done
@@ -240,6 +241,8 @@ static void setup_synaptic_dma_read(dma_buffer *current_buffer,
 
     if(setup_done){
         log_info("Processing mc_pkt (%u,%u) after DMA read", spike, *spiketime); 
+        spike_processing_count++;            
+        log_info("spike_processing_count = %u", spike_processing_count);
         // synaptic_row_t single_fixed_synapse =
         //             direct_synapses_get_direct_synapse(row_address);
         uint32_t current_buffer_index = buffer_being_read;
@@ -249,8 +252,7 @@ static void setup_synaptic_dma_read(dma_buffer *current_buffer,
             time = *spiketime; //spiketime = payload = eit bit + time
             synapses_process_synaptic_row(
                     time, current_buffer->row, &write_back);
-        spike_processing_count++;            
-        log_info("spike_processing_count = %u", spike_processing_count);
+        
         
     }
     

@@ -121,7 +121,7 @@ int32_t neuron_model_check_next_ev(neuron_t * neuron){
         log_info("nextSpikeTime = %f can be executed, continue PDEVS loop",neuron->tn);
         return(1);
     }else{
-        log_info("eit = %f, no more events to process, set phase to IDLE", neuron->eit);
+        log_info("no more events to process, set phase to IDLE");
         neuron->phase = 4;
         return(0);
     }
