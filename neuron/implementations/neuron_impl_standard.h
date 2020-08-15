@@ -273,7 +273,10 @@ for (index_t n = 0; n < n_neurons; n++) {
 static bool neuron_impl_check_sim_end(uint32_t n_neurons){
     bool endSim = true;
     bool err = false;
-    if(getSpikeRecvdCount() != getSpikeProcessedCount() ){
+    uint32_t allRecvdSpikes = getSpikeRecvdCount();
+    uint32_t allProcessedSpikes = getSpikeProcessedCount();
+    log_info("allRecvdSpikes = %u, allProcessedSpikes = %u",allRecvdSpikes, allProcessedSpikes);
+    if(allRecvdSpikes != allProcessedSpikes ){
         return false;
     }    
     for (index_t n = 0; n < n_neurons; n++) {
