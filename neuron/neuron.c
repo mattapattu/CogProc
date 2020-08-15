@@ -166,7 +166,13 @@ void neuron_pdevs_update(uint32_t time, index_t neuron_index, bool eit){
 
     // }
     neuron_impl_neuron_update(time, neuron_index, external_bias,key,eit,use_key);
-    
+    bool has_spiked  = check_neuron_has_spiked(neuron_index);
+    if(has_spiked){
+        neuron_recording_record_bit(SPIKE_RECORDING_BITFIELD, neuron_index);
+
+		neuron_recording_record(neuron_get_last_processed_spiketime());
+
+    }
     // if(ret == 0){
     //     log_info("Neuron %u has no more events to process", neuron_index);
     // }else if(ret == -1){
