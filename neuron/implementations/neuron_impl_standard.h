@@ -273,6 +273,9 @@ for (index_t n = 0; n < n_neurons; n++) {
 static bool neuron_impl_check_sim_end(uint32_t n_neurons){
     bool endSim = true;
     bool err = false;
+    if(check_spiketimes_not_empty()){
+        return false;
+    }    
     for (index_t n = 0; n < n_neurons; n++) {
         if(neuron_model_get_phase(&neuron_array[n]) == 4){
             endSim = endSim && true;
