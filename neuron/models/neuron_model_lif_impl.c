@@ -148,7 +148,7 @@ int32_t neuron_model_PDevs_sim(neuron_t * neuron, int32_t threshold,  uint32_t n
         //log_info("New event has not arrived after X clock cycles");
         if(neuron->waitCounter > 30){
             
-            log_info("New event has not arrived after waitCounter> 30. Set neuron phase to ERR");
+            //log_info("New event has not arrived after waitCounter> 30. Set neuron phase to ERR");
             neuron->phase = 5;
             return(-1);
         }
@@ -156,8 +156,8 @@ int32_t neuron_model_PDevs_sim(neuron_t * neuron, int32_t threshold,  uint32_t n
         spin1_delay_us(1000);
         
     }else{
-        log_info("Unknown condition. Check");
-        log_info("tn = %u, eit = %u, nextSpikeTime = %u", neuron->tn, neuron->eit, nextSpikeTime);
+        //log_info("Unknown condition. Check");
+        //log_info("tn = %u, eit = %u, nextSpikeTime = %u", neuron->tn, neuron->eit, nextSpikeTime);
         return(-2);
     }
 
@@ -174,18 +174,18 @@ void neuron_model_Devs_sim(neuron_t * neuron, int16_t event_type, uint32_t nextS
     //event_type 1 - Internal event
     if(event_type == 1 ){
         lambda(neuron, key, neuron_index, use_key);
-        log_info("Neuron %u internal event: phase %d expired at tn=%f",neuron_index, neuron->phase, neuron->tn);
+        //log_info("Neuron %u internal event: phase %d expired at tn=%f",neuron_index, neuron->phase, neuron->tn);
         neuron->phase  = deltaInt(neuron);
         //log_info("New phase after deltaInt = phase %d",neuron->phase);
         
         neuron->tl = neuron->tn;
         if(ta(neuron) >= INFINITY){
             neuron->tn = INFINITY;
-            log_info("Neuron %u: update tn = INFINITY", neuron_index);
+            //log_info("Neuron %u: update tn = INFINITY", neuron_index);
         }else{
             //Next phase change = last event time + time-advance(current-phase)
             neuron->tn = neuron->tl + ta(neuron);
-            log_info("Neuron %u: update tn = %f", neuron_index,neuron->tn);
+            //log_info("Neuron %u: update tn = %f", neuron_index,neuron->tn);
         }
         
         //log_info("Event 1 , new tl = %u, new tn = %u",neuron->tl,  neuron->tn);
@@ -193,16 +193,16 @@ void neuron_model_Devs_sim(neuron_t * neuron, int16_t event_type, uint32_t nextS
     }//event_type 2 - External event
     else if(event_type == 2){
         //uint32_t e = nextSpikeTime  - neuron->tl;
-        log_info("Neuron %u external event: at time = %f in phase %d",neuron_index, nextSpikeTime, neuron->phase);
+        //log_info("Neuron %u external event: at time = %f in phase %d",neuron_index, nextSpikeTime, neuron->phase);
         neuron->phase = deltaExt(neuron, nextSpikeTime, threshold, input);
-        log_info("New neuron phase = %d",neuron->phase);
+        //log_info("New neuron phase = %d",neuron->phase);
         neuron->tl = (float) nextSpikeTime;
         if(ta(neuron) >= INFINITY){
             neuron->tn = INFINITY;
-            log_info("Neuron %u: update tn = INFINITY", neuron_index);
+            //log_info("Neuron %u: update tn = INFINITY", neuron_index);
         }else{
             neuron->tn = neuron->tl + ta(neuron);
-            log_info("Neuron %u: update tn = %f", neuron_index,neuron->tn);
+            //log_info("Neuron %u: update tn = %f", neuron_index,neuron->tn);
         }
         //log_info("Event 2 , new tl = %u, new tn = %u",neuron->tl,  neuron->tn);
     }
@@ -231,7 +231,7 @@ void neuron_model_eit_update(neuron_t * neuron, float time){
 
     if(neuron->eit == 0 || neuron->eit > time ){
         neuron->eit = time;
-        log_info("Updating neuron eit to %f",neuron->eit );
+        //log_info("Updating neuron eit to %f",neuron->eit );
     }
     
 }
@@ -281,7 +281,7 @@ bool neuron_model_add_spike(neuron_t * neuron, uint32_t  spikeTime){
        log_error("spikeCount = %u, error storing new spike at time = %u. Exiting simulation", neuron->spikeCount, spikeTime);
        return FALSE;
    }else if(spikeTime >= neuron->spike_times[neuron->spikeCount-1] ){
-       log_info("Adding new spike time = %f at the end of array", spikeTime);
+       //log_info("Adding new spike time = %f at the end of array", spikeTime);
        neuron->spike_times[neuron->spikeCount] = spikeTime;
        return TRUE;
    }else{
@@ -297,7 +297,7 @@ bool neuron_model_add_spike(neuron_t * neuron, uint32_t  spikeTime){
                 continue;
            }
        }
-       log_info("Adding new spike at time = %f at index = %u", spikeTime,i);
+       //log_info("Adding new spike at time = %f at index = %u", spikeTime,i);
        return TRUE;
    }
 }
@@ -311,7 +311,7 @@ uint32_t neuron_model_spiketime_pop(neuron_t * neuron){
     }
     neuron->spike_times[9] = INFINITY  ;   
     neuron->spikeCount--;
-    log_info("Removing spike from spike_times = %f, nextspiketime = %f", nextSpike,neuron->spike_times[0]);
+    //log_info("Removing spike from spike_times = %f, nextspiketime = %f", nextSpike,neuron->spike_times[0]);
     return(nextSpike);	
 }
 
@@ -327,7 +327,7 @@ void neuron_model_init(neuron_t *neuron){
     for(uint32_t i = 0; i < 10; i++){
         neuron->spike_times[i] = INFINITY;
     }
-    log_info("Initializing neuron params,spikeCount = %u, tl = %f", neuron->spikeCount, neuron->tl);
+    //log_info("Initializing neuron params,spikeCount = %u, tl = %f", neuron->spikeCount, neuron->tl);
 
 }
 
