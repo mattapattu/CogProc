@@ -179,6 +179,9 @@ void neuron_pdevs_update(uint32_t time, index_t neuron_index, bool eit){
     }
 }
 
+uint32_t neuron_update_spiketime(uint32_t time, index_t neuron_index){
+    return(neuron_impl_update_spiketime(time, neuron_index));
+}
 
 
 /* void neuron_add_spike(uint32_t time, index_t neuron_index){

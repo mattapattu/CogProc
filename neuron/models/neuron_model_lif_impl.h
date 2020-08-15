@@ -76,6 +76,8 @@ typedef struct neuron_t {
 
     uint16_t waitCounter;
 
+    uint32_t lastProcessedSpikeTime;
+
 
 } neuron_t;
 

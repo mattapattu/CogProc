@@ -57,6 +57,8 @@ enum bitfield_recording_indices {
 // This import depends on variables defined above
 #include <neuron/neuron_recording.h>
 #define INFINITY  2147483646
+#define deltaT 1 // deltaT = 1000ms
+
 
 //! Array of neuron states
 static neuron_t *neuron_array;
@@ -343,17 +345,15 @@ static void  neuron_impl_neuron_update(uint32_t time, index_t neuron_index,
         // }
         
     }
-    // if( ret == 0){
-    //     //log_info("No event to process. Wait for new spike");
-    //     return 0;
-    // }else if(ret == -1){
-    //     //log_info("New event has not arrived after X clock cycles");
-    //     return -1;
-    // }
+       
+}
 
-
-    // Return the boolean to the model timestep update
-    
+static uint32_t neuron_impl_update_spiketime(uint32_t time, index_t neuron_index){
+    neuron_pointer_t neuron = &neuron_array[neuron_index];
+    if(neuron->lastProcessedSpikeTime - time < deltaT){
+        time = neuron->lastProcessedSpikeTime + deltaT;
+    }
+    return(time);
 }
 
 

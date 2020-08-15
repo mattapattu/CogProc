@@ -105,6 +105,8 @@ void neuron_print_synapse_parameters(void);
 //! \param[in] synapse_type: The synapse type.
 //! \return a single character that describes the synapse.
 const char *neuron_get_synapse_type_char(uint32_t synapse_type);
+
+uint32_t neuron_update_spiketime(uint32_t time, index_t neuron_index);
 #endif
 
 #endif // _NEURON_H_
