@@ -143,12 +143,12 @@ int32_t neuron_model_PDevs_sim(neuron_t * neuron, int32_t threshold,  uint32_t n
         neuron_model_Devs_sim(neuron, 2,nextSpikeTime,  threshold, key, neuron_index, input, use_key);
         neuron_model_spiketime_pop(neuron);
     }else if(nextSpikeTime == INFINITY && neuron->tn == INFINITY){
-
+        log_info("Next events at INFINITY");
     }    
     else{
         log_info("Unknown condition. Check");
         log_info("tn = %f, eit = %f, nextSpikeTime = %u", neuron->tn, neuron->eit, nextSpikeTime);
-        return(-2);
+        //return(-2);
     }
 
     if(neuron->eit < neuron->tn ){

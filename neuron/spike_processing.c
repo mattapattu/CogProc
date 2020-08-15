@@ -229,6 +229,7 @@ static void setup_synaptic_dma_read(dma_buffer *current_buffer,
             dma_n_rewires = 0;
             dma_n_spikes = 0;
             spike_processing_count++;
+            log_info("spike_processing_count = %u", spike_processing_count);
         } else {
             //log_info("Start DMA for mc_pkt. Exiting setup_synaptic_dma_read"); 
             // If the row is in SDRAM, set up the transfer and we are done
@@ -249,6 +250,7 @@ static void setup_synaptic_dma_read(dma_buffer *current_buffer,
             synapses_process_synaptic_row(
                     time, current_buffer->row, &write_back);
         spike_processing_count++;            
+        log_info("spike_processing_count = %u", spike_processing_count);
         
     }
     
@@ -426,9 +428,9 @@ uint32_t spike_processing_get_dma_complete_count(void) {
     return dma_complete_count;
 }
 
-uint32_t spike_processing_get_spike_processing_count(void) {
-    return spike_processing_count;
-}
+// uint32_t spike_processing_get_spike_processing_count(void) {
+//     return spike_processing_count;
+// }
 
 //! \brief get the address of the circular buffer used for buffering received
 //!     spikes before processing them
