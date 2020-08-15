@@ -169,14 +169,7 @@ void neuron_model_Devs_sim(neuron_t * neuron, int16_t event_type, uint32_t nextS
         //log_info("New phase after deltaInt = phase %d",neuron->phase);
         
         neuron->tl = neuron->tn;
-        if(ta(neuron) >= INFINITY){
-            neuron->tn = INFINITY;
-            //log_info("Neuron %u: update tn = INFINITY", neuron_index);
-        }else{
-            //Next phase change = last event time + time-advance(current-phase)
-            neuron->tn = neuron->tl + ta(neuron);
-            //log_info("Neuron %u: update tn = %f", neuron_index,neuron->tn);
-        }
+        
         
         //log_info("Event 1 , new tl = %u, new tn = %u",neuron->tl,  neuron->tn);
         
@@ -187,15 +180,24 @@ void neuron_model_Devs_sim(neuron_t * neuron, int16_t event_type, uint32_t nextS
         neuron->phase = deltaExt(neuron, nextSpikeTime, threshold, input);
         //log_info("New neuron phase = %d",neuron->phase);
         neuron->tl = (float) nextSpikeTime + deltaT;
-        if(ta(neuron) >= INFINITY){
-            neuron->tn = INFINITY;
-            //log_info("Neuron %u: update tn = INFINITY", neuron_index);
-        }else{
-            neuron->tn = neuron->tl + ta(neuron);
-            //log_info("Neuron %u: update tn = %f", neuron_index,neuron->tn);
-        }
+        // if(ta(neuron) >= INFINITY){
+        //     neuron->tn = INFINITY;
+        //     //log_info("Neuron %u: update tn = INFINITY", neuron_index);
+        // }else{
+        //     neuron->tn = neuron->tl + ta(neuron);
+        //     //log_info("Neuron %u: update tn = %f", neuron_index,neuron->tn);
+        // }
         //log_info("Event 2 , new tl = %u, new tn = %u",neuron->tl,  neuron->tn);
     }
+
+    if(ta(neuron) >= INFINITY){
+        neuron->tn = INFINITY;
+        log_info("Setting neuron %u tn to INFINITY", neuron_index);
+    }else{
+    //Next phase change = last event time + time-advance(current-phase)
+        neuron->tn = neuron->tl + ta(neuron);
+        log_info("Setting neuron %u tn to %f", neuron_index,neuron->tn);
+   }
 
 }
 
