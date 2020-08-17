@@ -168,7 +168,6 @@ void neuron_model_Devs_sim(neuron_t * neuron, int16_t event_type, uint32_t nextS
     if(event_type == 1 ){
         //log_info("Neuron %u internal event: phase %d expired at tn=%f",neuron_index, neuron->phase, neuron->tn);
         neuron->phase  = deltaInt(neuron);
-        lambda(neuron, key, neuron_index, use_key);
         log_info("Neuron %u in new phase = %u",neuron_index, neuron->phase);
         neuron->tl = neuron->tn;
         
@@ -242,7 +241,7 @@ int32_t deltaExt(neuron_t * neuron, uint32_t time, int32_t threshold, input_t in
 int32_t deltaInt(neuron_t * neuron) {
 	
 	//log_info("Inh 1: %12.6k, Inh 2: %12.6k", inh_input[0], inh_input[1]);
-
+    lambda(neuron, key, neuron_index, use_key);
     if(neuron->phase == 0 || neuron->phase == 1){
         //log_info("Neuron in phase 0/1, no neuron phase change ");
         return(neuron->phase);
