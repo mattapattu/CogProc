@@ -166,9 +166,9 @@ int32_t neuron_model_PDevs_sim(neuron_t * neuron, int32_t threshold,  uint32_t n
 void neuron_model_Devs_sim(neuron_t * neuron, int16_t event_type, uint32_t nextSpikeTime, int32_t threshold, key_t key, uint32_t neuron_index, input_t input, bool use_key){
     //event_type 1 - Internal event
     if(event_type == 1 ){
-        lambda(neuron, key, neuron_index, use_key);
         //log_info("Neuron %u internal event: phase %d expired at tn=%f",neuron_index, neuron->phase, neuron->tn);
         neuron->phase  = deltaInt(neuron);
+        lambda(neuron, key, neuron_index, use_key);
         log_info("Neuron %u in new phase = %u",neuron_index, neuron->phase);
         neuron->tl = neuron->tn;
         
