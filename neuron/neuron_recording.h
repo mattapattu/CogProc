@@ -210,9 +210,9 @@ static inline void neuron_recording_record(uint32_t time) {
 static inline void neuron_recording_setup_for_next_recording(void) {
     // Wait until recordings have completed, to ensure the recording space
     // can be re-written
-    while (n_recordings_outstanding > 0) {
-       spin1_wfi();
-    }
+    // while (n_recordings_outstanding > 0) {
+    //    spin1_wfi();
+    // }
 
     // Reset the bitfields before starting if a beginning of recording
     for (uint32_t i = N_BITFIELD_VARS; i > 0; i--) {

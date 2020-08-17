@@ -182,7 +182,7 @@ void neuron_pdevs_update(uint32_t time, index_t neuron_index, bool eit){
     //     neuron_recording_setup_for_next_recording();
 
     // }
-    //neuron_recording_setup_for_next_recording();
+    neuron_recording_setup_for_next_recording();
     neuron_reset_spiked(neuron_index);
     neuron_impl_neuron_update(time, neuron_index, external_bias,key,eit,use_key);
     //bool has_spiked  = neuron_check_spiked(neuron_has_spiked);
