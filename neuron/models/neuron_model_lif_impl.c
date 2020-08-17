@@ -141,7 +141,7 @@ int32_t neuron_model_PDevs_sim(neuron_t * neuron, int32_t threshold,  uint32_t n
     }else if(nextSpikeTime <= neuron->eit &&  nextSpikeTime < neuron->tn ){
         //Call deltaExt()
         neuron->waitCounter = 0;
-        log_info("Neuron %u: recv spike at %u", nextSpikeTime);
+        log_info("Neuron %u: recv spike at %u", neuron_index, nextSpikeTime);
         neuron_model_Devs_sim(neuron, 2,nextSpikeTime,  threshold, key, neuron_index, input, use_key);
         neuron->lastProcessedSpikeTime =  neuron_model_spiketime_pop(neuron);
     }
