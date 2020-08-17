@@ -171,23 +171,13 @@ void neuron_model_Devs_sim(neuron_t * neuron, int16_t event_type, uint32_t nextS
         neuron->phase  = deltaInt(neuron);
         log_info("Neuron %u in new phase = %u",neuron->phase);
         neuron->tl = neuron->tn;
-        //log_info("Event 1 , new tl = %u, new tn = %u",neuron->tl,  neuron->tn);
         
     }//event_type 2 - External event
     else if(event_type == 2){
-        //uint32_t e = nextSpikeTime  - neuron->tl;
-        //log_info("Neuron %u external event: at time = %f in phase %d",neuron_index, nextSpikeTime, neuron->phase);
         neuron->phase = deltaExt(neuron, nextSpikeTime, threshold, input);
-        //log_info("New neuron phase = %d",neuron->phase);
+        log_info("Neuron %u in new phase = %u after spike",neuron->phase);
         neuron->tl = (float) nextSpikeTime + deltaT;
-        // if(ta(neuron) >= INFINITY){
-        //     neuron->tn = INFINITY;
-        //     //log_info("Neuron %u: update tn = INFINITY", neuron_index);
-        // }else{
-        //     neuron->tn = neuron->tl + ta(neuron);
-        //     //log_info("Neuron %u: update tn = %f", neuron_index,neuron->tn);
-        // }
-        //log_info("Event 2 , new tl = %u, new tn = %u",neuron->tl,  neuron->tn);
+        
     }
 
     if(ta(neuron) >= INFINITY){
