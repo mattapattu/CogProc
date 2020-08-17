@@ -42,9 +42,12 @@ void neuron_model_set_global_neuron_params(
 static float ta(neuron_t * neuron){
     if(neuron->phase == 0){
         return(INFINITY);
-    }else if(neuron->phase == 1){
+    }else if(neuron->phase == 1 && neuron->V_membrane < -50){
         return(INFINITY);
-    }else if(neuron->phase == 2){
+    }else if(neuron->phase == 1 && neuron->V_membrane >= -50){
+        return(0);
+    }
+    else if(neuron->phase == 2){
         return(0);
     }else if(neuron->phase == 3){
         //return(neuron->T_refract);
@@ -228,13 +231,7 @@ int32_t deltaExt(neuron_t * neuron, uint32_t time, int32_t threshold, input_t in
         //log_info("external input = %f", input);
         lif_update(time, neuron, input);
         //log_info("New V_membrane after lif_update = %f, threshold = %f",  neuron->V_membrane,threshold);
-        if(neuron->V_membrane >= -50){ //do not hard-code, change this
-        //log_info("New neuron state = %d",  2);    
-            return(2);
-        }else{
-        //log_info("New neuron state = %d",  1);        
-            return(1);
-        }
+        return(1);
     }
 }
 
@@ -242,9 +239,18 @@ int32_t deltaInt(neuron_t * neuron,key_t key, uint32_t neuron_index, bool use_ke
 	
 	//log_info("Inh 1: %12.6k, Inh 2: %12.6k", inh_input[0], inh_input[1]);
     lambda(neuron, key, neuron_index, use_key);
-    if(neuron->phase == 0 || neuron->phase == 1){
+    if(neuron->phase == 0 ){
         //log_info("Neuron in phase 0/1, no neuron phase change ");
         return(neuron->phase);
+    }else if(neuron->phase == 1){
+
+        if(neuron->V_membrane >= -50){ //do not hard-code, change this
+        //log_info("New neuron state = %d",  2);    
+            return(2);
+        }else{
+        //log_info("New neuron state = %d",  1);        
+            return(1);
+        }
     }else if(neuron->phase == 2){
         //log_info("Neuron in phase 2, reset V_memb and change to phase 3");
         neuron->V_membrane = neuron->V_reset;
