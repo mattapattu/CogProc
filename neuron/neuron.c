@@ -187,6 +187,7 @@ void neuron_pdevs_update(uint32_t time, index_t neuron_index, bool eit){
     neuron_impl_neuron_update(time, neuron_index, external_bias,key,eit,use_key);
     //bool has_spiked  = neuron_check_spiked(neuron_has_spiked);
     if(neuron_get_spiked(neuron_index)){
+        log_info("Setting recording bit for neuron %u",neuron_index);
         neuron_recording_record_bit(SPIKE_RECORDING_BITFIELD, neuron_index);
 		neuron_recording_record(neuron_get_lastThresholdTime(neuron_index));
 
