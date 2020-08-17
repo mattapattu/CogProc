@@ -108,7 +108,7 @@ struct provenance_t {
 #define MIN_BUFFER_SPACE 10
 
 //! the amount of ticks to wait between requests
-#define TICKS_BETWEEN_REQUESTS 25
+#define TICKS_BETWEEN_REQUESTS 500
 
 //! the maximum size of a packet excluding header
 #define MAX_PACKET_SIZE 272
@@ -449,6 +449,7 @@ static inline uint32_t extract_time_from_eieio_msg(
 
     // If the packet is actually a command packet, return the current time
     if (!pkt_apply_prefix && pkt_class) {
+        log_info("Packet is command packet");
         return time;
     }
 
@@ -490,10 +491,12 @@ static inline uint32_t extract_time_from_eieio_msg(
                 payload_time |= event_ptr[0];
             }
             got_payload_time = true;
+            log_info("Payload found");
         }
 
         // If no actual time was found, return the current time
         if (!got_payload_time) {
+            log_info("No payload found");
             return time;
         }
         return payload_time;
@@ -656,12 +659,12 @@ static inline void process_32_bit_packets(
         uint32_t pkt_key_prefix, uint32_t pkt_payload_prefix,
         bool pkt_has_payload, bool pkt_payload_is_timestamp) {
     // Careful! event_pointer is not necessarily word aligned!
-    log_debug("process_32_bit_packets");
+    log_info("process_32_bit_packets");
     log_debug("event_pointer: %08x", (uint32_t) event_pointer);
     log_debug("count: %d", pkt_count);
     log_debug("pkt_prefix: %08x", pkt_key_prefix);
     log_debug("pkt_payload_prefix: %08x", pkt_payload_prefix);
-    log_debug("payload on: %d", pkt_has_payload);
+    log_info("payload on: %d", pkt_has_payload);
 
     for (uint32_t i = 0; i < pkt_count; i++) {
         uint32_t key = (event_pointer[1] << 16) | event_pointer[0];
@@ -682,22 +685,27 @@ static inline void process_32_bit_packets(
         if (has_key) {
             if (!check_key_in_space || (key & mask) == key_space) {
                 provenance.sent_packets++;
-                // if (pkt_has_payload && !pkt_payload_is_timestamp) {
-                //     log_debug("mc packet 32-bit key=0x%08x, payload=0x%08x",
-                //             key, payload);
-                //     while (!spin1_send_mc_packet(key, payload, WITH_PAYLOAD)) {
-                //         spin1_delay_us(1);
-                //     }
-                // } else {
-                //     log_debug("mc packet 32-bit key=0x%08x", key);
-                //     while (!spin1_send_mc_packet(key, 0, NO_PAYLOAD)) {
-                //         spin1_delay_us(1);
-                //     }
-                // }
-            payload = next_buffer_time;    
-            while (!spin1_send_mc_packet(key, payload, WITH_PAYLOAD)) {
+                /*
+                if (pkt_has_payload && !pkt_payload_is_timestamp) {
+                    log_debug("mc packet 32-bit key=0x%08x, payload=0x%08x",
+                            key, payload);
+                    while (!spin1_send_mc_packet(key, payload, WITH_PAYLOAD)) {
+                        spin1_delay_us(1);
+                    }
+                } else {
+                    log_debug("mc packet 32-bit key=0x%08x", key);
+                    while (!spin1_send_mc_packet(key, 0, NO_PAYLOAD)) {
+                        spin1_delay_us(1);
+                    }
+                } */
+                payload = next_buffer_time;
+                log_info("mc packet 32-bit key=%u, payload=%u",
+                            key, payload);
+
+                while (!spin1_send_mc_packet(key, payload, WITH_PAYLOAD)) {
                          spin1_delay_us(1000);
-            }    
+               }
+
             } else {
                 provenance.incorrect_keys++;
             }
@@ -721,7 +729,7 @@ static inline void record_packet(
 
         // Ensure that the recorded data size is a multiple of 4
         uint32_t recording_length = 4 * ((length + 3) / 4);
-        log_info("recording a EIEIO message with length %u",
+        log_debug("recording a EIEIO message with length %u",
                 recording_length);
         recording_in_progress = true;
         recorded_packet->length = recording_length;
@@ -783,7 +791,7 @@ static inline bool eieio_data_parse_packet(
     log_debug("pkt_apply_prefix: %d", pkt_apply_prefix);
     log_debug("pkt_format: %d", pkt_prefix_upper);
     log_debug("pkt_payload_prefix: %d", pkt_payload_apply_prefix);
-    log_info("pkt_timestamp: %d", pkt_payload_is_timestamp);
+    log_debug("pkt_timestamp: %d", pkt_payload_is_timestamp);
     log_debug("pkt_type: %d", pkt_type);
     log_debug("pkt_count: %d", pkt_count);
     log_debug("payload_on: %d", pkt_has_payload);
@@ -838,7 +846,6 @@ static inline bool eieio_data_parse_packet(
         return false;
     }
 
-    log_info("pkt_is_32bit = %u", pkt_is_32bit);
     if (!pkt_is_32bit) {
         process_16_bit_packets(
                 event_pointer, pkt_prefix_upper, pkt_count, pkt_key_prefix,
@@ -962,10 +969,10 @@ static inline bool packet_handler_selector(
     uint8_t pkt_class = BITS(data_hdr_value, PACKET_CLASS, 0x03);
 
     if (pkt_class == 0x01) {
-        log_debug("parsing a command packet");
+        log_info("parsing a command packet");
         return eieio_commmand_parse_packet(eieio_msg_ptr, length);
     } else {
-        log_debug("parsing an event packet");
+        log_info("parsing an event packet");
         return eieio_data_parse_packet(eieio_msg_ptr, length);
     }
 }
@@ -1009,7 +1016,7 @@ static void fetch_and_process_packet(void) {
             }
             uint32_t final_space = (end_of_buffer_region - read_pointer);
 
-            log_debug("packet with length %d, from address: %08x", len,
+            log_info("packet with length %d, from address: %08x", len,
                     read_pointer);
 
             if (len > final_space) {
@@ -1208,6 +1215,7 @@ static bool initialise(uint32_t *timer_period) {
             &infinite_run, &time, SDP_CALLBACK, DMA)) {
         return false;
     }
+
     simulation_set_provenance_function(
             provenance_callback,
             data_specification_get_region(PROVENANCE_REGION, ds_regions));
@@ -1254,6 +1262,7 @@ static void resume_callback(void) {
     stopped = false;
 }
 
+/*
 //! \brief The fundamental operation loop for the application.
 //! \param unused0 unused
 //! \param unused1 unused
@@ -1265,6 +1274,31 @@ static void timer_callback(uint unused0, uint unused1) {
     log_info("timer_callback, final time: %d, current time: %d,"
             "next packet buffer time: %d",
             simulation_ticks, time, next_buffer_time);
+
+    if (stopped || ((infinite_run != TRUE) && (time >= simulation_ticks))) {
+        // Enter pause and resume state to avoid another tick
+        simulation_handle_pause_resume(resume_callback);
+
+        // Wait for recording to finish
+        while (recording_in_progress) {
+            spin1_wfi();
+        }
+
+        // close recording channels
+        if (recording_flags > 0) {
+            recording_finalise();
+        }
+
+        log_debug("Last time of stop notification request: %d",
+                last_stop_notification_request);
+
+        // Subtract 1 from the time so this tick gets done again on the next
+        // run
+        time = simulation_ticks - 1;
+
+        simulation_ready_to_read();
+        return;
+    }
 
     if (send_packet_reqs &&
             ((time - last_request_tick) >= TICKS_BETWEEN_REQUESTS)) {
@@ -1280,7 +1314,30 @@ static void timer_callback(uint unused0, uint unused1) {
     } else if (next_buffer_time == time) {
         eieio_data_parse_packet(msg_from_sdram, msg_from_sdram_length);
         fetch_and_process_packet();
-    }else{
+    }
+
+    if (recording_flags > 0) {
+        recording_do_timestep_update(time);
+    }
+}
+*/
+
+static void timer_callback(uint unused0, uint unused1) {
+    use(unused0);
+    use(unused1);
+    time++;
+
+    log_info("timer_callback, final time: %d, current time: %d,"
+            "next packet buffer time: %d",
+            simulation_ticks, time, next_buffer_time);
+
+    if (send_packet_reqs &&
+            ((time - last_request_tick) >= TICKS_BETWEEN_REQUESTS)) {
+        send_buffer_request_pkt();
+        last_request_tick = time;
+    }
+
+    if(time-next_buffer_time == 10){
 
         log_info("No more spike packets to send");
         simulation_handle_pause_resume(resume_callback);
@@ -1299,12 +1356,21 @@ static void timer_callback(uint unused0, uint unused1) {
 
         simulation_ready_to_read();
         return;
+    } else if (!msg_from_sdram_in_use) {
+        fetch_and_process_packet();
+    } else if (next_buffer_time < time) {
+        provenance.late_packets++;
+        fetch_and_process_packet();
+    } else if (next_buffer_time == time) {
+        eieio_data_parse_packet(msg_from_sdram, msg_from_sdram_length);
+        fetch_and_process_packet();
     }
 
     if (recording_flags > 0) {
         recording_do_timestep_update(time);
     }
 }
+
 
 //! \brief Handles an incoming SDP message.
 //!
@@ -1329,18 +1395,21 @@ static void sdp_packet_callback(uint mailbox, uint port) {
 //! Entry point
 void c_main(void) {
     // Configure system
-    // uint32_t timer_period = 0;
+    uint32_t timer_period = 0;
     if (!initialise(&timer_period)) {
         rt_error(RTE_SWERR);
         return;
     }
-    uint32_t timer_period = TICKS_BETWEEN_REQUESTS;
+
+    timer_period = TICKS_BETWEEN_REQUESTS;
+    simulation_ticks  = 1000;
+
     // Set timer_callback
     spin1_set_timer_tick_and_phase(timer_period, tx_offset);
 
     // Register callbacks
     simulation_sdp_callback_on(buffered_in_sdp_port, sdp_packet_callback);
-    //spin1_callback_on(TIMER_TICK, timer_callback, TIMER);
+    spin1_callback_on(TIMER_TICK, timer_callback, TIMER);
 
     // Start the time at "-1" so that the first tick will be 0
     time = UINT32_MAX;
