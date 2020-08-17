@@ -169,7 +169,7 @@ void neuron_model_Devs_sim(neuron_t * neuron, int16_t event_type, uint32_t nextS
         lambda(neuron, key, neuron_index, use_key);
         //log_info("Neuron %u internal event: phase %d expired at tn=%f",neuron_index, neuron->phase, neuron->tn);
         neuron->phase  = deltaInt(neuron);
-        log_info("Neuron %u in new phase = %u",neuron->phase);
+        log_info("Neuron %u in new phase = %u",neuron_index, neuron->phase);
         neuron->tl = neuron->tn;
         
     }//event_type 2 - External event
