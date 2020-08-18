@@ -314,7 +314,7 @@ static void  neuron_impl_neuron_update(uint32_t time, index_t neuron_index,
 
     if(eit){
         float eit = (float) time;
-        log_info("New eit = %f",eit );
+        log_info("Neuron %u Update EIT = %f",neuron_index, eit );
         neuron_model_eit_update(neuron, time);
     }else{
          if(!neuron_impl_add_spike(neuron_index, time)){

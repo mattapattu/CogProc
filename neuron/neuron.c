@@ -202,6 +202,7 @@ void neuron_pdevs_update(uint32_t time, index_t neuron_index, bool eit){
         
     if(neuron_impl_check_sim_end(n_neurons)){
         log_info("Calling end_sim for graceful exit");
+        spin1_delay_us(1000);
         end_simulation();
     }
 }
