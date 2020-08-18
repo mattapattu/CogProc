@@ -172,22 +172,22 @@ void neuron_model_Devs_sim(neuron_t * neuron, int16_t event_type, uint32_t nextS
         //log_info("Neuron %u internal event: phase %d expired at tn=%f",neuron_index, neuron->phase, neuron->tn);
         neuron->phase  = deltaInt(neuron,key,neuron_index,use_key);
         log_info("Neuron %u NEW PHASE = %u",neuron_index, neuron->phase);
-        neuron->tl = neuron->tn;
+        neuron->tl = neuron->tn; //UPDATE TL
         
     }//event_type 2 - External event
     else if(event_type == 2){
         neuron->phase = deltaExt(neuron, nextSpikeTime, threshold, input);
         log_info("Neuron %u NEW PHASE = %u after spike",neuron_index, neuron->phase);
-        neuron->tl = (float) nextSpikeTime + deltaT;
+        neuron->tl = (float) nextSpikeTime + deltaT;//UPDATE TL
         
     }
 
-    if(ta(neuron) >= INFINITY){
-        neuron->tn = INFINITY;
+    if(ta(neuron) == INFINITY){
+        neuron->tn = INFINITY; //UPDATE TN
         //log_info("Neuron %u tn = INFINITY", neuron_index);
     }else{
     //Next phase change = last event time + time-advance(current-phase)
-        neuron->tn = neuron->tl + ta(neuron);
+        neuron->tn = neuron->tl + ta(neuron);  //UPDATE TN
         //log_info("Neuron %u tn = %f", neuron_index,neuron->tn);
    }
 
@@ -256,7 +256,7 @@ int32_t deltaInt(neuron_t * neuron,key_t key, uint32_t neuron_index, bool use_ke
         neuron->V_membrane = neuron->V_reset;
         return(3);
     }else if(neuron->phase == 3){
-        return(1);
+        return(0);
     }
 
     
