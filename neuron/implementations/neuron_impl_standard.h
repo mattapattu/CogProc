@@ -30,6 +30,8 @@
 #include <neuron/threshold_types/threshold_type.h>
 #include <neuron/synapse_types/synapse_types.h>
 #include <neuron/synapses.h>
+#include "neuron_recording.h"
+
 
 // Further includes
 #include <debug.h>
@@ -337,6 +339,14 @@ static void  neuron_impl_neuron_update(uint32_t time, index_t neuron_index,
         //log_info("neuron %u: tl = %u", neuron_index, neuron->tl);
         nextSpikeTime = neuron->spike_times[0];
         ret = neuron_model_PDevs_sim(neuron, threshold, nextSpikeTime, key, neuron_index, input,use_key);
+        
+        if(neuron_impl_get_spiked(neuron_index)){
+            log_info("Setting recording bit for neuron %u",neuron_index);
+            neuron_recording_record_bit(SPIKE_RECORDING_BITFIELD, neuron_index);
+            log_info("Neuron %u lastThresholdTime = %u", neuron_index, neuron_get_lastThresholdTime(neuron_index));
+            neuron_recording_record(neuron_get_lastThresholdTime(neuron_index));
+
+        }
         
     }
        
