@@ -113,6 +113,7 @@ void neuron_reset_spiked(uint32_t neuron_index);
 bool neuron_get_spiked(uint32_t neuron_index);
 
 bool neuron_get_lastThresholdTime(uint32_t neuron_index);
+void neuron_reset_exit_counter();
 
 #endif
 

@@ -178,7 +178,7 @@ uint32_t neuron_update_spiketime(uint32_t time, index_t neuron_index){
     return(neuron_impl_update_spiketime(time, neuron_index));
 }
 
-static void neuron_reset_exit_counter(){
+void neuron_reset_exit_counter(){
     exitCounter = 0;
 }
 
