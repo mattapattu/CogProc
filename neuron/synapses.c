@@ -221,7 +221,7 @@ static inline void process_fixed_synapses(
 
     num_fixed_pre_synaptic_events += fixed_synapse;
 
-    log_info("New mc_pkt (,%u): eit = %u, time = %u", payload, eit, time);
+    
 
     
     for (; fixed_synapse > 0; fixed_synapse--) {
@@ -245,11 +245,13 @@ static inline void process_fixed_synapses(
         time = time+delay;
         
         time = neuron_update_spiketime(time,neuron_index);    
+
+        log_info("New mc_pkt (,%u) to neuron %u: EIT = %u, time = %u", neuron_index, payload, eit, time);
         // Convert into ring buffer offset
         uint32_t ring_buffer_index = synapses_get_ring_buffer_index_combined(
             time, combined_synapse_neuron_index,
             synapse_type_index_bits);
-        log_info("Setting ring_buffer_index  = %u for neuron_index = %u,  time = %u,  delay = %u, weight = %u", ring_buffer_index, neuron_index, time, delay, weight);
+        //log_info("Setting ring_buffer_index  = %u for neuron_index = %u,  time = %u,  delay = %u, weight = %u", ring_buffer_index, neuron_index, time, delay, weight);
         //
         // Add weight to current ring buffer value
         uint32_t accumulation = ring_buffers[ring_buffer_index] + weight;

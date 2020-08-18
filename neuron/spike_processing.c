@@ -218,7 +218,7 @@ static void setup_synaptic_dma_read(dma_buffer *current_buffer,
             log_info("Reusing row to process mc_pkt. Exiting setup_synaptic_dma_read"); 
         } */
          if (n_bytes_to_transfer == 0) {
-            log_info("Processing mc_pkt (%u,%u), row is in DTCM", spike, *spiketime); 
+            //log_info("Processing mc_pkt (%u,%u), row is in DTCM", spike, *spiketime); 
             spike_processing_count++;
             log_info("spike_processing_count = %u", spike_processing_count);
             // If the row is in DTCM, process the row now
@@ -240,7 +240,7 @@ static void setup_synaptic_dma_read(dma_buffer *current_buffer,
     }
 
     if(setup_done){
-        log_info("Processing mc_pkt (%u,%u) after DMA read", spike, *spiketime); 
+        //log_info("Processing mc_pkt (%u,%u) after DMA read", spike, *spiketime); 
         spike_processing_count++;            
         log_info("spike_processing_count = %u", spike_processing_count);
         // synaptic_row_t single_fixed_synapse =
@@ -299,7 +299,7 @@ static inline void setup_synaptic_dma_write(
 void multicast_packet_received_callback(uint key, uint payload) {
     //use(payload);
     
-    log_info("Adding mc_pkt (%u,%u) to buffer, DMA Busy = %d", key, payload, dma_busy);
+    //log_info("Adding mc_pkt (%u,%u) to buffer, DMA Busy = %d", key, payload, dma_busy);
     
      // If there was space to add spike to incoming spike queue
     if (in_spikes_add_spike(key) && in_spiketimes_add_spiketime(payload)) {
