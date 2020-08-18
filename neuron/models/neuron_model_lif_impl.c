@@ -116,6 +116,7 @@ int32_t neuron_model_check_next_ev(neuron_t * neuron){
     float nextSpikeTime = neuron->spike_times[0];
     if(nextSpikeTime == INFINITY && neuron->tn == INFINITY){
         log_info("Next events at INFINITY");
+        neuron->phase = 4;
         return(0);
     }else if(neuron->tn <= neuron->eit && neuron->tn <=  nextSpikeTime ){
         log_info("tn = %f can be executed, continue PDEVS loop",neuron->tn);
@@ -124,9 +125,9 @@ int32_t neuron_model_check_next_ev(neuron_t * neuron){
         log_info("nextSpikeTime = %f can be executed, continue PDEVS loop",neuron->tn);
         return(1);
     }else{
-        log_info("no more events to process, set phase to IDLE");
-        neuron->phase = 4;
-        return(0);
+        log_info("Check state");
+        log_info("tn = %f, eit = %f, nextSpikeTime = %u", neuron->tn, neuron->eit, nextSpikeTime);
+
     }
 }
 
