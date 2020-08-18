@@ -211,10 +211,11 @@ static inline void lif_update(float time, neuron_t * neuron, input_t input_this_
 
 void neuron_model_eit_update(neuron_t * neuron, float time){
 
-    if(neuron->eit == 0 || neuron->eit > time ){
-        neuron->eit = time;
-        //log_info("Updating neuron eit to %f",neuron->eit );
-    }
+    neuron->eit = time;
+    // if(neuron->eit == 0 || neuron->eit > time ){
+    //     neuron->eit = time;
+    //     //log_info("Updating neuron eit to %f",neuron->eit );
+    // }
     
 }
 
