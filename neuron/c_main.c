@@ -278,6 +278,7 @@ void mc_pkt_recvd_callback(uint key, uint payload) {
     uint32_t time = payload &  2147483647; 
     
     log_info("Received mc_pkt (%u,%u) at time = %u", key, payload, time);
+    neuron_reset_exit_counter();
     multicast_packet_received_callback(key, payload);
        
 }

@@ -46,6 +46,9 @@ static uint32_t expected_time;
 //! The recording flags
 static uint32_t recording_flags = 0;
 
+static uint32_t exitCounter = 0;
+
+
 //! parameters that reside in the neuron_parameter_data_region
 struct neuron_parameters {
     uint32_t timer_start_offset;
@@ -175,6 +178,9 @@ uint32_t neuron_update_spiketime(uint32_t time, index_t neuron_index){
     return(neuron_impl_update_spiketime(time, neuron_index));
 }
 
+static void neuron_reset_exit_counter(){
+    exitCounter = 0;
+}
 
 void neuron_pdevs_update(uint32_t time, index_t neuron_index, bool eit){
     input_t external_bias = 0;
@@ -188,10 +194,15 @@ void neuron_pdevs_update(uint32_t time, index_t neuron_index, bool eit){
     neuron_impl_neuron_update(time, neuron_index, external_bias,key,eit,use_key);
         
     if(neuron_impl_check_sim_end(n_neurons)){
-        log_info("Waiting 1000ms for graceful exit");
-        spin1_delay_us(1000);
-        log_info("Calling end_sim for graceful exit");
-        end_simulation();
+        while(exitCounter < 20){
+            spin1_delay_us(1000);
+            exitCounter++;
+        }
+        if(exitCounter == 20){
+            log_info("exitCounter = %u, Calling end_sim for graceful exit", exitCounter);
+            end_simulation();
+        }
+        
     }
 }
 
