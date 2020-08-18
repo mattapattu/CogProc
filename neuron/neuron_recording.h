@@ -26,6 +26,26 @@
 #include <recording.h>
 #include <common/spin1-wfi.h>
 
+//! Indices for recording of words
+enum word_recording_indices {
+    //! V (somatic potential) recording index
+    V_RECORDING_INDEX = 0,
+    //! Gsyn_exc (excitatory synaptic conductance/current) recording index
+    GSYN_EXC_RECORDING_INDEX = 1,
+    //! Gsyn_inh (excitatory synaptic conductance/current) recording index
+    GSYN_INH_RECORDING_INDEX = 2,
+    //! Number of recorded word-sized state variables
+    N_RECORDED_VARS = 3
+};
+
+//! Indices for recording of bitfields
+enum bitfield_recording_indices {
+    //! Spike event recording index
+    SPIKE_RECORDING_BITFIELD = 0,
+    //! Number of recorded bitfields
+    N_BITFIELD_VARS = 1
+};
+
 //! A struct of the different types of recorded data
 // Note data is just bytes here but actual type is used on writing
 typedef struct recording_values_t {
