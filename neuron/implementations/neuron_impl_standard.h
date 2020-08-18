@@ -30,8 +30,7 @@
 #include <neuron/threshold_types/threshold_type.h>
 #include <neuron/synapse_types/synapse_types.h>
 #include <neuron/synapses.h>
-#include "neuron_recording.h"
-
+#include <neuron/neuron_recording.h>
 
 // Further includes
 #include <debug.h>
