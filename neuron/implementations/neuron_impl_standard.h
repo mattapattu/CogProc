@@ -300,6 +300,32 @@ static bool neuron_impl_check_sim_end(uint32_t n_neurons){
     }
 }
 
+static uint32_t neuron_impl_update_spiketime(uint32_t time, index_t neuron_index){
+    neuron_pointer_t neuron = &neuron_array[neuron_index];
+    if(neuron->lastProcessedSpikeTime - time < deltaT){
+        time = neuron->lastProcessedSpikeTime + deltaT;
+    }
+    return(time);
+}
+
+
+
+static void neuron_impl_reset_spiked(uint32_t neuron_index){
+    neuron_pointer_t neuron = &neuron_array[neuron_index];
+    neuron->hasSpiked = false;
+}
+
+static bool neuron_impl_get_spiked(uint32_t neuron_index){
+    neuron_pointer_t neuron = &neuron_array[neuron_index];
+    return(neuron->hasSpiked);
+}
+
+static uint32_t neuron_impl_get_lastThresholdTime(uint32_t neuron_index){
+    neuron_pointer_t neuron = &neuron_array[neuron_index];
+    return(neuron->lastThresholdTime);
+}
+
+
 
 static bool neuron_impl_add_spike(index_t neuron_index, uint32_t time) {
     //log_info("Adding spike at time = %u to neuron_index  = %u", time, neuron_index);
@@ -351,30 +377,6 @@ static void  neuron_impl_neuron_update(uint32_t time, index_t neuron_index,
        
 }
 
-static uint32_t neuron_impl_update_spiketime(uint32_t time, index_t neuron_index){
-    neuron_pointer_t neuron = &neuron_array[neuron_index];
-    if(neuron->lastProcessedSpikeTime - time < deltaT){
-        time = neuron->lastProcessedSpikeTime + deltaT;
-    }
-    return(time);
-}
-
-
-
-static void neuron_impl_reset_spiked(uint32_t neuron_index){
-    neuron_pointer_t neuron = &neuron_array[neuron_index];
-    neuron->hasSpiked = false;
-}
-
-static bool neuron_impl_get_spiked(uint32_t neuron_index){
-    neuron_pointer_t neuron = &neuron_array[neuron_index];
-    return(neuron->hasSpiked);
-}
-
-static uint32_t neuron_impl_get_lastThresholdTime(uint32_t neuron_index){
-    neuron_pointer_t neuron = &neuron_array[neuron_index];
-    return(neuron->lastThresholdTime);
-}
 
 
 SOMETIMES_UNUSED // Marked unused as only used sometimes
