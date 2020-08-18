@@ -1343,9 +1343,9 @@ static void timer_callback(uint unused0, uint unused1) {
         simulation_handle_pause_resume(resume_callback);
 
         // close recording channels
-        if (recording_flags > 0) {
-            recording_finalise();
-        }
+        // if (recording_flags > 0) {
+        //     recording_finalise();
+        // }
 
         log_info("Last time of stop notification request: %d",
                 last_stop_notification_request);
@@ -1366,9 +1366,9 @@ static void timer_callback(uint unused0, uint unused1) {
         fetch_and_process_packet();
     }
 
-    if (recording_flags > 0) {
-        recording_do_timestep_update(time);
-    }
+    // if (recording_flags > 0) {
+    //     recording_do_timestep_update(time);
+    // }
 }
 
 
