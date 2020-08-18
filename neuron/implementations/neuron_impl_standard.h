@@ -337,12 +337,6 @@ static void  neuron_impl_neuron_update(uint32_t time, index_t neuron_index,
         //log_info("neuron %u: tl = %u", neuron_index, neuron->tl);
         nextSpikeTime = neuron->spike_times[0];
         ret = neuron_model_PDevs_sim(neuron, threshold, nextSpikeTime, key, neuron_index, input,use_key);
-        //log_info("neuron_model_PDevs_sim returns %u", ret);
-        // if(ret == 1){
-        //     continue;
-        // }else{
-        //     break;
-        // }
         
     }
        
