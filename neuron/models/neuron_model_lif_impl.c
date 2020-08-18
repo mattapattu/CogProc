@@ -80,36 +80,33 @@ static void lambda(neuron_t * neuron, key_t key, uint32_t neuron_index, bool use
     uint16_t currentState  = neuron->phase;
     uint32_t nextEventTime = (uint32_t) neuron->eot;
     //log_info("lambda: neuron %u currentState = %u, nextEventTime = %u",neuron_index,  currentState, nextEventTime );
-    if(use_key){
-        if(currentState == 2){
-        //clear 32nd bit if packet is spike 
-        //nextEventTime = nextEventTime & (~(1 << 31));
-        log_info("Sending Spike with key = %u, neuron_index = %u, payload = %u",key,  neuron_index, nextEventTime );
-        neuron->lastThresholdTime = (uint32_t) nextEventTime;
-        neuron->hasSpiked  = true;
+   
+    if(currentState == 2){
+    //clear 32nd bit if packet is spike 
+    //nextEventTime = nextEventTime & (~(1 << 31));
+    log_info("Sending Spike with key = %u, neuron_index = %u, payload = %u",key,  neuron_index, nextEventTime );
+    neuron->lastThresholdTime = (uint32_t) nextEventTime;
+    neuron->hasSpiked  = true;
+    
+    }else if(currentState == 3){
+        //time  = time + neuron->tn;
+        //set 32nd bit if packet is eot messg. 
+        
+        log_info("Sending EOT with key = %u, neuron_index = %u, time = %u",key,  neuron_index, nextEventTime );
+        nextEventTime |= (1 << 31);
+        
+    }else if(currentState == 0||currentState == 1){
+        log_info("Sending EOT with key = %u, neuron_index = %u, time = %u",key,  neuron_index, nextEventTime );
+        nextEventTime |= (1 << 31);
+        //log_info("Sending EOT with key = %u, neuron_index = %u, payload = %u",key,  neuron_index, nextEventTime );
+        
+    }
+
+    if(use_key){    
         while (!spin1_send_mc_packet(
-                        key | neuron_index, nextEventTime, WITH_PAYLOAD)) {
-                    spin1_delay_us(1000);
-                }
-        }else if(currentState == 3){
-            //time  = time + neuron->tn;
-            //set 32nd bit if packet is eot messg. 
-            
-            log_info("Sending EOT with key = %u, neuron_index = %u, time = %u",key,  neuron_index, nextEventTime );
-            nextEventTime |= (1 << 31);
-            while (!spin1_send_mc_packet(
-                            key | neuron_index, nextEventTime, WITH_PAYLOAD)) {
-                        spin1_delay_us(1000);
-                    }
-        }else if(currentState == 0||currentState == 1){
-            log_info("Sending EOT with key = %u, neuron_index = %u, time = %u",key,  neuron_index, nextEventTime );
-            nextEventTime |= (1 << 31);
-            //log_info("Sending EOT with key = %u, neuron_index = %u, payload = %u",key,  neuron_index, nextEventTime );
-            while (!spin1_send_mc_packet(
-                            key | neuron_index, nextEventTime, WITH_PAYLOAD)) {
-                        spin1_delay_us(1000);
-                    }
-        }
+                    key | neuron_index, nextEventTime, WITH_PAYLOAD)) {
+                spin1_delay_us(1000);
+            }
     }
     
 }
