@@ -184,11 +184,11 @@ void neuron_model_Devs_sim(neuron_t * neuron, int16_t event_type, uint32_t nextS
 
     if(ta(neuron) >= INFINITY){
         neuron->tn = INFINITY;
-        log_info("Neuron %u tn = INFINITY", neuron_index);
+        //log_info("Neuron %u tn = INFINITY", neuron_index);
     }else{
     //Next phase change = last event time + time-advance(current-phase)
         neuron->tn = neuron->tl + ta(neuron);
-        log_info("Neuron %u tn = %f", neuron_index,neuron->tn);
+        //log_info("Neuron %u tn = %f", neuron_index,neuron->tn);
    }
 
 }
