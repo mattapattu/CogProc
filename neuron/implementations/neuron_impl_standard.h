@@ -352,7 +352,7 @@ static void  neuron_impl_neuron_update(uint32_t time, index_t neuron_index,
             neuron_recording_record_bit(SPIKE_RECORDING_BITFIELD, neuron_index);
             log_info("Neuron %u lastThresholdTime = %u", neuron_index, neuron->lastThresholdTime);
             neuron_recording_record(neuron->lastThresholdTime);
-
+            neuron_impl_reset_spiked(neuron_index);
         }
         
     }
