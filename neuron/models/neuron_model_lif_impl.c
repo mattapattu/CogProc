@@ -125,7 +125,7 @@ int32_t neuron_model_check_next_ev(neuron_t * neuron){
         log_info("nextSpikeTime = %f can be executed, continue PDEVS loop",neuron->tn);
         return(1);
     }else{
-        log_info("Check state");
+        log_info("TN < EIT, wait for EIT update");
         log_info("tn = %f, eit = %f, nextSpikeTime = %u", neuron->tn, neuron->eit, nextSpikeTime);
 
     }
