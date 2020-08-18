@@ -84,7 +84,8 @@ static void lambda(neuron_t * neuron, key_t key, uint32_t neuron_index, bool use
     if(currentState == 2){
     //clear 32nd bit if packet is spike 
     //nextEventTime = nextEventTime & (~(1 << 31));
-    log_info("Sending Spike with key = %u, neuron_index = %u, payload = %u",key,  neuron_index, nextEventTime );
+    //log_info("Sending Spike with key = %u, neuron_index = %u, payload = %u",key,  neuron_index, nextEventTime );
+    log_info("Neuron = %u has fired at time = %u",neuron_index, nextEventTime );
     neuron->lastThresholdTime = (uint32_t) nextEventTime;
     neuron->hasSpiked  = true;
     
