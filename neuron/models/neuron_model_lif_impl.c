@@ -138,13 +138,13 @@ int32_t neuron_model_check_next_ev(neuron_t * neuron){
 int32_t neuron_model_PDevs_sim(neuron_t * neuron, int32_t threshold,  uint32_t nextSpikeTime, key_t key, uint32_t neuron_index, input_t input, bool use_key){
     if(neuron->tn <= neuron->eit && neuron->tn <=  nextSpikeTime ){
         //Call deltaInt()
-        log_info("Neuron %u phase %u expired at tn = %f",neuron_index, neuron->phase,  neuron->tn);
+        //log_info("Neuron %u PHASE %u END at tn = %f",neuron_index, neuron->phase,  neuron->tn);
         neuron_model_Devs_sim(neuron, 1,nextSpikeTime, threshold, key, neuron_index, input, use_key);
         
     }else if(nextSpikeTime <= neuron->eit &&  nextSpikeTime < neuron->tn ){
         //Call deltaExt()
         neuron->waitCounter = 0;
-        log_info("Neuron %u: recv spike at %u", neuron_index, nextSpikeTime);
+        log_info("Neuron %u: EXT INP at %u", neuron_index, nextSpikeTime);
         neuron_model_Devs_sim(neuron, 2,nextSpikeTime,  threshold, key, neuron_index, input, use_key);
         neuron->lastProcessedSpikeTime =  neuron_model_spiketime_pop(neuron);
     }
@@ -171,24 +171,24 @@ void neuron_model_Devs_sim(neuron_t * neuron, int16_t event_type, uint32_t nextS
     if(event_type == 1 ){
         //log_info("Neuron %u internal event: phase %d expired at tn=%f",neuron_index, neuron->phase, neuron->tn);
         neuron->phase  = deltaInt(neuron,key,neuron_index,use_key);
-        log_info("Neuron %u in new phase = %u",neuron_index, neuron->phase);
+        log_info("Neuron %u NEW PHASE = %u",neuron_index, neuron->phase);
         neuron->tl = neuron->tn;
         
     }//event_type 2 - External event
     else if(event_type == 2){
         neuron->phase = deltaExt(neuron, nextSpikeTime, threshold, input);
-        log_info("Neuron %u in new phase = %u after spike",neuron_index, neuron->phase);
+        log_info("Neuron %u NEW PHASE = %u after spike",neuron_index, neuron->phase);
         neuron->tl = (float) nextSpikeTime + deltaT;
         
     }
 
     if(ta(neuron) >= INFINITY){
         neuron->tn = INFINITY;
-        log_info("Setting neuron %u tn to INFINITY", neuron_index);
+        log_info("Neuron %u tn = INFINITY", neuron_index);
     }else{
     //Next phase change = last event time + time-advance(current-phase)
         neuron->tn = neuron->tl + ta(neuron);
-        log_info("Setting neuron %u tn to %f", neuron_index,neuron->tn);
+        log_info("Neuron %u tn = %f", neuron_index,neuron->tn);
    }
 
 }
