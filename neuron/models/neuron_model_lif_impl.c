@@ -141,7 +141,7 @@ int32_t neuron_model_PDevs_sim(neuron_t * neuron, int32_t threshold,  uint32_t n
     }else if(nextSpikeTime <= neuron->eit &&  nextSpikeTime < neuron->tn ){
         //Call deltaExt()
         neuron->waitCounter = 0;
-        log_info("Neuron %u: EXT INP at %u", neuron_index, nextSpikeTime);
+        log_info("Neuron %u: EXTERNAL INPUT at %u", neuron_index, nextSpikeTime);
         neuron_model_Devs_sim(neuron, 2,nextSpikeTime,  threshold, key, neuron_index, input, use_key);
         neuron->lastProcessedSpikeTime =  neuron_model_spiketime_pop(neuron);
     }
@@ -181,11 +181,11 @@ void neuron_model_Devs_sim(neuron_t * neuron, int16_t event_type, uint32_t nextS
 
     if(ta(neuron) == INFINITY){
         neuron->tn = INFINITY; //UPDATE TN
-        //log_info("Neuron %u tn = INFINITY", neuron_index);
+        log_info("Neuron %u TN = INFINITY", neuron_index);
     }else{
     //Next phase change = last event time + time-advance(current-phase)
         neuron->tn = neuron->tl + ta(neuron);  //UPDATE TN
-        //log_info("Neuron %u tn = %f", neuron_index,neuron->tn);
+        log_info("Neuron %u TN = %f", neuron_index,neuron->tn);
    }
 
 }
