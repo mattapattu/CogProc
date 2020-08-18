@@ -256,24 +256,6 @@ for (index_t n = 0; n < n_neurons; n++) {
 #endif // LOG_LEVEL >= LOG_DEBUG
 }
 
-// static bool neuron_impl_check_sim_end(uint32_t n_neurons){
-//     bool endSim = false;
-//     //bool err = false;
-//     // if(!check_spiketimes_not_empty()){
-//         log("in_spiketimes is empty");
-//         // log("in_spiketimes is empty. Checking neuron states");
-//         endSim = true;
-//         for (index_t n = 0; n < n_neurons; n++) {
-//             if(neuron_model_get_phase(&neuron_array[n]) == 4){
-//                 endSim = endSim && true;
-//             }
-//         }
-              
-//     // }
-    
-//     return(endSim);
-// }
-
 static bool neuron_impl_check_sim_end(uint32_t n_neurons){
     bool endSim = true;
     bool err = false;
@@ -315,7 +297,7 @@ static void neuron_impl_reset_spiked(uint32_t neuron_index){
     neuron->hasSpiked = false;
 }
 
-static bool neuron_impl_get_spiked(uint32_t neuron_index){
+static bool neuron_impl_spiked(uint32_t neuron_index){
     neuron_pointer_t neuron = &neuron_array[neuron_index];
     return(neuron->hasSpiked);
 }
@@ -365,7 +347,7 @@ static void  neuron_impl_neuron_update(uint32_t time, index_t neuron_index,
         nextSpikeTime = neuron->spike_times[0];
         ret = neuron_model_PDevs_sim(neuron, threshold, nextSpikeTime, key, neuron_index, input,use_key);
         
-        if(neuron_impl_get_spiked(neuron_index)){
+        if(neuron_impl_spiked(neuron_index)){
             log_info("Setting recording bit for neuron %u",neuron_index);
             neuron_recording_record_bit(SPIKE_RECORDING_BITFIELD, neuron_index);
             log_info("Neuron %u lastThresholdTime = %u", neuron_index, neuron->lastThresholdTime);

@@ -164,7 +164,7 @@ void neuron_reset_spiked(uint32_t neuron_index){
 }
 
 bool neuron_get_spiked(uint32_t neuron_index){
-    return(neuron_impl_get_spiked(neuron_index));
+    return(neuron_impl_spiked(neuron_index));
 }
 
 bool neuron_get_lastThresholdTime(uint32_t neuron_index){
