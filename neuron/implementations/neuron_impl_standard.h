@@ -313,9 +313,9 @@ static void  neuron_impl_neuron_update(uint32_t time, index_t neuron_index,
     neuron_pointer_t neuron = &neuron_array[neuron_index];
 
     if(eit){
-        float eit = (float) time;
-        log_info("Neuron %u Update EIT = %f",neuron_index, eit );
-        neuron_model_eit_update(neuron, time);
+        float eitTime = (float) time;
+        log_info("Neuron %u Update EIT = %f",neuron_index, eitTime );
+        neuron_model_eit_update(neuron, eitTime);
     }else{
          if(!neuron_impl_add_spike(neuron_index, time)){
             log_error("Unable to add spike to neuron %u at time = %u", neuron_index, time);
@@ -335,7 +335,7 @@ static void  neuron_impl_neuron_update(uint32_t time, index_t neuron_index,
     while(ret == 1){
         //log_info("Calling neuron_model_PDevs_sim");
         //log_info("neuron %u: tl = %u", neuron_index, neuron->tl);
-        nextSpikeTime = neuron->spike_times[0];
+        //nextSpikeTime = neuron->spike_times[0];
         ret = neuron_model_PDevs_sim(neuron, threshold, nextSpikeTime, key, neuron_index, input,use_key);
         //log_info("neuron_model_PDevs_sim returns %u", ret);
         // if(ret == 1){
