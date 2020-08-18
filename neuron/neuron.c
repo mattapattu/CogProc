@@ -154,6 +154,7 @@ void neuron_pause(address_t address) { // EXPORTED
 static void end_simulation(){
 
     simulation_handle_pause_resume(NULL);
+    neuron_recording_finalise();
     simulation_ready_to_read();
     return;    
 } 
