@@ -106,7 +106,7 @@ static void lambda(neuron_t * neuron, key_t key, uint32_t neuron_index, bool use
     if(use_key && nextEventTime < INFINITY){    
         while (!spin1_send_mc_packet(
                     key | neuron_index, nextEventTime, WITH_PAYLOAD)) {
-                spin1_delay_us(1000);
+                spin1_delay_us(1);
             }
     }
     
