@@ -193,7 +193,10 @@ void neuron_pdevs_update(uint32_t time, index_t neuron_index, bool eit){
     if(time >= sim_exit_time){
         log_info("Force Exit. Spiketime = %u > sim_exit_time = %u", time, sim_exit_time);
         forceExit = true;
-        neuron_sim_exit();
+        
+        spin1_delay_us(100000);
+
+        end_simulation();
         return;
     }
     
@@ -208,23 +211,24 @@ void neuron_pdevs_update(uint32_t time, index_t neuron_index, bool eit){
     
 }
 
-void neuron_sim_exit(){
-    if(forceExit){ // For Synfire chains which will never end
-        spin1_delay_us(100000);
-        end_simulation();
-    }
-    // else if(neuron_impl_check_sim_end(n_neurons)){
-    //     while(exitCounter < 20){
-    //         spin1_delay_us(1000);
-    //         exitCounter++;
-    //     }
-    //     if(exitCounter == 20){
-    //         log_info("exitCounter = %u, Calling end_sim for graceful exit", exitCounter);
-    //         end_simulation();
-    //     }
+// void neuron_sim_exit(){
+//     if(forceExit){ // For Synfire chains which will never end
+//         spin1_delay_us(100000);
+
+//         end_simulation();
+//     }
+//     // else if(neuron_impl_check_sim_end(n_neurons)){
+//     //     while(exitCounter < 20){
+//     //         spin1_delay_us(1000);
+//     //         exitCounter++;
+//     //     }
+//     //     if(exitCounter == 20){
+//     //         log_info("exitCounter = %u, Calling end_sim for graceful exit", exitCounter);
+//     //         end_simulation();
+//     //     }
         
-    // }
-}
+//     // }
+// }
 
 
 /* void neuron_add_spike(uint32_t time, index_t neuron_index){

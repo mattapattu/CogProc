@@ -279,7 +279,11 @@ void resume_callback(void) {
 void mc_pkt_recvd_callback(uint key, uint payload) {
     //use(payload);
 
-    uint32_t time = payload &  2147483647; 
+    uint32_t time = payload &  2147483647;
+    if(time > simulation_ticks){
+        spin1_callback_off(MCPL_PACKET_RECEIVED);
+        spin1_callback_off(MC_PACKET_RECEIVED);
+    } 
     
     log_info("Received mc_pkt (%u,%u) at time = %u", key, payload, time);
     neuron_reset_exit_counter();
