@@ -128,7 +128,7 @@ int32_t neuron_model_check_next_ev(neuron_t * neuron){
         }
         
     }else if(nextSpikeTime <= neuron->eit &&  nextSpikeTime < neuron->tn){
-        if(neuron->tn < INFINITY){
+        if(nextSpikeTime < INFINITY){
             log_info("nextSpikeTime = %f can be executed, continue PDEVS loop",neuron->tn);
             return(1);
         }else{
