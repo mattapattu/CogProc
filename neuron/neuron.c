@@ -193,6 +193,10 @@ void neuron_pdevs_update(uint32_t time, index_t neuron_index, bool eit){
     neuron_reset_spiked(neuron_index);
     neuron_impl_neuron_update(time, neuron_index, external_bias,key,eit,use_key);
         
+    
+}
+
+void neuron_sim_exit(){
     if(neuron_impl_check_sim_end(n_neurons)){
         while(exitCounter < 20){
             spin1_delay_us(1000);
@@ -205,7 +209,6 @@ void neuron_pdevs_update(uint32_t time, index_t neuron_index, bool eit){
         
     }
 }
-
 
 
 /* void neuron_add_spike(uint32_t time, index_t neuron_index){
