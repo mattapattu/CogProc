@@ -120,7 +120,7 @@ int32_t neuron_model_check_next_ev(neuron_t * neuron){
     float nextSpikeTime = neuron->spike_times[0];
     if(nextSpikeTime == INFINITY && neuron->tn == INFINITY){
         log_info("Next events at INFINITY");
-        neuron->phase = 4;
+        //neuron->phase = 4;
         return(0);
     }else if(neuron->tn <= neuron->eit && neuron->tn <=  nextSpikeTime ){
         if(neuron->tn < INFINITY){
