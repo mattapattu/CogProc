@@ -99,6 +99,6 @@ int32_t deltaExt(neuron_t * neuron, uint32_t time, int32_t threshold, input_t in
 
 void neuron_model_init(neuron_t * neuron);
 
-int32_t neuron_model_get_phase(neuron_t * neuron);
+uint16_t neuron_model_get_phase(neuron_t * neuron);
 
 #endif // _NEURON_MODEL_H_

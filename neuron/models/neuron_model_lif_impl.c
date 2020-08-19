@@ -52,6 +52,9 @@ static float ta(neuron_t * neuron){
     }else if(neuron->phase == 3){
         //return(neuron->T_refract);
         return(0.1); //Fix this, do not hardcode
+    }else{
+        log_info("Unknown Neuron PHASE = %u. Check",  neuron->phase);
+
     }
 }
 
@@ -278,6 +281,9 @@ int32_t deltaInt(neuron_t * neuron,key_t key, uint32_t neuron_index, bool use_ke
         return(3);
     }else if(neuron->phase == 3){
         return(0);
+    }else{
+        log_info("Unknown Neuron %u PHASE = %u. Check", neuron_index, neuron->phase);
+
     }
 
     
@@ -339,7 +345,7 @@ void neuron_model_init(neuron_t *neuron){
 
 }
 
-int32_t neuron_model_get_phase(neuron_t * neuron){
+uint16_t neuron_model_get_phase(neuron_t * neuron){
     return(neuron->phase);
 }
 
