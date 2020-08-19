@@ -48,7 +48,9 @@ static uint32_t recording_flags = 0;
 
 static volatile uint32_t exitCounter = 0;
 
+static sim_exit_time = 0;
 
+static bool forceExit = false;
 //! parameters that reside in the neuron_parameter_data_region
 struct neuron_parameters {
     uint32_t timer_start_offset;
@@ -182,8 +184,15 @@ void neuron_reset_exit_counter(){
     exitCounter = 0;
 }
 
+void neuron_set_sim_exit_time(uint32_t time){
+    sim_exit_time = time;
+}
+
 void neuron_pdevs_update(uint32_t time, index_t neuron_index, bool eit){
     input_t external_bias = 0;
+    if(time >= sim_exit_time){
+        neuron_sim_exit();
+    }
     
     // if(!eit){
     //     neuron_recording_setup_for_next_recording();
@@ -197,7 +206,10 @@ void neuron_pdevs_update(uint32_t time, index_t neuron_index, bool eit){
 }
 
 void neuron_sim_exit(){
-    if(neuron_impl_check_sim_end(n_neurons)){
+    if(forceExit){ // For Synfire chains which will never end
+        spin1_delay_us(1000);
+        end_simulation();
+    }else if(neuron_impl_check_sim_end(n_neurons)){
         while(exitCounter < 20){
             spin1_delay_us(1000);
             exitCounter++;

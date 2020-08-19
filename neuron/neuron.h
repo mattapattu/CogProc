@@ -115,6 +115,7 @@ bool neuron_get_spiked(uint32_t neuron_index);
 bool neuron_get_lastThresholdTime(uint32_t neuron_index);
 void neuron_reset_exit_counter();
 void neuron_sim_exit();
+void neuron_set_sim_exit_time(uint32_t time);
 #endif
 
 #endif // _NEURON_H_
