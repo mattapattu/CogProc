@@ -211,17 +211,18 @@ void neuron_sim_exit(){
     if(forceExit){ // For Synfire chains which will never end
         spin1_delay_us(1000);
         end_simulation();
-    }else if(neuron_impl_check_sim_end(n_neurons)){
-        while(exitCounter < 20){
-            spin1_delay_us(1000);
-            exitCounter++;
-        }
-        if(exitCounter == 20){
-            log_info("exitCounter = %u, Calling end_sim for graceful exit", exitCounter);
-            end_simulation();
-        }
-        
     }
+    // else if(neuron_impl_check_sim_end(n_neurons)){
+    //     while(exitCounter < 20){
+    //         spin1_delay_us(1000);
+    //         exitCounter++;
+    //     }
+    //     if(exitCounter == 20){
+    //         log_info("exitCounter = %u, Calling end_sim for graceful exit", exitCounter);
+    //         end_simulation();
+    //     }
+        
+    // }
 }
 
 
