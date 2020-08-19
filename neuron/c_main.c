@@ -170,6 +170,7 @@ static bool initialise(void) {
             &infinite_run, &time, SDP, DMA)) {
         return false;
     }
+    log_info("simulation_ticks = %u", simulation_ticks);
     simulation_set_provenance_function(
             c_main_store_provenance_data,
             data_specification_get_region(PROVENANCE_DATA_REGION, ds_regions));
@@ -321,6 +322,7 @@ void c_main(void) {
 
     // Set up the timer tick callback (others are handled elsewhere)
     //spin1_callback_on(TIMER_TICK, timer_callback, TIMER);
+    neuron_set_sim_exit_time(simulation_ticks);
     spin1_callback_on(MCPL_PACKET_RECEIVED,
             mc_pkt_recvd_callback, -1);
     spin1_callback_on(MC_PACKET_RECEIVED,
