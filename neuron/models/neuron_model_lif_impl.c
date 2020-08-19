@@ -195,7 +195,7 @@ void neuron_model_Devs_sim(neuron_t * neuron, int16_t event_type, uint32_t nextS
     }
 
     if(neuron->eit != INFINITY && neuron->tl >= neuron->eit){
-        log_info("Neuron %u eit = INFINITY", neuron_index);
+        //log_info("Neuron %u eit = INFINITY", neuron_index);
         neuron->eit = INFINITY;
     }
 
