@@ -247,6 +247,7 @@ static inline void process_fixed_synapses(
         time = neuron_update_spiketime(time,neuron_index);    
 
         log_info("New mc_pkt to neuron %u: EIT = %u, time = %u",  neuron_index,  eit, time);
+        neuron_reset_exit_counter();
         // Convert into ring buffer offset
         uint32_t ring_buffer_index = synapses_get_ring_buffer_index_combined(
             time, combined_synapse_neuron_index,
