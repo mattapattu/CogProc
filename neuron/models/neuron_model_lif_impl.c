@@ -116,14 +116,14 @@ int32_t neuron_model_check_next_ev(neuron_t * neuron){
     //log_info("phase = %u, tn = %u, eit = %u, spikeCount = %u", neuron->phase, neuron->tn, neuron->eit, neuron->spikeCount);
     float nextSpikeTime = neuron->spike_times[0];
     if(nextSpikeTime == INFINITY && neuron->tn == INFINITY){
-        log_info("Next events at INFINITY");
+        //log_info("Next events at INFINITY");
         neuron->phase = 4;
         return(0);
     }else if(neuron->tn <= neuron->eit && neuron->tn <=  nextSpikeTime ){
-        log_info("tn = %f can be executed, continue PDEVS loop",neuron->tn);
+        //log_info("tn = %f can be executed, continue PDEVS loop",neuron->tn);
         return(1);
     }else if(nextSpikeTime <= neuron->eit &&  nextSpikeTime < neuron->tn){
-        log_info("nextSpikeTime = %f can be executed, continue PDEVS loop",neuron->tn);
+        //log_info("nextSpikeTime = %f can be executed, continue PDEVS loop",neuron->tn);
         return(1);
     }else{
         log_info("TN > EIT, wait for EIT update");
@@ -324,15 +324,15 @@ int32_t neuron_model_get_phase(neuron_t * neuron){
 
 void neuron_model_print_parameters(const neuron_t *neuron) {
 
-    log_info("V reset       = %11.4k mv", neuron->V_reset);
-    log_info("V rest        = %11.4k mv", neuron->V_rest);
+    //log_info("V reset       = %11.4k mv", neuron->V_reset);
+    //log_info("V rest        = %11.4k mv", neuron->V_rest);
 
-    log_info("I offset      = %11.4k nA", neuron->I_offset);
-    log_info("R membrane    = %11.4k Mohm", neuron->R_membrane);
+    //log_info("I offset      = %11.4k nA", neuron->I_offset);
+    //log_info("R membrane    = %11.4k Mohm", neuron->R_membrane);
 
-    log_info("exp(-ms/(RC)) = %11.4k [.]", neuron->exp_TC);
+    //log_info("exp(-ms/(RC)) = %11.4k [.]", neuron->exp_TC);
 
-    log_info("T refract  neuron_model_print_state_variables   = %u timesteps", neuron->T_refract);
-    log_info("V_membrane     = %f ", neuron->V_membrane);
+    //log_info("T refract  neuron_model_print_state_variables   = %u timesteps", neuron->T_refract);
+    //log_info("V_membrane     = %f ", neuron->V_membrane);
     
 }
