@@ -210,7 +210,7 @@ void neuron_pdevs_update(uint32_t time, index_t neuron_index, bool eit){
 
 void neuron_sim_exit(){
     if(forceExit){ // For Synfire chains which will never end
-        spin1_delay_us(1000);
+        spin1_delay_us(100000);
         end_simulation();
     }
     // else if(neuron_impl_check_sim_end(n_neurons)){
