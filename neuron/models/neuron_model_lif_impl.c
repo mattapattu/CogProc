@@ -116,25 +116,35 @@ int32_t neuron_model_check_next_ev(neuron_t * neuron){
     //log_info("phase = %u, tn = %u, eit = %u, spikeCount = %u", neuron->phase, neuron->tn, neuron->eit, neuron->spikeCount);
     float nextSpikeTime = neuron->spike_times[0];
     if(nextSpikeTime == INFINITY && neuron->tn == INFINITY){
-        //log_info("Next events at INFINITY");
+        log_info("Next events at INFINITY");
         neuron->phase = 4;
         return(0);
     }else if(neuron->tn <= neuron->eit && neuron->tn <=  nextSpikeTime ){
-        //log_info("tn = %f can be executed, continue PDEVS loop",neuron->tn);
-        return(1);
+        if(neuron->tn < INFINITY){
+            log_info("tn = %f can be executed, continue PDEVS loop",neuron->tn);
+            return(1);
+        }else{
+            return 0;
+        }
+        
     }else if(nextSpikeTime <= neuron->eit &&  nextSpikeTime < neuron->tn){
-        //log_info("nextSpikeTime = %f can be executed, continue PDEVS loop",neuron->tn);
-        return(1);
+        if(neuron->tn < INFINITY){
+            log_info("nextSpikeTime = %f can be executed, continue PDEVS loop",neuron->tn);
+            return(1);
+        }else{
+            return 0;
+        }
     }else{
         log_info("TN > EIT, wait for EIT update");
         log_info("tn = %f, eit = %f, nextSpikeTime = %u", neuron->tn, neuron->eit, nextSpikeTime);
-
+        return 0;
     }
 }
 
 
 //DEVS PDEVS  simulator
 int32_t neuron_model_PDevs_sim(neuron_t * neuron, int32_t threshold,  uint32_t nextSpikeTime, key_t key, uint32_t neuron_index, input_t input, bool use_key){
+    
     if(neuron->tn <= neuron->eit && neuron->tn <=  nextSpikeTime ){
         //Call deltaInt()
         log_info("Neuron %u PHASE %u END at tn = %f",neuron_index, neuron->phase,  neuron->tn);
@@ -180,8 +190,9 @@ void neuron_model_Devs_sim(neuron_t * neuron, int16_t event_type, uint32_t nextS
         neuron->tl = (float) nextSpikeTime + deltaT;//UPDATE TL
         
     }
+
     if(neuron->eit != INFINITY && neuron->tl >= neuron->eit){
-        log_info("Neuron %u TN = INFINITY", neuron_index);
+        log_info("Neuron %u eit = INFINITY", neuron_index);
         neuron->eit = INFINITY;
     }
 
