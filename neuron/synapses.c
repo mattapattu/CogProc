@@ -205,7 +205,7 @@ static inline void process_fixed_synapses(
     uint32_t time  = -1;  
     uint8_t eit =   -1;
     if(payload == 0){
-        log_info("payload  = 0. Consider as spike from spikearray ");
+        //log_info("payload  = 0. Consider as spike from spikearray ");
         //pkt came from sourcearray and is a spike at time t =0
         time = 0;
         eit = 0;
@@ -252,7 +252,7 @@ static inline void process_fixed_synapses(
         uint32_t ring_buffer_index = synapses_get_ring_buffer_index_combined(
             time, combined_synapse_neuron_index,
             synapse_type_index_bits);
-        log_info("Setting ring_buffer_index  = %u for neuron_index = %u,  time = %u,  delay = %u, weight = %u", ring_buffer_index, neuron_index, time, delay, weight);
+        //log_info("Setting ring_buffer_index  = %u for neuron_index = %u,  time = %u,  delay = %u, weight = %u", ring_buffer_index, neuron_index, time, delay, weight);
         //
         // Add weight to current ring buffer value
         uint32_t accumulation = ring_buffers[ring_buffer_index] + weight;
