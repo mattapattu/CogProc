@@ -170,7 +170,7 @@ static bool initialise(void) {
             &infinite_run, &time, SDP, DMA)) {
         return false;
     }
-    log_info("simulation_ticks = %u", simulation_ticks);
+    //log_info("simulation_ticks = %u", simulation_ticks);
     simulation_set_provenance_function(
             c_main_store_provenance_data,
             data_specification_get_region(PROVENANCE_DATA_REGION, ds_regions));
@@ -236,12 +236,16 @@ static bool initialise(void) {
     // Setup profiler
     profiler_init(data_specification_get_region(PROFILER_REGION, ds_regions));
 
-    log_info("initialising the bit field region");
+    //log_info("initialising the bit field region");
     print_post_to_pre_entry();
     if (!bit_field_filter_initialise(data_specification_get_region(
             BIT_FIELD_FILTER_REGION, ds_regions))) {
         return false;
     }
+
+    
+    log_info("simulation_ticks = %u", simulation_ticks);
+    neuron_set_sim_exit_time(simulation_ticks);
 
     log_debug("Initialise: finished");
     return true;
@@ -322,7 +326,7 @@ void c_main(void) {
 
     // Set up the timer tick callback (others are handled elsewhere)
     //spin1_callback_on(TIMER_TICK, timer_callback, TIMER);
-    neuron_set_sim_exit_time(simulation_ticks);
+    //neuron_set_sim_exit_time(simulation_ticks);
     spin1_callback_on(MCPL_PACKET_RECEIVED,
             mc_pkt_recvd_callback, -1);
     spin1_callback_on(MC_PACKET_RECEIVED,
