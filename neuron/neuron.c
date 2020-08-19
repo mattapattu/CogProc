@@ -191,6 +191,7 @@ void neuron_set_sim_exit_time(uint32_t time){
 void neuron_pdevs_update(uint32_t time, index_t neuron_index, bool eit){
     input_t external_bias = 0;
     if(time >= sim_exit_time){
+        log_info("Force Exit. Spiketime = %u > sim_exit_time = %u", time, sim_exit_time)
         neuron_sim_exit();
     }
     

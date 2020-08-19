@@ -192,7 +192,7 @@ static inline void neuron_recording_record(uint32_t time) {
             n_recordings_outstanding += 1;
             // Set the time and record the data
             rec_info->values->time = time;
-            log_info("Recording VARS now");
+            //log_info("Recording VARS now");
             recording_record_and_notify(
                 i - 1, rec_info->values, rec_info->size, recording_done_callback);
         } else {
@@ -216,12 +216,12 @@ static inline void neuron_recording_record(uint32_t time) {
             n_recordings_outstanding += 1;
             // Set the time and record the data (note index is after recorded_vars)
             bf_info->values->time = time;
-            log_info("Recording BITFIELDS now");
+            //("Recording BITFIELDS now");
             recording_record_and_notify(
                 i + N_RECORDED_VARS - 1, bf_info->values, bf_info->size,
                 recording_done_callback);
         } else {
-            log_info("Not Recording BITFIELDS now");    
+            //log_info("Not Recording BITFIELDS now");    
             // Not recording this time, so increment by specified amount
             bf_info->count += bf_info->increment;
         }
