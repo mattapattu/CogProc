@@ -251,11 +251,14 @@ int32_t deltaExt(neuron_t * neuron, uint32_t time, int32_t threshold, input_t in
     if(neuron->phase == 2 || neuron->phase == 3){
         //log_info("Ignore input as neuron is in threshold/refractory phase");
         return(neuron->phase);
-    }else{
+    }else if(neuron->phase == 0 || neuron->phase == 1){
         //log_info("external input = %f", input);
         lif_update(time, neuron, input);
         //log_info("New V_membrane after lif_update = %f, threshold = %f",  neuron->V_membrane,threshold);
         return(1);
+    }else{
+        log_info("Unknown Neuron %u PHASE = %u. Check", neuron_index, neuron->phase);
+        return(0);
     }
 }
 
