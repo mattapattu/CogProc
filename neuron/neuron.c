@@ -46,7 +46,7 @@ static uint32_t expected_time;
 //! The recording flags
 static uint32_t recording_flags = 0;
 
-static uint32_t exitCounter = 0;
+static volatile uint32_t exitCounter = 0;
 
 
 //! parameters that reside in the neuron_parameter_data_region
