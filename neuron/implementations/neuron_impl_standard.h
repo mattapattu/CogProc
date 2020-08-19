@@ -337,26 +337,31 @@ static void  neuron_impl_neuron_update(uint32_t time, index_t neuron_index,
     //neuron_pointer_t neuron = &neuron_array[neuron_index];
 
     float nextSpikeTime = neuron->spike_times[0];
-    input_t input = synapses_get_ring_buffer_input(nextSpikeTime,neuron_index );
+    input_t input;
+    int32_t ret = 1;
+    if(nextSpikeTime < INFINITY){
+        input = synapses_get_ring_buffer_input(nextSpikeTime,neuron_index ); 
+    }else{
+        ret = 0;
+    }
+     
     //log_info("nextSpikeTime = %u, input = %u", nextSpikeTime, input);
     
-    int32_t ret = 1;
+    
     while(ret == 1){
         //log_info("Calling neuron_model_PDevs_sim");
         //log_info("neuron %u: tl = %u", neuron_index, neuron->tl);
         nextSpikeTime = neuron->spike_times[0];
-        if(nextSpikeTime < INFINITY){
-            ret = neuron_model_PDevs_sim(neuron, threshold, nextSpikeTime, key, neuron_index, input,use_key);
-            if(neuron_impl_spiked(neuron_index)){
-                //log_info("Setting recording bit for neuron %u",neuron_index);
-                neuron_recording_record_bit(SPIKE_RECORDING_BITFIELD, neuron_index);
-            //log_info("Neuron %u lastThresholdTime = %u", neuron_index, neuron->lastThresholdTime);
-                neuron_recording_record(neuron->lastThresholdTime);
-                neuron_impl_reset_spiked(neuron_index);
-            }
-        }else{
-            ret =0;
+        ret = neuron_model_PDevs_sim(neuron, threshold, nextSpikeTime, key, neuron_index, input,use_key);
+        
+        if(neuron_impl_spiked(neuron_index)){
+            //log_info("Setting recording bit for neuron %u",neuron_index);
+            neuron_recording_record_bit(SPIKE_RECORDING_BITFIELD, neuron_index);
+        //log_info("Neuron %u lastThresholdTime = %u", neuron_index, neuron->lastThresholdTime);
+            neuron_recording_record(neuron->lastThresholdTime);
+            neuron_impl_reset_spiked(neuron_index);
         }
+        
     
     }
        
