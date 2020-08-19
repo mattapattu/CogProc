@@ -274,7 +274,7 @@ static bool neuron_impl_check_sim_end(uint32_t n_neurons){
         }
     }
     if(err){
-        log_info("Call end sim as neuron in Error phase");
+        //log_info("Call end sim as neuron in Error phase");
         return(err);
     }else if(endSim){
         log_info("All neurons in Idle state. Call end_sim");
@@ -348,9 +348,9 @@ static void  neuron_impl_neuron_update(uint32_t time, index_t neuron_index,
         ret = neuron_model_PDevs_sim(neuron, threshold, nextSpikeTime, key, neuron_index, input,use_key);
         
         if(neuron_impl_spiked(neuron_index)){
-            log_info("Setting recording bit for neuron %u",neuron_index);
+            //log_info("Setting recording bit for neuron %u",neuron_index);
             neuron_recording_record_bit(SPIKE_RECORDING_BITFIELD, neuron_index);
-            log_info("Neuron %u lastThresholdTime = %u", neuron_index, neuron->lastThresholdTime);
+           //log_info("Neuron %u lastThresholdTime = %u", neuron_index, neuron->lastThresholdTime);
             neuron_recording_record(neuron->lastThresholdTime);
             neuron_impl_reset_spiked(neuron_index);
         }
