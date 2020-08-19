@@ -283,7 +283,8 @@ static inline void process_fixed_synapses(
 
     }
 
-    spin1_schedule_callback(neuron_sim_exit, 0, 0, 1);
+    neuron_sim_exit();
+    //spin1_schedule_callback(neuron_sim_exit, 0, 0, 1);
 }
 
 
