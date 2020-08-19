@@ -257,7 +257,7 @@ int32_t deltaExt(neuron_t * neuron, uint32_t time, int32_t threshold, input_t in
         //log_info("New V_membrane after lif_update = %f, threshold = %f",  neuron->V_membrane,threshold);
         return(1);
     }else{
-        log_info("Unknown Neuron %u PHASE = %u. Check", neuron_index, neuron->phase);
+        log_info("Unknown Neuron PHASE = %u. Check",  neuron->phase);
         return(0);
     }
 }
