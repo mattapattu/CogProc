@@ -327,7 +327,7 @@ void c_main(void) {
     //spin1_callback_on(TIMER_TICK, timer_callback, TIMER);
     //neuron_set_sim_exit_time(simulation_ticks);
     //log_info("simulation_ticks = %u", simulation_ticks);
-    simulation_ticks = 1000;
+    simulation_ticks = 800;
     neuron_set_sim_exit_time(simulation_ticks);
     spin1_callback_on(MCPL_PACKET_RECEIVED,
             mc_pkt_recvd_callback, -1);
