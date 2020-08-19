@@ -103,7 +103,7 @@ static void lambda(neuron_t * neuron, key_t key, uint32_t neuron_index, bool use
         
     }
 
-    if(use_key){    
+    if(use_key && nextEventTime < INFINITY){    
         while (!spin1_send_mc_packet(
                     key | neuron_index, nextEventTime, WITH_PAYLOAD)) {
                 spin1_delay_us(1000);
@@ -180,6 +180,9 @@ void neuron_model_Devs_sim(neuron_t * neuron, int16_t event_type, uint32_t nextS
         neuron->tl = (float) nextSpikeTime + deltaT;//UPDATE TL
         
     }
+    if(neuron->eit != INFINITY && neuron->tl >= neuron->eit){
+        neuron->eit = INFINITY;
+    }
 
     if(ta(neuron) == INFINITY){
         neuron->tn = INFINITY; //UPDATE TN
@@ -210,9 +213,15 @@ static inline void lif_update(float time, neuron_t * neuron, input_t input_this_
 
 }
 
-void neuron_model_eit_update(neuron_t * neuron, float time){
+bool neuron_model_eit_update(neuron_t * neuron, float time){
 
-    neuron->eit = time;
+    if(time < INFINITY){
+       neuron->eit = time;
+       return true;
+    }else{
+        return false;
+    }
+    
     // if(neuron->eit == 0 || neuron->eit > time ){
     //     neuron->eit = time;
     //     //log_info("Updating neuron eit to %f",neuron->eit );

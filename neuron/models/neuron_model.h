@@ -91,7 +91,7 @@ int32_t neuron_model_PDevs_sim(neuron_t * neuron, int32_t threshold,  uint32_t n
 
 void neuron_model_Devs_sim(neuron_t * neuron, int16_t event_type, uint32_t nextSpikeTime, int32_t threshold, key_t key, uint32_t neuron_index, input_t input, bool use_key);
 
-void neuron_model_eit_update(neuron_pointer_t neuron, float time);
+bool neuron_model_eit_update(neuron_pointer_t neuron, float time);
 
 int32_t deltaInt(neuron_t * neuron,key_t key, uint32_t neuron_index, bool use_key);
 
