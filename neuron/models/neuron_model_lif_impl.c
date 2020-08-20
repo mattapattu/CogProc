@@ -254,7 +254,7 @@ int32_t deltaInt(neuron_t * neuron,key_t key, uint32_t neuron_index, bool use_ke
         }
     }else if(neuron->phase == 2){
         lambda(neuron, key, neuron_index, use_key);
-        //log_info("Neuron in phase 2, reset V_memb and change to phase 3");
+        log_info("Neuron in phase 2, reset V_memb and change to phase 3");
         neuron->V_membrane = neuron->V_reset;
         return(3);
     }else if(neuron->phase == 3){
