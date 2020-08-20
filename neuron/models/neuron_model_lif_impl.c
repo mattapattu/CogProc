@@ -319,8 +319,8 @@ uint16_t neuron_model_get_phase(neuron_t * neuron){
     return(neuron->phase);
 }
 
-bool neuron_tn_is_inf(neuron_t * neuron){
-    if(neuron->tn == INFINITY){
+bool neuron_model_check(neuron_t * neuron){
+    if(neuron->tl <= simulation_ticks || neuron->tn == INFINITY ){
         return(true);
     }else{
         return(false);

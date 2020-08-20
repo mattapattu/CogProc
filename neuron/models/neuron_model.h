@@ -101,6 +101,6 @@ uint16_t neuron_model_get_phase(neuron_t * neuron);
 
 void neuron_set_simulation_ticks(uint32_t time);
 
-bool neuron_tn_is_inf(neuron_t * neuron);
+bool neuron_model_check(neuron_t * neuron);
 
 #endif // _NEURON_MODEL_H_
