@@ -204,6 +204,7 @@ void neuron_pdevs_update(uint32_t time, index_t neuron_index){
     if(endsim){
         log_info("Check all pending neuron computations are over");
         if(neuron_impl_check_sim_end){
+            log_info("Calling end_simulation");
             end_simulation();
         }
     }
