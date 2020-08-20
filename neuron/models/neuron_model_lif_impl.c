@@ -366,8 +366,8 @@ void neuron_model_init(neuron_t *neuron){
 
 }
 
-float neuron_model_get_phase(neuron_t * neuron){
-    return(neuron->tn);
+uint16_t neuron_model_get_phase(neuron_t * neuron){
+    return(neuron->phase);
 }
 
 bool neuron_tn_is_inf(neuron_t * neuron){
