@@ -342,6 +342,7 @@ static bool neuron_impl_check_sim_end(uint32_t n_neurons){
         }
     }
     log_info("Sim end check return %u",endSim );
+    
     return(endSim);
 }
 
