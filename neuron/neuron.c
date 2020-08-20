@@ -203,7 +203,6 @@ void neuron_pdevs_update(uint32_t time, index_t neuron_index){
 
     if(ret){
         log_info("Calling end_simulation");
-        end_simulation();
         log_info("Turning off all callbacks at time = %u",  time);
         spin1_callback_off(MCPL_PACKET_RECEIVED);
         spin1_callback_off(MC_PACKET_RECEIVED);
