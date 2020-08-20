@@ -53,7 +53,10 @@ static float ta(neuron_t * neuron){
     }else if(neuron->phase == 3){
         //return(neuron->T_refract);
         return(0.1); //Fix this, do not hardcode
-    }else{
+    }else if(neuron->phase == 4){
+        return(INFINITY);
+    }
+    else{
         log_info("Unknown Neuron PHASE = %u. Check",  neuron->phase);
 
     }
