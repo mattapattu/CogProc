@@ -69,8 +69,8 @@ static inline bool in_spiketimes_add_spiketime(uint32_t spiketime) {
 
 
 
-static inline bool in_spiketimes_clear_spiketime() {
-    return circular_buffer_clear(buffer2);
+static inline void in_spiketimes_clear_spiketime() {
+    circular_buffer_clear(buffer2);
 }
 
 static inline bool in_spiketimes_not_empty() {

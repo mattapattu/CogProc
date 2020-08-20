@@ -76,8 +76,8 @@ static inline bool in_spikes_is_next_spike_equal(spike_t spike) {
     return circular_buffer_advance_if_next_equals(buffer, spike);
 }
 
-static inline bool in_spikes_clear_spikes() {
-    return circular_buffer_clear(buffer);
+static inline void in_spikes_clear_spikes() {
+    circular_buffer_clear(buffer);
 }
 
 //! \brief Get the number of times that the input spike buffer overflowed.
