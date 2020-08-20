@@ -336,11 +336,16 @@ static void  neuron_impl_neuron_update(uint32_t time, index_t neuron_index,
 static bool neuron_impl_check_sim_end(uint32_t n_neurons){
     bool endSim = true;
 
-    for (index_t n = 0; n < n_neurons; n++) {
-        if(neuron_model_check(&neuron_array[n])){
-            endSim = endSim && true;
+    if(!in_spiketimes_not_empty){
+        for (index_t n = 0; n < n_neurons; n++) {
+            if(neuron_model_check(&neuron_array[n])){
+                endSim = endSim && true;
+            }
         }
+    }else{
+        log_info("in_spiketimes_not_empty not empty");
     }
+    
     log_info("Sim end check return %u",endSim );
     
     return(endSim);

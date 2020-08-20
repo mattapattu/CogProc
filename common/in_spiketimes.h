@@ -67,6 +67,11 @@ static inline bool in_spiketimes_add_spiketime(uint32_t spiketime) {
     return circular_buffer_add(buffer2, spiketime);
 }
 
+static inline bool in_spiketimes_not_empty() {
+    return _circular_buffer_not_empty(buffer2);
+}
+
+
 //! \brief Retrieves a spike from the input spike buffer.
 //! \param[out] spike: The spike that was retrieved.
 //! \return True if a spike was retrieved, false if the buffer was empty.
