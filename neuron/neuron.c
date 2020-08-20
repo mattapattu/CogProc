@@ -50,6 +50,8 @@ static volatile uint32_t exitCounter = 0;
 
 static sim_exit_time = 0;
 
+static bool endsim = false;
+
 
 //! parameters that reside in the neuron_parameter_data_region
 struct neuron_parameters {
@@ -192,19 +194,21 @@ void neuron_set_sim_exit_time(uint32_t time){
 void neuron_pdevs_update(uint32_t time, index_t neuron_index){
     input_t external_bias = 0;
     if(time >= sim_exit_time){
-        log_info("Force Exit. Spiketime = %u > sim_exit_time = %u", time, sim_exit_time);
+        log_info("Spiketime = %u > sim_exit_time = %u. Turn off call back", time, sim_exit_time);
+        endsim = true;
           spin1_delay_us(100000);
          log_info("Turning off mc callback at time = %u",  time);
          spin1_callback_off(MCPL_PACKET_RECEIVED);
         spin1_callback_off(MC_PACKET_RECEIVED);
-        if(neuron_impl_check_sim_end){
-            end_simulation();
-            return;
-        }
-        
         
     }
-    
+    if(endsim){
+        log_info("Check all pending neuron computations are over");
+        if(neuron_impl_check_sim_end){
+            end_simulation();
+        }
+    }
+
     neuron_recording_setup_for_next_recording();
     neuron_reset_spiked(neuron_index);
     neuron_impl_neuron_update(time, neuron_index, external_bias,key,use_key);
