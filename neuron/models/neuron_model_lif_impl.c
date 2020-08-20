@@ -262,6 +262,7 @@ int32_t deltaInt(neuron_t * neuron,key_t key, uint32_t neuron_index, bool use_ke
         if(neuron->tl + DELAY >= simulation_ticks){ //We know no new input will arrive because SYNFIRE delay is const.
             neuron->phase = 4;
             log_info("Neuron %u TL = %f. Setting to phase 4", neuron_index, neuron->tl);
+            return(4);
         }else{
             log_info("Neuron %u TL = %f. Setting to phase 0", neuron_index, neuron->tl);
             return(0);
