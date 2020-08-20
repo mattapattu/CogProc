@@ -298,6 +298,10 @@ static void  neuron_impl_neuron_update(uint32_t time, index_t neuron_index,
     if(!neuron_impl_add_spike(neuron_index, time)){
             log_error("Unable to add spike to neuron %u at time = %u", neuron_index, time);
     }
+    if(in_spiketimes_not_empty){
+        log_info("in_spiketimes is not empty");
+    }
+
 
     threshold_type_pointer_t threshold_type =
             &threshold_type_array[neuron_index];
@@ -337,13 +341,15 @@ static bool neuron_impl_check_sim_end(uint32_t n_neurons){
     bool endSim = true;
 
     if(!in_spiketimes_not_empty){
+
+        log_info("in_spiketimes is empty");
         for (index_t n = 0; n < n_neurons; n++) {
             if(neuron_model_check(&neuron_array[n])){
                 endSim = endSim && true;
             }
         }
     }else{
-        log_info("in_spiketimes_not_empty not empty");
+        log_info("in_spiketimes is empty");
     }
     
     log_info("Sim end check return %u",endSim );
