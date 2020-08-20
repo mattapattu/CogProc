@@ -134,7 +134,7 @@ int32_t neuron_model_PDevs_sim(neuron_t * neuron, int32_t threshold,  uint32_t n
     // check ONCE another event can be execued immediately without 
     //new pkts recvd, exit otherwise
 
-    if(nextSpikeTime == INFINITY && neuron->tn == INFINITY){
+    if(nextSpikeTime >= INFINITY && neuron->tn >= INFINITY){
         log_info("Next events at INFINITY");
         return(0);
     }else{
