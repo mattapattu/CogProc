@@ -327,7 +327,7 @@ uint16_t neuron_model_get_phase(neuron_t * neuron){
 
 bool neuron_model_check_sim_continue(uint32_t time){
 
-    if(time < sim_exit_time){
+    if(time < simulation_ticks){
         return true;
     }else{
         return false;
