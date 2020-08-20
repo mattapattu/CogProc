@@ -196,9 +196,8 @@ void neuron_pdevs_update(uint32_t time, index_t neuron_index){
     if(time >= sim_exit_time){
         log_info("Spiketime = %u > sim_exit_time = %u. Turn off call back", time, sim_exit_time);
         endsim = true;
-          spin1_delay_us(100000);
-         log_info("Turning off mc callback at time = %u",  time);
-         spin1_callback_off(MCPL_PACKET_RECEIVED);
+        log_info("Turning off mc callback at time = %u",  time);
+        spin1_callback_off(MCPL_PACKET_RECEIVED);
         spin1_callback_off(MC_PACKET_RECEIVED);
         
     }
