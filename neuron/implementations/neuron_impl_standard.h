@@ -340,7 +340,7 @@ static void  neuron_impl_neuron_update(uint32_t time, index_t neuron_index,
 static bool neuron_impl_check_sim_end(uint32_t n_neurons){
     bool endSim = false;
 
-    if(!in_spiketimes_not_empty){
+    if(!in_spiketimes_not_empty()){
 
         log_info("in_spiketimes is empty");
         endSim = true;

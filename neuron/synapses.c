@@ -263,7 +263,7 @@ static inline void process_fixed_synapses(
             ring_buffers[ring_buffer_index] = accumulation;
             neuron_pdevs_update(time, neuron_index);
         }else{
-            if(in_spiketimes_not_empty){
+            if(in_spiketimes_not_empty()){
                 log_info("Clearing input buffers");
                 in_spikes_clear_spikes();
                 in_spiketimes_clear_spiketime();
