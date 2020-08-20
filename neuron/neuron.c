@@ -48,9 +48,9 @@ static uint32_t recording_flags = 0;
 
 static volatile uint32_t exitCounter = 0;
 
-static sim_exit_time = 0;
+static uint32_t sim_exit_time = 0;
 
-static bool endsim = false;
+//static bool endsim = false;
 
 
 //! parameters that reside in the neuron_parameter_data_region
@@ -214,7 +214,11 @@ void neuron_pdevs_update(uint32_t time, index_t neuron_index){
  
 }
 bool neuron_check_sim_continue(uint32_t time){
-    return time < sim_exit_time;
+    if(time < sim_exit_time){
+        return true;
+    }else{
+        return false;
+    }
 }
 
 
