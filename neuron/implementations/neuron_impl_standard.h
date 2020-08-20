@@ -321,7 +321,7 @@ static void  neuron_impl_neuron_update(uint32_t time, index_t neuron_index,
         log_info("Calling neuron_model_PDevs_sim");
         nextSpikeTime = neuron->spike_times[0];
         ret = neuron_model_PDevs_sim(neuron, threshold, nextSpikeTime, key, neuron_index, input,use_key);
-        log_info("neuron %u: tl = %u", neuron_index, neuron->tl);
+        
         if(neuron_impl_spiked(neuron_index)){
             //log_info("Setting recording bit for neuron %u",neuron_index);
             neuron_recording_record_bit(SPIKE_RECORDING_BITFIELD, neuron_index);
@@ -332,36 +332,17 @@ static void  neuron_impl_neuron_update(uint32_t time, index_t neuron_index,
         
     
     }
+    if(!neuron_check_sim_continue(neuron->tl)){
+        log_info("End simulation");
+        return false;
+    }else{
+        return true;
+    }
        
        //log_info("Exiting neuron_impl_neuron_update");
 }
 
-static bool neuron_impl_check_sim_end(uint32_t n_neurons){
-    bool endSim = false;
 
-    if(!in_spiketimes_not_empty()){
-
-        log_info("in_spiketimes is empty");
-        endSim = true;
-        for (index_t n = 0; n < n_neurons; n++) {
-            if(neuron_model_check(&neuron_array[n])){
-                log_info("Neuron %u in Phase 4", n);
-                endSim = endSim && true;
-            }else{
-                log_info("Neuron %u not in Phase 4", n);
-                endSim = false;
-            }
-        }
-    }else{
-        log_info("in_spiketimes is not empty");
-        in_spiketimes_print_buffer();
-        endSim = false;
-    }
-    
-    log_info("Sim end check return %u",endSim );
-    
-    return(endSim);
-}
 
 static uint16_t neuron_impl_get_phase(uint32_t neuron_index){
     neuron_pointer_t neuron = &neuron_array[neuron_index];

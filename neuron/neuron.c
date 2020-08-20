@@ -194,33 +194,26 @@ void neuron_set_sim_exit_time(uint32_t time){
 void neuron_pdevs_update(uint32_t time, index_t neuron_index){
     input_t external_bias = 0;
     
-    if(time >= sim_exit_time){
-        log_info("Spiketime = %u > sim_exit_time = %u. Turn off call back", time, sim_exit_time);
-        endsim = true;
-        log_info("Turning off mc callback at time = %u",  time);
+    
+    log_info("Neuron %u update at time  = %u", time, neuron_index);
+    neuron_recording_setup_for_next_recording();
+    neuron_reset_spiked(neuron_index);
+    
+    bool ret = neuron_impl_neuron_update(time, neuron_index, external_bias,key,use_key);
+
+    if(ret){
+        log_info("Calling end_simulation");
+        end_simulation();
+        log_info("Turning off all callbacks at time = %u",  time);
         spin1_callback_off(MCPL_PACKET_RECEIVED);
         spin1_callback_off(MC_PACKET_RECEIVED);
-        
-    }else{
-        log_info("Neuron %u update at time  = %u", time, neuron_index);
-        neuron_recording_setup_for_next_recording();
-        neuron_reset_spiked(neuron_index);
-        neuron_impl_neuron_update(time, neuron_index, external_bias,key,use_key);
+        spin1_callback_off(USER_EVENT); 
+        spin1_delay_us(100);
+        end_simulation();
     }
-    
-    if(neuron_impl_get_phase(neuron_index) == 4){
-        log_info("Check all neuronal computations are over");
-        if(neuron_impl_check_sim_end(n_neurons)){
-            log_info("Calling end_simulation");
-            end_simulation();
-        }
-    }
-
-    
-        
-    
+ 
 }
-bool neuron_check_sim_time(uint32_t time){
+bool neuron_check_sim_continue(uint32_t time){
     return time < sim_exit_time;
 }
 
