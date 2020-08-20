@@ -201,6 +201,7 @@ void neuron_pdevs_update(uint32_t time, index_t neuron_index){
         spin1_callback_off(MC_PACKET_RECEIVED);
         
     }else{
+        log_info("Neuron %u update at time  = %u", time, neuron_index);
         neuron_recording_setup_for_next_recording();
         neuron_reset_spiked(neuron_index);
         neuron_impl_neuron_update(time, neuron_index, external_bias,key,use_key);
