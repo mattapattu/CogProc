@@ -240,7 +240,7 @@ static inline void process_fixed_synapses(
 
         log_info("New mc_pkt to neuron %u:  time = %u",  neuron_index, time);
 
-        if(!neuron_check_sim_time(time)){
+        if(neuron_check_sim_time(time)){
             uint32_t ring_buffer_index = synapses_get_ring_buffer_index_combined(
             time, combined_synapse_neuron_index,
             synapse_type_index_bits);
