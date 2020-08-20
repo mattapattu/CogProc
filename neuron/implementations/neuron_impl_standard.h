@@ -354,7 +354,7 @@ static bool neuron_impl_check_sim_end(uint32_t n_neurons){
         }
     }else{
         log_info("in_spiketimes is not empty");
-        in_spiketimes_print_buffer()
+        in_spiketimes_print_buffer();
         endSim = false;
     }
     
