@@ -32,6 +32,7 @@
 //! \param[in] V_prev: previous voltage
 //! \param[in] input_this_timestep: The input to apply
 
+static uint32_t simulation_ticks;
 
 void neuron_model_set_global_neuron_params(
         const global_neuron_params_t *params) {
@@ -162,7 +163,7 @@ int32_t neuron_model_PDevs_sim(neuron_t * neuron, int32_t threshold,  uint32_t n
     }
     else{
         log_info("Cannot execute any events.Check");
-        log_info("tn = %f, eit = %f, nextSpikeTime = %u", neuron->tn, neuron->eit, nextSpikeTime);
+        log_info("tn = %f, eit = %f, nextSpikeTime = %u, tl = %f", neuron->tn, neuron->eit, nextSpikeTime, neuron->tn);
         return(-1);
     }
 
@@ -208,6 +209,13 @@ void neuron_model_Devs_sim(neuron_t * neuron, int16_t event_type, uint32_t nextS
         log_info("Neuron %u TN = %f", neuron_index,neuron->tn);
    }
 
+    if(neuron->tn > simulation_ticks){
+        neuron->phase = 4;
+    }
+}
+
+void set_simulation_ticks(uint32_t time){
+    simulation_ticks = time;
 }
 
 
@@ -248,14 +256,20 @@ int32_t deltaExt(neuron_t * neuron, uint32_t time, int32_t threshold, input_t in
 	//log_info("Exc 1: %12.6k", exc_input[0]);
 	//log_info("Inh 1: %12.6k, Inh 2: %12.6k", inh_input[0], inh_input[1]);
 
-    if(neuron->phase == 2 || neuron->phase == 3){
+    if(neuron->phase == 4){
+        return(neuron->phase);
+    }
+    else if(neuron->phase == 2 || neuron->phase == 3){
         //log_info("Ignore input as neuron is in threshold/refractory phase");
         return(neuron->phase);
     }else if(neuron->phase == 0 || neuron->phase == 1){
         //log_info("external input = %f", input);
-        lif_update(time, neuron, input);
-        //log_info("New V_membrane after lif_update = %f, threshold = %f",  neuron->V_membrane,threshold);
-        return(1);
+        if(time < simulation_ticks){
+            lif_update(time, neuron, input);
+            return(1);
+        }else{
+            return(neuron->phase);
+        }
     }else{
         log_info("Unknown Neuron PHASE = %u. Check",  neuron->phase);
         return(0);
@@ -266,7 +280,11 @@ int32_t deltaInt(neuron_t * neuron,key_t key, uint32_t neuron_index, bool use_ke
 	
 	//log_info("Inh 1: %12.6k, Inh 2: %12.6k", inh_input[0], inh_input[1]);
     lambda(neuron, key, neuron_index, use_key);
-    if(neuron->phase == 0 ){
+    
+    if(neuron->phase == 4){
+        return(neuron->phase);
+    }
+    else if(neuron->phase == 0 ){
         //log_info("Neuron in phase 0/1, no neuron phase change ");
         return(neuron->phase);
     }else if(neuron->phase == 1){

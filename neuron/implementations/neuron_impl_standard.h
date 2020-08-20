@@ -256,32 +256,6 @@ for (index_t n = 0; n < n_neurons; n++) {
 #endif // LOG_LEVEL >= LOG_DEBUG
 }
 
-// static bool neuron_impl_check_sim_end(uint32_t n_neurons){
-//     bool endSim = true;
-//     bool err = false;
-//     uint32_t allRecvdSpikes = getSpikeRecvdCount();
-//     uint32_t allProcessedSpikes = getSpikeProcessedCount();
-//     log_info("allRecvdSpikes = %u, allProcessedSpikes = %u",allRecvdSpikes, allProcessedSpikes);
-//     if(allRecvdSpikes != allProcessedSpikes ){
-//         return false;
-//     }    
-//     for (index_t n = 0; n < n_neurons; n++) {
-//         if(neuron_model_get_phase(&neuron_array[n]) == 4){
-//             endSim = endSim && true;
-//         }else if(neuron_model_get_phase(&neuron_array[n]) == 5){
-//             err = true;
-//             break;
-//         }
-//     }
-//     if(err){
-//         //log_info("Call end sim as neuron in Error phase");
-//         return(err);
-//     }else if(endSim){
-//         log_info("All neurons in Idle state. Call end_sim");
-//         return(endSim);
-//     }
-// }
-
 static uint32_t neuron_impl_update_spiketime(uint32_t time, index_t neuron_index){
     neuron_pointer_t neuron = &neuron_array[neuron_index];
     if(neuron->lastProcessedSpikeTime - time < deltaT){
@@ -344,9 +318,6 @@ static void  neuron_impl_neuron_update(uint32_t time, index_t neuron_index,
     }else{
         ret = 0;
     }
-     
-    //log_info("nextSpikeTime = %u, input = %u", nextSpikeTime, input);
-    
     
     while(ret == 1){
         //log_info("Calling neuron_model_PDevs_sim");
