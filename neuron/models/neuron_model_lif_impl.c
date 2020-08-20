@@ -25,6 +25,7 @@
 //static int32_t last_update_time = 0;
 #define INFINITY  2147483646
 #define deltaT 1 // deltaT = 1000ms
+#define DELAY 14
 
 
 //! \brief simple Leaky I&F ODE
@@ -257,7 +258,12 @@ int32_t deltaInt(neuron_t * neuron,key_t key, uint32_t neuron_index, bool use_ke
         neuron->V_membrane = neuron->V_reset;
         return(3);
     }else if(neuron->phase == 3){
-        return(0);
+        if(neuron->tl + DELAY >= simulation_ticks){ //We know no new input will arrive because SYNFIRE delay is const.
+            neuron->phase = 4;
+        }else{
+            return(0);
+        }
+        
     }else{
         log_info("Unknown Neuron %u PHASE = %u. Check", neuron_index, neuron->phase);
 
