@@ -268,8 +268,8 @@ static inline void process_fixed_synapses(
                 in_spikes_clear_spikes();
                 in_spiketimes_clear_spiketime();
 
-                in_spikes_print_buffer();
-                in_spiketimes_print_buffer();
+                //in_spikes_print_buffer();
+                //in_spiketimes_print_buffer();
             }
         }
         
