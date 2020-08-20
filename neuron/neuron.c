@@ -163,7 +163,7 @@ static void end_simulation(){
     simulation_handle_pause_resume(NULL);
     neuron_recording_finalise();
     simulation_ready_to_read();
-    return;    
+    spin1_delay_us(1000);
 } 
 
 void neuron_reset_spiked(uint32_t neuron_index){
