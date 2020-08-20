@@ -149,6 +149,7 @@ static inline bool is_something_to_do(
     if (population_table_get_next_address(
             spike, row_address, n_bytes_to_transfer)) {
         *n_process_spike += 1;
+        log_info("Getting next address (%u,%u)", spike, *spiketime);
         return true;
     }
     cpsr = spin1_int_disable();
@@ -167,6 +168,8 @@ static inline bool is_something_to_do(
             *n_process_spike += 1;
             return true;
         }
+
+        log_info("Getting next spike (%u,%u)", spike, *spiketime);
 
         // Disable interrupts before checking if there is another spike
         cpsr = spin1_int_disable();
@@ -232,7 +235,7 @@ static void setup_synaptic_dma_read(dma_buffer *current_buffer,
             dma_n_spikes = 0;
             
         } else {
-            //log_info("Start DMA for mc_pkt. Exiting setup_synaptic_dma_read"); 
+            log_info("Start DMA for mc_pkt. "); 
             // If the row is in SDRAM, set up the transfer and we are done
             do_dma_read(row_address, n_bytes_to_transfer, spike);
             setup_done = true;
