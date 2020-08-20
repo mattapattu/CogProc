@@ -318,11 +318,10 @@ static void  neuron_impl_neuron_update(uint32_t time, index_t neuron_index,
     }
     
     while(ret == 1){
-        //log_info("Calling neuron_model_PDevs_sim");
-        //log_info("neuron %u: tl = %u", neuron_index, neuron->tl);
+        log_info("Calling neuron_model_PDevs_sim");
         nextSpikeTime = neuron->spike_times[0];
         ret = neuron_model_PDevs_sim(neuron, threshold, nextSpikeTime, key, neuron_index, input,use_key);
-        
+        log_info("neuron %u: tl = %u", neuron_index, neuron->tl);
         if(neuron_impl_spiked(neuron_index)){
             //log_info("Setting recording bit for neuron %u",neuron_index);
             neuron_recording_record_bit(SPIKE_RECORDING_BITFIELD, neuron_index);
