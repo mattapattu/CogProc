@@ -202,9 +202,9 @@ void neuron_pdevs_update(uint32_t time, index_t neuron_index){
     neuron_recording_setup_for_next_recording();
     neuron_reset_spiked(neuron_index);
     
-    bool ret = neuron_impl_neuron_update(time, neuron_index, external_bias,key,use_key);
+    bool continueSim = neuron_impl_neuron_update(time, neuron_index, external_bias,key,use_key);
 
-    if(ret){
+    if(!continueSim){
         log_info("Calling end_simulation");
         log_info("Turning off all callbacks at time = %u",  time);
         spin1_callback_off(MCPL_PACKET_RECEIVED);
