@@ -334,7 +334,7 @@ static void  neuron_impl_neuron_update(uint32_t time, index_t neuron_index,
     
     }
        
-       log_info("Exiting neuron_impl_neuron_update");
+       //log_info("Exiting neuron_impl_neuron_update");
 }
 
 static bool neuron_impl_check_sim_end(uint32_t n_neurons){
