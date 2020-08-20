@@ -332,7 +332,8 @@ static void  neuron_impl_neuron_update(uint32_t time, index_t neuron_index,
         
     
     }
-    if(!neuron_check_sim_continue((uint32_t) neuron->tl)){
+    bool check = neuron_check_sim_continue(neuron->tl);
+    if(!neurcheck){
         log_info("End simulation");
         return false;
     }else{
