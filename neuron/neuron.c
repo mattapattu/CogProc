@@ -160,7 +160,9 @@ void neuron_pause(address_t address) { // EXPORTED
 
 static void end_simulation(){
 
+    spin1_pause();
     simulation_handle_pause_resume(NULL);
+
     neuron_recording_finalise();
     simulation_ready_to_read();
     spin1_delay_us(1000);
