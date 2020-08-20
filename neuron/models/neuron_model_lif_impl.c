@@ -150,15 +150,14 @@ void neuron_model_Devs_sim(neuron_t * neuron, int16_t event_type, uint32_t nextS
     if(event_type == 1 ){
         //log_info("Neuron %u internal event: phase %d expired at tn=%f",neuron_index, neuron->phase, neuron->tn);
         neuron->phase  = deltaInt(neuron,key,neuron_index,use_key);
-        log_info("Neuron %u NEW PHASE = %u",neuron_index, neuron->phase);
         neuron->tl = neuron->tn; //UPDATE TL
+        log_info("Neuron %u NEW PHASE = %u, TL = %f",neuron_index, neuron->phase, neuron->tl);
         
     }//event_type 2 - External event
     else if(event_type == 2){
         neuron->phase = deltaExt(neuron, nextSpikeTime, threshold, input);
-        log_info("Neuron %u NEW PHASE = %u after spike",neuron_index, neuron->phase);
         neuron->tl = (float) nextSpikeTime + deltaT;//UPDATE TL
-        
+        log_info("Neuron %u NEW PHASE = %u, TL = %f after spike",neuron_index, neuron->tl, neuron->phase);
     }
 
 
