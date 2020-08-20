@@ -200,6 +200,10 @@ void neuron_pdevs_update(uint32_t time, index_t neuron_index){
         spin1_callback_off(MCPL_PACKET_RECEIVED);
         spin1_callback_off(MC_PACKET_RECEIVED);
         
+    }else{
+        neuron_recording_setup_for_next_recording();
+        neuron_reset_spiked(neuron_index);
+        neuron_impl_neuron_update(time, neuron_index, external_bias,key,use_key);
     }
     if(endsim){
         log_info("Check all neuronal computations are over");
@@ -209,9 +213,7 @@ void neuron_pdevs_update(uint32_t time, index_t neuron_index){
         }
     }
 
-    neuron_recording_setup_for_next_recording();
-    neuron_reset_spiked(neuron_index);
-    neuron_impl_neuron_update(time, neuron_index, external_bias,key,use_key);
+    
         
     
 }
