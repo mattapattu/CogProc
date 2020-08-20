@@ -92,7 +92,7 @@ static void lambda(neuron_t * neuron, key_t key, uint32_t neuron_index, bool use
     //clear 32nd bit if packet is spike 
     //nextEventTime = nextEventTime & (~(1 << 31));
     //log_info("Sending Spike with key = %u, neuron_index = %u, payload = %u",key,  neuron_index, nextEventTime );
-    log_info("Neuron = %u has fired at time = %u",neuron_index, nextEventTime );
+    //log_info("Neuron = %u has fired at time = %u",neuron_index, nextEventTime );
     neuron->lastThresholdTime = nextEventTime;
     neuron->hasSpiked  = true;
     
@@ -123,12 +123,12 @@ int32_t neuron_model_check_next_ev(neuron_t * neuron){
     //log_info("phase = %u, tn = %u, eit = %u, spikeCount = %u", neuron->phase, neuron->tn, neuron->eit, neuron->spikeCount);
     float nextSpikeTime = neuron->spike_times[0];
     if(nextSpikeTime == INFINITY && neuron->tn == INFINITY){
-        log_info("Next events at INFINITY");
+        //log_info("Next events at INFINITY");
         //neuron->phase = 4;
         return(0);
     }else if(neuron->tn <= neuron->eit && neuron->tn <=  nextSpikeTime ){
         if(neuron->tn < INFINITY){
-            log_info("tn = %f can be executed, continue PDEVS loop",neuron->tn);
+           //log_info("tn = %f can be executed, continue PDEVS loop",neuron->tn);
             return(1);
         }else{
             return 0;
@@ -136,13 +136,13 @@ int32_t neuron_model_check_next_ev(neuron_t * neuron){
         
     }else if(nextSpikeTime <= neuron->eit &&  nextSpikeTime < neuron->tn){
         if(nextSpikeTime < INFINITY){
-            log_info("nextSpikeTime = %f can be executed, continue PDEVS loop",neuron->tn);
+            //log_info("nextSpikeTime = %f can be executed, continue PDEVS loop",neuron->tn);
             return(1);
         }else{
             return 0;
         }
     }else{
-        log_info("TN > EIT, wait for EIT update");
+        //log_info("TN > EIT, wait for EIT update");
         //log_info("tn = %f, eit = %f, nextSpikeTime = %u", neuron->tn, neuron->eit, nextSpikeTime);
         return 0;
     }
@@ -205,16 +205,16 @@ void neuron_model_Devs_sim(neuron_t * neuron, int16_t event_type, uint32_t nextS
 
     if(ta(neuron) == INFINITY){
         neuron->tn = INFINITY; //UPDATE TN
-        log_info("Neuron %u TN = INFINITY", neuron_index);
+        //log_info("Neuron %u TN = INFINITY", neuron_index);
     }else{
     //Next phase change = last event time + time-advance(current-phase)
         neuron->tn = neuron->tl + ta(neuron);  //UPDATE TN
-        log_info("Neuron %u TN = %f", neuron_index,neuron->tn);
+        //log_info("Neuron %u TN = %f", neuron_index,neuron->tn);
    }
 
     if(neuron->tl > simulation_ticks){
         neuron->phase = 4;
-        log_info("Setting Neuron %u to PHASE 4", neuron_index);
+        //log_info("Setting Neuron %u to PHASE 4", neuron_index);
     }
 }
 
