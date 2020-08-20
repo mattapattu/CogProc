@@ -214,7 +214,7 @@ void neuron_model_Devs_sim(neuron_t * neuron, int16_t event_type, uint32_t nextS
     }
 }
 
-void set_simulation_ticks(uint32_t time){
+void neuron_set_simulation_ticks(uint32_t time){
     simulation_ticks = time;
 }
 
@@ -366,8 +366,17 @@ void neuron_model_init(neuron_t *neuron){
 
 }
 
-uint16_t neuron_model_get_phase(neuron_t * neuron){
-    return(neuron->phase);
+float neuron_model_get_phase(neuron_t * neuron){
+    return(neuron->tn);
+}
+
+bool neuron_tn_is_inf(neuron_t * neuron){
+    if(neuron->tn == INFINITY){
+        return(true);
+    }else{
+        return(false);
+    }
+    
 }
 
 void neuron_model_print_parameters(const neuron_t *neuron) {

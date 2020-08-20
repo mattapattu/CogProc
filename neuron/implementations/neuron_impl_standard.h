@@ -338,6 +338,16 @@ static void  neuron_impl_neuron_update(uint32_t time, index_t neuron_index,
        
 }
 
+static bool neuron_impl_check_sim_end(uint32_t n_neurons){
+    bool endSim = true;
+
+    for (index_t n = 0; n < n_neurons; n++) {
+        if(neuron_model_get_phase(&neuron_array[n]) == 4 || neuron_tn_is_inf(&neuron_array[n])  ){
+            endSim = endSim && true;
+        }
+    }
+    return(endSim);
+}
 
 
 SOMETIMES_UNUSED // Marked unused as only used sometimes
