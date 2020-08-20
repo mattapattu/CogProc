@@ -213,13 +213,7 @@ void neuron_pdevs_update(uint32_t time, index_t neuron_index){
     }
  
 }
-bool neuron_check_sim_continue(uint32_t time){
-    if(time < sim_exit_time){
-        return true;
-    }else{
-        return false;
-    }
-}
+
 
 
 
