@@ -54,8 +54,6 @@ static float ta(neuron_t * neuron){
     }else if(neuron->phase == 3){
         //return(neuron->T_refract);
         return(0.1); //Fix this, do not hardcode
-    }else if(neuron->phase == 4){
-        return(INFINITY);
     }
     else{
         log_info("Unknown Neuron PHASE = %u. Check",  neuron->phase);
@@ -176,10 +174,6 @@ void neuron_model_Devs_sim(neuron_t * neuron, int16_t event_type, uint32_t nextS
         neuron->tn = neuron->tl + ta(neuron);  //UPDATE TN
    }
 
-    if(neuron->tl > simulation_ticks){
-        neuron->phase = 4;
-        log_info("TL = %f, Setting Neuron %u to PHASE 4", neuron->tl, neuron_index);
-    }
 }
 
 void neuron_set_simulation_ticks(uint32_t time){
@@ -210,10 +204,7 @@ int32_t deltaExt(neuron_t * neuron, uint32_t time, int32_t threshold, input_t in
 	//log_info("Exc 1: %12.6k", exc_input[0]);
 	//log_info("Inh 1: %12.6k, Inh 2: %12.6k", inh_input[0], inh_input[1]);
 
-    if(neuron->phase == 4){
-        return(neuron->phase);
-    }
-    else if(neuron->phase == 2 || neuron->phase == 3){
+    if(neuron->phase == 2 || neuron->phase == 3){
         //log_info("Ignore input as neuron is in threshold/refractory phase");
         return(neuron->phase);
     }else if(neuron->phase == 0 || neuron->phase == 1){
@@ -237,10 +228,7 @@ int32_t deltaInt(neuron_t * neuron,key_t key, uint32_t neuron_index, bool use_ke
 	//log_info("Inh 1: %12.6k, Inh 2: %12.6k", inh_input[0], inh_input[1]);
     
     
-    if(neuron->phase == 4){
-        return(neuron->phase);
-    }
-    else if(neuron->phase == 0 ){
+    if(neuron->phase == 0 ){
         //log_info("Neuron in phase 0/1, no neuron phase change ");
         return(neuron->phase);
     }else if(neuron->phase == 1){
@@ -259,14 +247,9 @@ int32_t deltaInt(neuron_t * neuron,key_t key, uint32_t neuron_index, bool use_ke
         return(3);
     }else if(neuron->phase == 3){
 
-        if(neuron->tl + DELAY >= simulation_ticks){ //We know no new input will arrive because SYNFIRE delay is const.
-            neuron->phase = 4;
-            log_info("Neuron %u TL = %f. Setting to phase 4", neuron_index, neuron->tl);
-            return(4);
-        }else{
-            log_info("Neuron %u TL = %f. Setting to phase 0", neuron_index, neuron->tl);
-            return(0);
-        }
+        log_info("Neuron %u TL = %f. Setting to phase 0", neuron_index, neuron->tl);
+        return(0);
+    }
         
     }else{
         log_info("Unknown Neuron %u PHASE = %u. Check", neuron_index, neuron->phase);
@@ -334,14 +317,14 @@ uint16_t neuron_model_get_phase(neuron_t * neuron){
     return(neuron->phase);
 }
 
-bool neuron_model_check(neuron_t * neuron){
-    if(neuron->phase == 4){
-        return(true);
-    }else{
-        return(false);
-    }
+// bool neuron_model_check(neuron_t * neuron){
+//     if(neuron->phase == 4){
+//         return(true);
+//     }else{
+//         return(false);
+//     }
     
-}
+// }
 
 void neuron_model_print_parameters(const neuron_t *neuron) {
 
