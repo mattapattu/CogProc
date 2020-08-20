@@ -264,9 +264,12 @@ static inline void process_fixed_synapses(
             neuron_pdevs_update(time, neuron_index);
         }else{
             if(in_spiketimes_not_empty){
-                log_info("Clearning input buffers");
+                log_info("Clearing input buffers");
                 in_spikes_clear_spikes();
                 in_spiketimes_clear_spiketime();
+
+                in_spikes_print_buffer();
+                in_spiketimes_print_buffer();
             }
         }
         
