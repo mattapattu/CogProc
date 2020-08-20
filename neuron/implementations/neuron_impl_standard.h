@@ -290,7 +290,7 @@ static bool neuron_impl_add_spike(index_t neuron_index, uint32_t time) {
     return(neuron_model_add_spike(neuron, time));
 }
 
-static void  neuron_impl_neuron_update(uint32_t time, index_t neuron_index,
+static bool  neuron_impl_neuron_update(uint32_t time, index_t neuron_index,
         input_t external_bias, key_t key, bool use_key) {
     // Get the neuron itself
     neuron_pointer_t neuron = &neuron_array[neuron_index];
