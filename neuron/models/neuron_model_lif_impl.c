@@ -234,7 +234,7 @@ int32_t deltaExt(neuron_t * neuron, uint32_t time, int32_t threshold, input_t in
 int32_t deltaInt(neuron_t * neuron,key_t key, uint32_t neuron_index, bool use_key ) {
 	
 	//log_info("Inh 1: %12.6k, Inh 2: %12.6k", inh_input[0], inh_input[1]);
-    lambda(neuron, key, neuron_index, use_key);
+    
     
     if(neuron->phase == 4){
         return(neuron->phase);
@@ -252,6 +252,7 @@ int32_t deltaInt(neuron_t * neuron,key_t key, uint32_t neuron_index, bool use_ke
             return(1);
         }
     }else if(neuron->phase == 2){
+        lambda(neuron, key, neuron_index, use_key);
         //log_info("Neuron in phase 2, reset V_memb and change to phase 3");
         neuron->V_membrane = neuron->V_reset;
         return(3);
