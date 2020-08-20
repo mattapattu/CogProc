@@ -206,12 +206,12 @@ void neuron_pdevs_update(uint32_t time, index_t neuron_index){
         neuron_reset_spiked(neuron_index);
         neuron_impl_neuron_update(time, neuron_index, external_bias,key,use_key);
     }
-    //if(endsim){
-    log_info("Check all neuronal computations are over");
-    if(neuron_impl_check_sim_end(n_neurons)){
-        log_info("Calling end_simulation");
-        end_simulation();
-    }
+    if(neuron_impl_get_phase(neuron_index) == 4){
+        log_info("Check all neuronal computations are over");
+        if(neuron_impl_check_sim_end(n_neurons)){
+            log_info("Calling end_simulation");
+            end_simulation();
+        }
    // }
 
     

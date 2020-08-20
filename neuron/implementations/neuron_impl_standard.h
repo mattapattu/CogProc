@@ -364,6 +364,10 @@ static bool neuron_impl_check_sim_end(uint32_t n_neurons){
     return(endSim);
 }
 
+static uint16_t neuron_impl_get_phase(uint32_t neuron_index){
+    neuron_pointer_t neuron = &neuron_array[neuron_index];
+    return neuron_model_get_phase(neuron);
+}
 
 SOMETIMES_UNUSED // Marked unused as only used sometimes
 //! \brief Stores neuron parameters back into SDRAM
