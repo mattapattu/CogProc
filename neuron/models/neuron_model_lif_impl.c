@@ -214,6 +214,7 @@ void neuron_model_Devs_sim(neuron_t * neuron, int16_t event_type, uint32_t nextS
 
     if(neuron->tn > simulation_ticks){
         neuron->phase = 4;
+        log_info("Setting Neuron %u to PHASE 4", neuron_index);
     }
 }
 
