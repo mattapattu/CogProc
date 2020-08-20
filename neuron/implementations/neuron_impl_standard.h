@@ -346,7 +346,10 @@ static bool neuron_impl_check_sim_end(uint32_t n_neurons){
         endSim = true;
         for (index_t n = 0; n < n_neurons; n++) {
             if(neuron_model_check(&neuron_array[n])){
+                log_info("Neuron %u in Phase 4", n);
                 endSim = endSim && true;
+            }else{
+                log_info("Neuron %u not in Phase 4", n);
             }
         }
     }else{

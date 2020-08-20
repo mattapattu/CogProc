@@ -331,7 +331,7 @@ uint16_t neuron_model_get_phase(neuron_t * neuron){
 }
 
 bool neuron_model_check(neuron_t * neuron){
-    if(neuron->tl >= simulation_ticks || neuron->tn == INFINITY ||neuron->phase == 4){
+    if(neuron->phase == 4){
         return(true);
     }else{
         return(false);
