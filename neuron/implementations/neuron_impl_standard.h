@@ -298,7 +298,7 @@ static void  neuron_impl_neuron_update(uint32_t time, index_t neuron_index,
     if(!neuron_impl_add_spike(neuron_index, time)){
             log_error("Unable to add spike to neuron %u at time = %u", neuron_index, time);
     }
-    if(in_spiketimes_not_empty){
+    if(in_spiketimes_not_empty()){
         log_info("test: in_spiketimes is not empty");
     }
 
@@ -350,6 +350,7 @@ static bool neuron_impl_check_sim_end(uint32_t n_neurons){
                 endSim = endSim && true;
             }else{
                 log_info("Neuron %u not in Phase 4", n);
+                endSim = false;
             }
         }
     }else{
