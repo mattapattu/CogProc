@@ -67,6 +67,12 @@ static inline bool in_spiketimes_add_spiketime(uint32_t spiketime) {
     return circular_buffer_add(buffer2, spiketime);
 }
 
+
+
+static inline bool in_spiketimes_clear_spiketime() {
+    return circular_buffer_clear(buffer2);
+}
+
 static inline bool in_spiketimes_not_empty() {
     return _circular_buffer_not_empty(buffer2);
 }

@@ -262,6 +262,12 @@ static inline void process_fixed_synapses(
             // Store saturated value back in ring-buffer
             ring_buffers[ring_buffer_index] = accumulation;
             neuron_pdevs_update(time, neuron_index);
+        }else{
+            if(!in_spiketimes_not_empty){
+                log_info("Clearning input buffers");
+                in_spikes_clear_spikes();
+                in_spiketimes_clear_spiketime();
+            }
         }
         
         // Convert into ring buffer offset
