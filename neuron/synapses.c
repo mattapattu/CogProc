@@ -202,17 +202,9 @@ static inline void print_inputs(void) {
 static inline void process_fixed_synapses(
     address_t fixed_region_address, uint32_t payload) {
 
-    uint32_t time  = -1;  
-    uint8_t eit =   -1;
-    if(payload == 0){
-        //log_info("payload  = 0. Consider as spike from spikearray ");
-        //pkt came from sourcearray and is a spike at time t =0
-        time = 0;
-        eit = 0;
-    }else{
-        time = payload &  TIME_CONV; 
-        eit =   (payload >> 31) & 1;
-    }
+    uint32_t time  = payload;  
+    //uint8_t eit =   -1;
+    
  
     register uint32_t *synaptic_words =
             synapse_row_fixed_weight_controls(fixed_region_address);
@@ -269,17 +261,8 @@ static inline void process_fixed_synapses(
 
         // Store saturated value back in ring-buffer
         ring_buffers[ring_buffer_index] = accumulation;
-        //log_info("Calling PDEVS_Sim() at time  = %u", time);
-        if(eit == 0){
-            neuron_pdevs_update(time, neuron_index,FALSE);
-        } //msg is EIT 
-        else if(eit == 1){
-            //log_info("Calling neuron_eit_update at time  = %u", time);
-            neuron_pdevs_update(time, neuron_index,TRUE);
-        } else{
-            log_error("Unknown message recevied");
-        }
-    
+        neuron_pdevs_update(time, neuron_index);
+      
 
     }
 

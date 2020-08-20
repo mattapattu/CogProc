@@ -291,18 +291,12 @@ static bool neuron_impl_add_spike(index_t neuron_index, uint32_t time) {
 }
 
 static void  neuron_impl_neuron_update(uint32_t time, index_t neuron_index,
-        input_t external_bias, key_t key,  bool eit, bool use_key) {
+        input_t external_bias, key_t key, bool use_key) {
     // Get the neuron itself
     neuron_pointer_t neuron = &neuron_array[neuron_index];
 
-    if(eit){
-        float eitTime = (float) time;
-        //log_info("Neuron %u Update EIT = %f",neuron_index, eitTime );
-        neuron_model_eit_update(neuron, eitTime);
-    }else{
-         if(!neuron_impl_add_spike(neuron_index, time)){
+    if(!neuron_impl_add_spike(neuron_index, time)){
             log_error("Unable to add spike to neuron %u at time = %u", neuron_index, time);
-        }
     }
 
     threshold_type_pointer_t threshold_type =
@@ -342,7 +336,7 @@ static bool neuron_impl_check_sim_end(uint32_t n_neurons){
     bool endSim = true;
 
     for (index_t n = 0; n < n_neurons; n++) {
-        if(neuron_model_get_phase(&neuron_array[n]) == 4 || neuron_tn_is_inf(&neuron_array[n])  ){
+        if(neuron_tn_is_inf(&neuron_array[n])){
             endSim = endSim && true;
         }
     }

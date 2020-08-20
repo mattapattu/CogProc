@@ -65,12 +65,6 @@ typedef struct neuron_t {
     //! last event time
     float tl;
 
-    //! EIT
-    float eit;
-
-    //!EOT
-    float eot;
-
     //! Neuron Phases: 0 = Resting,  1 = Subthreshold, 2 = Threshold, 3 = Refractory, 4 = Idle (or Exit), 5 = Error
     uint16_t phase;
 

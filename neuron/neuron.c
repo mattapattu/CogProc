@@ -189,7 +189,7 @@ void neuron_set_sim_exit_time(uint32_t time){
     neuron_set_simulation_ticks(time);
 }
 
-void neuron_pdevs_update(uint32_t time, index_t neuron_index, bool eit){
+void neuron_pdevs_update(uint32_t time, index_t neuron_index){
     input_t external_bias = 0;
     if(time >= sim_exit_time){
         //log_info("Force Exit. Spiketime = %u > sim_exit_time = %u", time, sim_exit_time);
@@ -207,13 +207,9 @@ void neuron_pdevs_update(uint32_t time, index_t neuron_index, bool eit){
         
     }
     
-    // if(!eit){
-    //     neuron_recording_setup_for_next_recording();
-
-    // }
     neuron_recording_setup_for_next_recording();
     neuron_reset_spiked(neuron_index);
-    neuron_impl_neuron_update(time, neuron_index, external_bias,key,eit,use_key);
+    neuron_impl_neuron_update(time, neuron_index, external_bias,key,use_key);
         
     
 }
