@@ -250,8 +250,7 @@ int32_t deltaInt(neuron_t * neuron,key_t key, uint32_t neuron_index, bool use_ke
         log_info("Neuron %u TL = %f. Setting to phase 0", neuron_index, neuron->tl);
         return(0);
     }
-        
-    }else{
+    else{
         log_info("Unknown Neuron %u PHASE = %u. Check", neuron_index, neuron->phase);
 
     }
@@ -327,6 +326,7 @@ uint16_t neuron_model_get_phase(neuron_t * neuron){
 // }
 
 bool neuron_model_check_sim_continue(uint32_t time){
+
     if(time < sim_exit_time){
         return true;
     }else{
