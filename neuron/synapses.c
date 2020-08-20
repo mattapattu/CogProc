@@ -239,29 +239,33 @@ static inline void process_fixed_synapses(
         time = neuron_update_spiketime(time,neuron_index);    
 
         log_info("New mc_pkt to neuron %u:  time = %u",  neuron_index, time);
-        
-        // Convert into ring buffer offset
-        uint32_t ring_buffer_index = synapses_get_ring_buffer_index_combined(
+
+        if(!neuron_check_sim_time(time)){
+            uint32_t ring_buffer_index = synapses_get_ring_buffer_index_combined(
             time, combined_synapse_neuron_index,
             synapse_type_index_bits);
-        //log_info("Setting ring_buffer_index  = %u for neuron_index = %u,  time = %u,  delay = %u, weight = %u", ring_buffer_index, neuron_index, time, delay, weight);
-        //
-        // Add weight to current ring buffer value
-        uint32_t accumulation = ring_buffers[ring_buffer_index] + weight;
+            //log_info("Setting ring_buffer_index  = %u for neuron_index = %u,  time = %u,  delay = %u, weight = %u", ring_buffer_index, neuron_index, time, delay, weight);
+            //
+            // Add weight to current ring buffer value
+            uint32_t accumulation = ring_buffers[ring_buffer_index] + weight;
 
-        // If 17th bit is set, saturate accumulator at UINT16_MAX (0xFFFF)
-        // **NOTE** 0x10000 can be expressed as an ARM literal,
-        //          but 0xFFFF cannot.  Therefore, we use (0x10000 - 1)
-        //          to obtain this value
-        uint32_t sat_test = accumulation & 0x10000;
-        if (sat_test) {
-            accumulation = sat_test - 1;
-            saturation_count++;
+            // If 17th bit is set, saturate accumulator at UINT16_MAX (0xFFFF)
+            // **NOTE** 0x10000 can be expressed as an ARM literal,
+            //          but 0xFFFF cannot.  Therefore, we use (0x10000 - 1)
+            //          to obtain this value
+            uint32_t sat_test = accumulation & 0x10000;
+            if (sat_test) {
+                accumulation = sat_test - 1;
+                saturation_count++;
+            }
+
+            // Store saturated value back in ring-buffer
+            ring_buffers[ring_buffer_index] = accumulation;
+            neuron_pdevs_update(time, neuron_index);
         }
-
-        // Store saturated value back in ring-buffer
-        ring_buffers[ring_buffer_index] = accumulation;
-        neuron_pdevs_update(time, neuron_index);
+        
+        // Convert into ring buffer offset
+        
       
 
     }
