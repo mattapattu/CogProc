@@ -149,7 +149,10 @@ void neuron_model_Devs_sim(neuron_t * neuron, int16_t event_type, uint32_t nextS
     //event_type 1 - Internal event
     if(event_type == 1 ){
         //log_info("Neuron %u internal event: phase %d expired at tn=%f",neuron_index, neuron->phase, neuron->tn);
-        neuron->tl = neuron->tn;
+        if(neuron->tn < INFINITY){
+            neuron->tl = neuron->tn;
+        }
+        
         neuron->phase  = deltaInt(neuron,key,neuron_index,use_key);
          //UPDATE TL
         log_info("Neuron %u NEW PHASE = %u, TL = %f",neuron_index, neuron->phase, neuron->tl);
