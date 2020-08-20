@@ -288,7 +288,6 @@ void mc_pkt_recvd_callback(uint key, uint payload) {
     // } 
     
     
-    neuron_reset_exit_counter();
     multicast_packet_received_callback(key, payload);
        
 }

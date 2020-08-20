@@ -162,7 +162,7 @@ static void end_simulation(){
 
     simulation_handle_pause_resume(NULL);
 
-    neuron_recording_finalise();
+    //neuron_recording_finalise();
     simulation_ready_to_read();
     spin1_delay_us(1000);
 } 
