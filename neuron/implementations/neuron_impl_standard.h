@@ -336,7 +336,7 @@ static bool neuron_impl_check_sim_end(uint32_t n_neurons){
     bool endSim = true;
 
     for (index_t n = 0; n < n_neurons; n++) {
-        if(neuron_model_check(&neuron_array[n]) {}){
+        if(neuron_model_check(&neuron_array[n])){
             endSim = endSim && true;
         }
     }
