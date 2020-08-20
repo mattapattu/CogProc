@@ -120,7 +120,7 @@ int32_t neuron_model_PDevs_sim(neuron_t * neuron, int32_t threshold,  uint32_t n
         if(neuron->tl <= nextSpikeTime){
             neuron_model_Devs_sim(neuron, 2,nextSpikeTime,  threshold, key, neuron_index, input, use_key);
         }else{
-            log_error("Causality Error in neuron %u", neuron_index);
+            log_error("Causality Error: nextSpikeTime = %u, TL = %f in  neuron %u", nextSpikeTime,neuron->tl, neuron_index);
         }
         
         neuron->lastProcessedSpikeTime =  neuron_model_spiketime_pop(neuron);
