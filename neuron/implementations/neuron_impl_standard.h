@@ -299,7 +299,7 @@ static void  neuron_impl_neuron_update(uint32_t time, index_t neuron_index,
             log_error("Unable to add spike to neuron %u at time = %u", neuron_index, time);
     }
     if(in_spiketimes_not_empty){
-        log_info("in_spiketimes is not empty");
+        log_info("test: in_spiketimes is not empty");
     }
 
 
@@ -350,7 +350,7 @@ static bool neuron_impl_check_sim_end(uint32_t n_neurons){
             }
         }
     }else{
-        log_info("in_spiketimes is empty");
+        log_info("in_spiketimes is not empty");
         endSim = false;
     }
     
