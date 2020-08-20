@@ -117,9 +117,9 @@ int32_t neuron_model_PDevs_sim(neuron_t * neuron, int32_t threshold,  uint32_t n
         //Call deltaExt()
         neuron->waitCounter = 0;
         log_info("Neuron %u: EXTERNAL INPUT at %u", neuron_index, nextSpikeTime);
-        if(neuron->tl <= nextSpikeTime){
+        if(neuron->tl <= nextSpikeTime|| neuron->tl == 0){
             neuron_model_Devs_sim(neuron, 2,nextSpikeTime,  threshold, key, neuron_index, input, use_key);
-        }else if(neuron->tl > 0.1 ){ //Check ?
+        }else {
             log_error("Causality Error: nextSpikeTime = %u, TL = %f in  neuron %u", nextSpikeTime, neuron->tl, neuron_index);
         }
         
