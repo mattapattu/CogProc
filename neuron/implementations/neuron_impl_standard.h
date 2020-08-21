@@ -332,7 +332,7 @@ static bool  neuron_impl_neuron_update(uint32_t time, index_t neuron_index,
         
     
     }
-    if(neuron_model_check_sim_continue(neuron->tl)){
+    if(neuron_model_check_sim_continue(neuron)){
         return true;
     }else{
         log_info("End simulation = TRUE");
