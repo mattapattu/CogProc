@@ -161,7 +161,7 @@ void neuron_model_Devs_sim(neuron_t * neuron, int16_t event_type, uint32_t nextS
     else if(event_type == 2){
         neuron->phase = deltaExt(neuron, nextSpikeTime, threshold, input);
         neuron->tl = (float) nextSpikeTime + deltaT;//UPDATE TL
-        log_info("Neuron %u NEW PHASE = %u, TL = %f after spike",neuron_index, neuron->tl, neuron->phase);
+        log_info("Neuron %u NEW PHASE = %u, TL = %f after spike",neuron_index, neuron->phase, neuron->tl);
     }
 
 
