@@ -209,12 +209,8 @@ int32_t deltaExt(neuron_t * neuron, uint32_t time, int32_t threshold, input_t in
         return(neuron->phase);
     }else if(neuron->phase == 0 || neuron->phase == 1){
         //log_info("external input = %f", input);
-        if(time < simulation_ticks){
-            lif_update(time, neuron, input);
-            return(1);
-        }else{
-            return(4);
-        }
+        lif_update(time, neuron, input);
+        return(1);
     }else{
         log_info("Unknown Neuron PHASE = %u. Check",  neuron->phase);
         return(0);
