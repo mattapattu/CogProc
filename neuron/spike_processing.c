@@ -303,7 +303,6 @@ void multicast_packet_received_callback(uint key, uint payload) {
     //use(payload);
     
     log_info("Adding mc_pkt (%u,%u) to buffer", key, payload);
-    neuron_reset_exit_counter();
      // If there was space to add spike to incoming spike queue
     if (in_spikes_add_spike(key) && in_spiketimes_add_spiketime(payload)) {
         // If we're not already processing synaptic DMAs,
