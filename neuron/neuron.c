@@ -189,7 +189,7 @@ void neuron_pdevs_update(uint32_t time, index_t neuron_index){
     input_t external_bias = 0;
     
     
-    log_info("Neuron %u update at time  = %u", time, neuron_index);
+    log_info("Neuron %u update at time  = %u", neuron_index, time);
     neuron_recording_setup_for_next_recording();
     neuron_reset_spiked(neuron_index);
     
