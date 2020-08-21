@@ -27,7 +27,7 @@
 #include <simulation.h>
 
 
-extern void end_simulation();
+
 //! The key to be used for this core (will be ORed with neuron ID)
 static key_t key;
 
@@ -184,6 +184,7 @@ void neuron_set_sim_exit_time(uint32_t time){
     neuron_set_simulation_ticks(time);
 }
 
+
 void neuron_pdevs_update(uint32_t time, index_t neuron_index){
     input_t external_bias = 0;
     
@@ -204,7 +205,6 @@ void neuron_pdevs_update(uint32_t time, index_t neuron_index){
         simulation_handle_pause_resume(NULL);
         simulation_ready_to_read();
         spin1_exit(0);
-        //spin1_schedule_callback(end_simulation, 0, 0, -1);
     }
  
 }
