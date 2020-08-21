@@ -201,6 +201,8 @@ void neuron_pdevs_update(uint32_t time, index_t neuron_index){
         spin1_callback_off(MC_PACKET_RECEIVED);
         spin1_callback_off(USER_EVENT); 
         spin1_delay_us(100);
+        simulation_handle_pause_resume(NULL);
+        simulation_ready_to_read();
         spin1_exit(0);
         //spin1_schedule_callback(end_simulation, 0, 0, -1);
     }
