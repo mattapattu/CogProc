@@ -373,7 +373,7 @@ void user_event_callback(uint unused0, uint unused1) {
     } else {
         // If the DMA buffer is invalid, just do the first transfer possible
         uint32_t *spiketime;
-        setup_synaptic_dma_read(NULL, NULL, NULL,*spiketime);
+        setup_synaptic_dma_read(NULL, NULL, NULL,spiketime);
     }
 }
 
