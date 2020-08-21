@@ -312,6 +312,17 @@ void mc_pkt_recvd_callback(uint key, uint payload) {
     return;    
 } */
 
+void end_simulation(){
+
+    log_info("Inside end_simulation");
+
+    simulation_handle_pause_resume(NULL);
+
+    //neuron_recording_finalise();
+    simulation_ready_to_read();
+    spin1_delay_us(1000);
+} 
+
 //! \brief The entry point for this model.
 void c_main(void) {
 

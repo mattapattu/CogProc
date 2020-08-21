@@ -158,15 +158,7 @@ void neuron_pause(address_t address) { // EXPORTED
 }
 
 
-static void end_simulation(){
 
-    simulation_handle_pause_resume(NULL);
-
-    //neuron_recording_finalise();
-    simulation_ready_to_read();
-    spin1_delay_us(1000);
-    spin1_exit(1);
-} 
 
 void neuron_reset_spiked(uint32_t neuron_index){
     neuron_impl_reset_spiked(neuron_index);
@@ -184,9 +176,7 @@ uint32_t neuron_update_spiketime(uint32_t time, index_t neuron_index){
     return(neuron_impl_update_spiketime(time, neuron_index));
 }
 
-void neuron_reset_exit_counter(){
-    exitCounter = 0;
-}
+
 
 void neuron_set_sim_exit_time(uint32_t time){
     sim_exit_time = time;
@@ -210,7 +200,7 @@ void neuron_pdevs_update(uint32_t time, index_t neuron_index){
         spin1_callback_off(MC_PACKET_RECEIVED);
         spin1_callback_off(USER_EVENT); 
         spin1_delay_us(100);
-        end_simulation();
+        spin1_schedule_callback(end_simulation, 0, 0, -1);
     }
  
 }
