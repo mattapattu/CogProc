@@ -123,7 +123,7 @@ bool neuron_initialise(address_t address, address_t recording_address, // EXPORT
     // Read the size of the incoming spike buffer to use
     *incoming_spike_buffer_size = params->incoming_spike_buffer_size;
 
-    log_debug("\t n_neurons = %u, spike buffer size = %u", n_neurons,
+    log_info("\t n_neurons = %u, spike buffer size = %u", n_neurons,
             *incoming_spike_buffer_size);
 
     // Call the neuron implementation initialise function to setup DTCM etc.
