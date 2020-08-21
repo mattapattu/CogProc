@@ -325,13 +325,13 @@ uint16_t neuron_model_get_phase(neuron_t * neuron){
     
 // }
 
-bool neuron_model_check_sim_continue(uint32_t time){
+bool neuron_model_check_sim_continue(float time){
 
     if(time < simulation_ticks){
-        log_info("neuron TL = %u < simulation_ticks, continue",time);
+        log_info("neuron TL = %f < simulation_ticks, continue",time);
         return true;
     }else{
-        log_info("neuron TL = %u > simulation_ticks, exit",time);
+        log_info("neuron TL = %f > simulation_ticks, exit",time);
         return false;
     }
 }
