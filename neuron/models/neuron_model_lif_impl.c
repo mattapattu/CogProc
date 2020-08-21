@@ -321,7 +321,7 @@ uint16_t neuron_model_get_phase(neuron_t * neuron){
     
 // }
 
-bool neuron_model_check_sim_continue(neuron_t * neuron){
+bool neuron_model_check_sim_continue(neuron_pointer_t neuron){
 
     if(neuron->tl < simulation_ticks){
         log_info("neuron TL = %f < simulation_ticks, continue",neuron->tl);
