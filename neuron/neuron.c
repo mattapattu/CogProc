@@ -27,6 +27,7 @@
 #include <simulation.h>
 
 
+extern void end_simulation();
 //! The key to be used for this core (will be ORed with neuron ID)
 static key_t key;
 
