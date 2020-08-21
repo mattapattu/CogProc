@@ -231,14 +231,13 @@ static inline void process_fixed_synapses(
         uint32_t weight = synapse_row_sparse_weight(synaptic_word);
    
         
-        
         uint32_t neuron_index = combined_synapse_neuron_index & 255;
         
         time = time+delay;
         
         time = neuron_update_spiketime(time,neuron_index);    
 
-        log_info("New mc_pkt to neuron %u:  time = %u",  neuron_index, time);
+        log_info("New mc_pkt to neuron %u:  time = %u, combined_synapse_neuron_index = %u",  neuron_index, time,combined_synapse_neuron_index);
 
         uint32_t ring_buffer_index = synapses_get_ring_buffer_index_combined(
         time, combined_synapse_neuron_index,
