@@ -332,17 +332,17 @@ bool neuron_model_check_sim_continue(neuron_pointer_t neuron){
     }
 }
 
-// void neuron_model_print_parameters(const neuron_t *neuron) {
+void neuron_model_print_parameters(const neuron_t *neuron) {
 
-//     log_info("V reset       = %11.4k mv", neuron->V_reset);
-//     log_info("V rest        = %11.4k mv", neuron->V_rest);
+    log_debug("V reset       = %11.4k mv", neuron->V_reset);
+    log_debug("V rest        = %11.4k mv", neuron->V_rest);
 
-//     log_info("I offset      = %11.4k nA", neuron->I_offset);
-//     log_info("R membrane    = %11.4k Mohm", neuron->R_membrane);
+    log_debug("I offset      = %11.4k nA", neuron->I_offset);
+    log_debug("R membrane    = %11.4k Mohm", neuron->R_membrane);
 
-//     log_info("exp(-ms/(RC)) = %11.4k [.]", neuron->exp_TC);
+    log_debug("exp(-ms/(RC)) = %11.4k [.]", neuron->exp_TC);
 
-//     log_info("T refract  neuron_model_print_state_variables   = %u timesteps", neuron->T_refract);
-//     log_info("V_membrane     = %f ", neuron->V_membrane);
+    log_debug("T refract  neuron_model_print_state_variables   = %u timesteps", neuron->T_refract);
+    log_debug("V_membrane     = %f ", neuron->V_membrane);
     
-// }
+}
