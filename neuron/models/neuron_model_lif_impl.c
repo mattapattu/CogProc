@@ -57,7 +57,7 @@ static float ta(neuron_t * neuron){
     }
     else{
         log_info("Unknown Neuron PHASE = %u. Check",  neuron->phase);
-
+         return(-1);
     }
 }
 
@@ -219,7 +219,7 @@ int32_t deltaExt(neuron_t * neuron, uint32_t time, int32_t threshold, input_t in
     
 }
 
-int32_t deltaInt(neuron_t * neuron,key_t key, uint32_t neuron_index, bool use_key ) {
+uint16_t deltaInt(neuron_t * neuron,key_t key, uint32_t neuron_index, bool use_key ) {
 	
 	//log_info("Inh 1: %12.6k, Inh 2: %12.6k", inh_input[0], inh_input[1]);
     
@@ -248,7 +248,7 @@ int32_t deltaInt(neuron_t * neuron,key_t key, uint32_t neuron_index, bool use_ke
     }
     else{
         log_info("Unknown Neuron %u PHASE = %u. Check", neuron_index, neuron->phase);
-
+        return(5);
     }
 
     
@@ -332,17 +332,17 @@ bool neuron_model_check_sim_continue(neuron_pointer_t neuron){
     }
 }
 
-void neuron_model_print_parameters(const neuron_t *neuron) {
+// void neuron_model_print_parameters(const neuron_t *neuron) {
 
-    //log_info("V reset       = %11.4k mv", neuron->V_reset);
-    //log_info("V rest        = %11.4k mv", neuron->V_rest);
+//     log_info("V reset       = %11.4k mv", neuron->V_reset);
+//     log_info("V rest        = %11.4k mv", neuron->V_rest);
 
-    //log_info("I offset      = %11.4k nA", neuron->I_offset);
-    //log_info("R membrane    = %11.4k Mohm", neuron->R_membrane);
+//     log_info("I offset      = %11.4k nA", neuron->I_offset);
+//     log_info("R membrane    = %11.4k Mohm", neuron->R_membrane);
 
-    //log_info("exp(-ms/(RC)) = %11.4k [.]", neuron->exp_TC);
+//     log_info("exp(-ms/(RC)) = %11.4k [.]", neuron->exp_TC);
 
-    //log_info("T refract  neuron_model_print_state_variables   = %u timesteps", neuron->T_refract);
-    //log_info("V_membrane     = %f ", neuron->V_membrane);
+//     log_info("T refract  neuron_model_print_state_variables   = %u timesteps", neuron->T_refract);
+//     log_info("V_membrane     = %f ", neuron->V_membrane);
     
-}
+// }

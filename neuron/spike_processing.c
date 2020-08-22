@@ -349,7 +349,7 @@ static void dma_complete_callback(uint unused, uint tag) {
     // count repeats of the current spike
     uint32_t n_rewires = dma_n_rewires;
     uint32_t n_spikes = dma_n_spikes;
-    uint32_t *spiketime;
+    uint32_t *spiketime = 0;
     setup_synaptic_dma_read(current_buffer, &n_rewires, &n_spikes, spiketime);
 
 }

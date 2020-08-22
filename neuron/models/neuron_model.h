@@ -80,7 +80,7 @@ void neuron_model_has_spiked(neuron_t *restrict neuron);
 //! \brief printout of parameters i.e. those values that don't change
 //! \param[in] neuron: a pointer to a neuron parameter struct which contains all
 //!     the parameters for a specific neuron
-void neuron_model_print_parameters(const neuron_t *neuron);
+//void neuron_model_print_parameters(const neuron_t *neuron);
 
 
 bool neuron_model_add_spike(neuron_t * neuron, uint32_t  spikeTime);
