@@ -372,7 +372,7 @@ void user_event_callback(uint unused0, uint unused1) {
         dma_complete_callback(0, DMA_TAG_READ_SYNAPTIC_ROW);
     } else {
         // If the DMA buffer is invalid, just do the first transfer possible
-        uint32_t *spiketime;
+        uint32_t *spiketime = 0;
         setup_synaptic_dma_read(NULL, NULL, NULL,spiketime);
     }
 }
