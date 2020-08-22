@@ -42,7 +42,7 @@ static uint32_t n_neurons;
 static uint32_t time_between_spikes;
 
 //! The expected current clock tick of timer_1 when the next spike can be sent
-static uint32_t expected_time;
+//static uint32_t expected_time;
 
 //! The recording flags
 static uint32_t recording_flags = 0;

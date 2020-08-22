@@ -344,10 +344,10 @@ static bool  neuron_impl_neuron_update(uint32_t time, index_t neuron_index,
 
 
 
-static uint16_t neuron_impl_get_phase(uint32_t neuron_index){
-    neuron_pointer_t neuron = &neuron_array[neuron_index];
-    return neuron_model_get_phase(neuron);
-}
+// static uint16_t neuron_impl_get_phase(uint32_t neuron_index){
+//     neuron_pointer_t neuron = &neuron_array[neuron_index];
+//     return neuron_model_get_phase(neuron);
+// }
 
 SOMETIMES_UNUSED // Marked unused as only used sometimes
 //! \brief Stores neuron parameters back into SDRAM
