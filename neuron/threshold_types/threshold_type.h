@@ -35,7 +35,7 @@ typedef threshold_type_t* threshold_type_pointer_t;
 //! \param[in] value: The value to determine if it is above the threshold
 //! \param[in] threshold_type: The parameters to use to determine the result
 //! \return True if the neuron should fire
-static bool threshold_type_is_above_threshold(
-        state_t value, threshold_type_t *threshold_type);
+// static bool threshold_type_is_above_threshold(
+//         state_t value, threshold_type_t *threshold_type);
 
 #endif // _THRESHOLD_TYPE_H_

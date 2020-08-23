@@ -32,9 +32,9 @@ struct threshold_type_t {
 //! \param[in] value: The value to determine if it is above the threshold
 //! \param[in] threshold_type: The parameters to use to determine the result
 //! \return True if the neuron should fire
-static inline bool threshold_type_is_above_threshold(
-        state_t value, threshold_type_t *threshold_type) {
-    return REAL_COMPARE(value, >=, threshold_type->threshold_value);
-}
+// static inline bool threshold_type_is_above_threshold(
+//         state_t value, threshold_type_t *threshold_type) {
+//     return REAL_COMPARE(value, >=, threshold_type->threshold_value);
+// }
 
 #endif // _THRESHOLD_TYPE_STATIC_H_
