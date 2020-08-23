@@ -104,7 +104,7 @@ static void lambda(neuron_t * neuron, key_t key, uint32_t neuron_index, bool use
 
 
 //DEVS PDEVS  simulator
-int32_t neuron_model_PDevs_sim(neuron_t * neuron, int32_t threshold,  uint32_t nextSpikeTime, key_t key, uint32_t neuron_index, input_t input, bool use_key){
+int32_t neuron_model_PDevs_sim(neuron_t * neuron,  uint32_t nextSpikeTime, key_t key, uint32_t neuron_index, input_t input, bool use_key){
     
      
     //Calling Basic DEVS

@@ -303,9 +303,9 @@ static bool  neuron_impl_neuron_update(uint32_t time, index_t neuron_index,
     }
 
 
-    threshold_type_pointer_t threshold_type =
-            &threshold_type_array[neuron_index];
-    int32_t threshold = threshold_type->threshold_value;
+    // threshold_type_pointer_t threshold_type =
+    //         &threshold_type_array[neuron_index];
+    // int32_t threshold = threshold_type->threshold_value;
     //neuron_pointer_t neuron = &neuron_array[neuron_index];
 
     float nextSpikeTime = neuron->spike_times[0];
