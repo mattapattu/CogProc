@@ -195,14 +195,14 @@ static inline bool is_something_to_do(
 //! \param[in,out] n_rewires: Accumulator of number of rewirings
 //! \param[in,out] n_synapse_processes:
 //!     Accumulator of number of synapses processed
-static void setup_synaptic_dma_read(dma_buffer *current_buffer,
-        uint32_t *n_rewires, uint32_t *n_synapse_processes, uint32_t *spiketime) {
+static void setup_synaptic_dma_read(uint32_t *spiketime) {
     // Set up to store the DMA location and size to read
     address_t row_address;
     size_t n_bytes_to_transfer;
     spike_t spike;
     dma_n_spikes = 0;
     dma_n_rewires = 0;
+    
 
     // Keep looking if there is something to do until a DMA can be done
     bool setup_done = false;
@@ -330,7 +330,7 @@ uint32_t getSpikeRecvdCount(){
 //! \param[in] tag: What sort of DMA has finished?
 static void dma_complete_callback(uint unused, uint tag) {
     use(unused);
-
+    use(tag);
     // increment the dma complete count for provenance generation
     dma_complete_count++;
 
@@ -338,8 +338,8 @@ static void dma_complete_callback(uint unused, uint tag) {
     //log_info("DMA transfer complete at time %u with tag %u", time, tag);
 
     // Get pointer to current buffer
-    uint32_t current_buffer_index = buffer_being_read;
-    dma_buffer *current_buffer = &dma_buffers[current_buffer_index];
+    // uint32_t current_buffer_index = buffer_being_read;
+    // dma_buffer *current_buffer = &dma_buffers[current_buffer_index];
 
     // Start the next DMA transfer and get a count of the rewires and spikes
     // that can be done on this row now (there might be more while the DMA
@@ -347,10 +347,10 @@ static void dma_complete_callback(uint unused, uint tag) {
     // to 1 here, with the other being 0.  We take a copy of the count and this
     // is the value added to for this processing, as setup_synaptic_dma will
     // count repeats of the current spike
-    uint32_t n_rewires = dma_n_rewires;
-    uint32_t n_spikes = dma_n_spikes;
+    // uint32_t n_rewires = dma_n_rewires;
+    // uint32_t n_spikes = dma_n_spikes;
     uint32_t *spiketime = 0;
-    setup_synaptic_dma_read(current_buffer, &n_rewires, &n_spikes, spiketime);
+    setup_synaptic_dma_read(spiketime);
 
 }
 
@@ -373,7 +373,7 @@ void user_event_callback(uint unused0, uint unused1) {
     } else {
         // If the DMA buffer is invalid, just do the first transfer possible
         uint32_t *spiketime = 0;
-        setup_synaptic_dma_read(NULL, NULL, NULL,spiketime);
+        setup_synaptic_dma_read(spiketime);
     }
 }
 
