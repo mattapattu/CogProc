@@ -320,7 +320,7 @@ static bool  neuron_impl_neuron_update(uint32_t time, index_t neuron_index,
     while(ret == 1){
         log_info("Calling neuron_model_PDevs_sim");
         nextSpikeTime = neuron->spike_times[0];
-        ret = neuron_model_PDevs_sim(neuron, threshold, nextSpikeTime, key, neuron_index, input,use_key);
+        ret = neuron_model_PDevs_sim(neuron, nextSpikeTime, key, neuron_index, input,use_key);
         
         if(neuron_impl_spiked(neuron_index)){
             //log_info("Setting recording bit for neuron %u",neuron_index);
