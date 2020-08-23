@@ -145,7 +145,7 @@ int32_t neuron_model_PDevs_sim(neuron_t * neuron, int32_t threshold,  uint32_t n
 }
 
 //DEVS atomic simulator
-void neuron_model_Devs_sim(neuron_t * neuron, int16_t event_type, uint32_t nextSpikeTime, int32_t threshold, key_t key, uint32_t neuron_index, input_t input, bool use_key){
+void neuron_model_Devs_sim(neuron_t * neuron, int16_t event_type, uint32_t nextSpikeTime, key_t key, uint32_t neuron_index, input_t input, bool use_key){
     //event_type 1 - Internal event
     if(event_type == 1 ){
         //log_info("Neuron %u internal event: phase %d expired at tn=%f",neuron_index, neuron->phase, neuron->tn);
@@ -159,7 +159,7 @@ void neuron_model_Devs_sim(neuron_t * neuron, int16_t event_type, uint32_t nextS
         
     }//event_type 2 - External event
     else if(event_type == 2){
-        neuron->phase = deltaExt(neuron, nextSpikeTime, threshold, input);
+        neuron->phase = deltaExt(neuron, nextSpikeTime, input);
         neuron->tl = (float) nextSpikeTime + deltaT;//UPDATE TL
         log_info("Neuron %u NEW PHASE = %u, TL = %f after spike",neuron_index, neuron->phase, neuron->tl);
     }
@@ -200,7 +200,7 @@ static inline void lif_update(float time, neuron_t * neuron, input_t input_this_
 }
 
 
-int32_t deltaExt(neuron_t * neuron, uint32_t time, int32_t threshold, input_t input) {
+int32_t deltaExt(neuron_t * neuron, uint32_t time, input_t input) {
 	//log_info("Exc 1: %12.6k", exc_input[0]);
 	//log_info("Inh 1: %12.6k, Inh 2: %12.6k", inh_input[0], inh_input[1]);
 
