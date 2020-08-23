@@ -34,8 +34,7 @@
 //! \param[in] incoming_spike_buffer_size: Size of buffer for receiving spikes
 //! \return True if initialisation succeeded
 bool spike_processing_initialise(
-        size_t row_max_n_bytes, uint mc_packet_callback_priority,
-        uint user_event_priority, uint incoming_spike_buffer_size);
+        size_t row_max_n_bytes, uint user_event_priority, uint incoming_spike_buffer_size);
 
 //! \brief Gets the number of times the input buffer has overflowed
 //! \return the number of times the input buffer has overflowed

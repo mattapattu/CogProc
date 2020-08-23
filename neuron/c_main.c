@@ -229,7 +229,7 @@ static bool initialise(void) {
     rewiring = rewiring_period != -1;
 
     if (!spike_processing_initialise(
-            row_max_n_words, MC, USER, incoming_spike_buffer_size)) {
+            row_max_n_words, USER, incoming_spike_buffer_size)) {
         return false;
     }
 

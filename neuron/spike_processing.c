@@ -380,7 +380,7 @@ void user_event_callback(uint unused0, uint unused1) {
 /* INTERFACE FUNCTIONS - cannot be static */
 
 bool spike_processing_initialise( // EXPORTED
-        size_t row_max_n_words, uint mc_packet_callback_priority,
+        size_t row_max_n_words, 
         uint user_event_priority, uint incoming_spike_buffer_size) {
     // Allocate the DMA buffers
     for (uint32_t i = 0; i < N_DMA_BUFFERS; i++) {
