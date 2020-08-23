@@ -227,10 +227,10 @@ static void setup_synaptic_dma_read(uint32_t *spiketime) {
             // If the row is in DTCM, process the row now
             synaptic_row_t single_fixed_synapse =
                     direct_synapses_get_direct_synapse(row_address);
-            bool write_back;
+            //bool write_back;
             time = *spiketime; //spiketime = payload = eit bit + time
             synapses_process_synaptic_row(
-                    time, single_fixed_synapse, &write_back);
+                    time, single_fixed_synapse);
             dma_n_rewires = 0;
             dma_n_spikes = 0;
             
@@ -251,10 +251,9 @@ static void setup_synaptic_dma_read(uint32_t *spiketime) {
         uint32_t current_buffer_index = buffer_being_read;
         dma_buffer *current_buffer = &dma_buffers[current_buffer_index];
         
-            bool write_back;
             time = *spiketime; //spiketime = payload = eit bit + time
             synapses_process_synaptic_row(
-                    time, current_buffer->row, &write_back);
+                    time, current_buffer->row);
         
         
     }

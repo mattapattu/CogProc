@@ -365,7 +365,7 @@ uint32_t synapses_get_ring_buffer_input(uint32_t time, uint32_t neuron_index){
 }
 
 bool synapses_process_synaptic_row(
-        uint32_t payload, synaptic_row_t row, bool *write_back) {
+        uint32_t payload, synaptic_row_t row) {
 
    // uint32_t time = payload; 
 

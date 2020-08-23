@@ -26,6 +26,7 @@
 struct additional_input_t {
 };
 
+__attribute__((unused))
 //! \brief Gets the value of current provided by the additional input this
 //!     timestep
 //! \details Does nothing
@@ -41,6 +42,7 @@ static input_t additional_input_get_input_value_as_current(
     return 0;
 }
 
+__attribute__((unused))
 //! \brief Notifies the additional input type that the neuron has spiked
 //! \details Does nothing
 //! \param[in] additional_input: The additional input type pointer to the
