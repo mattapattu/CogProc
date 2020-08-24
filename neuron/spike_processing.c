@@ -96,7 +96,7 @@ static uint32_t spike_recvd_count = 0;
 //! The number of successful rewires
 static uint32_t n_successful_rewires = 0;
 
-static uint32_t lastSpikeTime = 0;
+static uint32_t lastSpikeTime = 20000;
 
 /* PRIVATE FUNCTIONS - static for inlining */
 
