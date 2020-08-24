@@ -46,7 +46,7 @@ typedef struct dma_buffer {
 } dma_buffer;
 
 //! The number of DMA Buffers to use
-#define N_DMA_BUFFERS 2
+#define N_DMA_BUFFERS 1
 
 extern void end_sim();
 
