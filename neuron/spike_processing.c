@@ -156,7 +156,7 @@ static inline bool is_something_to_do(
         log_info("Getting next address (%u,%u)", spike, *spiketime);
         return true;
     }
-    cpsr = spin1_int_disable();
+    //cpsr = spin1_int_disable();
     // Are there any more spikes to process?
     //in_spiketimes_print_buffer();
     //in_spikes_print_buffer();
@@ -164,7 +164,7 @@ static inline bool is_something_to_do(
         //log_info("Get next from buffer: spike = %u, spiketime = %u", *spike, *spiketime);
         // Enable interrupts while looking up in the master pop table,
         // as this can be slow
-        spin1_mode_restore(cpsr);
+        //spin1_mode_restore(cpsr);
         if (population_table_get_first_address(
                 *spike, row_address, n_bytes_to_transfer)) {
             time = *spiketime;        
@@ -183,7 +183,7 @@ static inline bool is_something_to_do(
     dma_busy = false;
 
     // Restore interrupts
-    spin1_mode_restore(cpsr);
+    //spin1_mode_restore(cpsr);
     return false;
 }
 
