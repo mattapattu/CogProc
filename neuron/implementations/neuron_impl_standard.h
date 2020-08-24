@@ -294,7 +294,7 @@ static bool neuron_impl_add_spike(index_t neuron_index, uint32_t time) {
 }
 
 SOMETIMES_UNUSED
-static bool  neuron_impl_neuron_update(uint32_t time, index_t neuron_index,
+static bool  neuron_impl_neuron_update(index_t neuron_index,
         input_t external_bias, key_t key, bool use_key) {
     use(external_bias);        
     // Get the neuron itself

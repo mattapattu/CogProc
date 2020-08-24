@@ -204,7 +204,7 @@ bool neuron_pdevs_update(){
         neuron_recording_setup_for_next_recording();
         neuron_reset_spiked(neuron_index);
     
-        bool continueSim = neuron_impl_neuron_update(time, neuron_index, external_bias,key,use_key);
+        bool continueSim = neuron_impl_neuron_update(neuron_index, external_bias,key,use_key);
 
         if(!continueSim){
             log_info("Calling end_simulation");
