@@ -218,7 +218,7 @@ static inline bool process_fixed_synapses(
         // (should auto increment pointer in single instruction)
         uint32_t synaptic_word = *synaptic_words++;
 
-        log_info("synaptic_word  = %u, synapse_type_index_bits = %u", synaptic_word, synapse_type_index_bits);
+        //log_info("synaptic_word  = %u, synapse_type_index_bits = %u", synaptic_word, synapse_type_index_bits);
 
         // Extract components from this word
         uint32_t delay =
@@ -238,7 +238,7 @@ static inline bool process_fixed_synapses(
         time = neuron_update_spiketime(time,neuron_index);    
 
 
-        log_info("New mc_pkt to neuron %u:  time = %u, delay = %u",  neuron_index, time,delay);
+        //log_info("New mc_pkt to neuron %u:  time = %u, delay = %u",  neuron_index, time,delay);
 
         //log_info("Time after shifting  = %u",  time);
 
@@ -255,7 +255,7 @@ static inline bool process_fixed_synapses(
         // Add weight to current ring buffer value
         //log_info("accumulation  = %u",  ring_buffers[ring_buffer_index]);
         uint32_t accumulation = ring_buffers[ring_buffer_index] + weight;
-        log_info("New accumulation  = %u",  accumulation);
+        //log_info("New accumulation  = %u",  accumulation);
 
         // If 17th bit is set, saturate accumulator at UINT16_MAX (0xFFFF)
         // **NOTE** 0x10000 can be expressed as an ARM literal,
