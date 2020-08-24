@@ -240,7 +240,9 @@ static inline bool process_fixed_synapses(
         log_info("Time after shifting  = %u",  time);
 
 
-        neuron_add_spike(time,neuron_index);
+        if(!neuron_add_spike(time,neuron_index)){
+            return false;
+        }
 
         
         uint32_t ring_buffer_index = synapses_get_ring_buffer_index_combined(
@@ -249,7 +251,9 @@ static inline bool process_fixed_synapses(
         //log_info("Setting ring_buffer_index  = %u for neuron_index = %u,  time = %u,  delay = %u, weight = %u", ring_buffer_index, neuron_index, time, delay, weight);
         //
         // Add weight to current ring buffer value
+        log_info("accumulation  = %u",  ring_buffers[ring_buffer_index]);
         uint32_t accumulation = ring_buffers[ring_buffer_index] + weight;
+        log_info("New accumulation  = %u",  accumulation);
 
         // If 17th bit is set, saturate accumulator at UINT16_MAX (0xFFFF)
         // **NOTE** 0x10000 can be expressed as an ARM literal,
