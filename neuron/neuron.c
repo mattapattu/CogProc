@@ -194,9 +194,11 @@ void neuron_set_sim_exit_time(uint32_t time){
 }
 
 
-bool neuron_pdevs_update(uint32_t time, index_t neuron_index){
+bool neuron_pdevs_update(){
+
     input_t external_bias = 0;
     
+    for(neuron )
     
     //log_info("Neuron %u update at time  = %u", neuron_index, time);
     neuron_recording_setup_for_next_recording();
