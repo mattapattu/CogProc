@@ -231,10 +231,12 @@ static inline bool process_fixed_synapses(
         uint32_t neuron_index = combined_synapse_neuron_index & 255;
         
         time = time + delay;
+
+        log_info("New mc_pkt to neuron %u:  time = %u, delay = %u",  neuron_index, time,delay);
         
         time = neuron_update_spiketime(time,neuron_index);    
 
-        log_info("New mc_pkt to neuron %u:  time = %u, combined_synapse_neuron_index = %u",  neuron_index, time,combined_synapse_neuron_index);
+        log_info("Time after shifting  = %u",  time);
 
         uint32_t ring_buffer_index = synapses_get_ring_buffer_index_combined(
         time, combined_synapse_neuron_index,
