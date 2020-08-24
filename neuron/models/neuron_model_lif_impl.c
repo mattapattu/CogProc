@@ -86,7 +86,8 @@ static void lambda(neuron_t * neuron, key_t key, uint32_t neuron_index, bool use
     uint16_t currentState  = neuron->phase;
     uint32_t nextEventTime = (uint32_t) neuron->tn;
     //log_info("lambda: neuron %u currentState = %u, nextEventTime = %u",neuron_index,  currentState, nextEventTime );
-   
+    log_info("Inside lambda");
+
     if(currentState == 2){
         neuron->lastThresholdTime = nextEventTime;
         neuron->hasSpiked  = true;
@@ -110,7 +111,7 @@ int32_t neuron_model_PDevs_sim(neuron_t * neuron,  uint32_t nextSpikeTime, key_t
     //Calling Basic DEVS
     if(neuron->tn <=  nextSpikeTime ){
         //Call deltaInt()
-        log_info("Neuron %u PHASE %u END at tn = %f",neuron_index, neuron->phase,  neuron->tn);
+        //log_info("Neuron %u PHASE %u END at tn = %f",neuron_index, neuron->phase,  neuron->tn);
         neuron_model_Devs_sim(neuron, 1,nextSpikeTime, key, neuron_index, input, use_key);
         
     }else if( nextSpikeTime < neuron->tn ){
@@ -161,7 +162,7 @@ void neuron_model_Devs_sim(neuron_t * neuron, int16_t event_type, uint32_t nextS
     else if(event_type == 2){
         neuron->phase = deltaExt(neuron, nextSpikeTime, input);
         neuron->tl = (float) nextSpikeTime + deltaT;//UPDATE TL
-        log_info("Neuron %u NEW PHASE = %u, TL = %f after spike",neuron_index, neuron->phase, neuron->tl);
+        //log_info("Neuron %u NEW PHASE = %u, TL = %f after spike",neuron_index, neuron->phase, neuron->tl);
     }
 
 
@@ -243,7 +244,7 @@ uint16_t deltaInt(neuron_t * neuron,key_t key, uint32_t neuron_index, bool use_k
         return(3);
     }else if(neuron->phase == 3){
 
-        log_info("Neuron %u TL = %f. Setting to phase 0", neuron_index, neuron->tl);
+        //log_info("Neuron %u TL = %f. Setting to phase 0", neuron_index, neuron->tl);
         return(0);
     }
     else{
