@@ -53,6 +53,7 @@ static uint32_t sim_exit_time = 0;
 
 //static bool endsim = false;
 
+extern void end_sim();
 
 //! parameters that reside in the neuron_parameter_data_region
 struct neuron_parameters {
@@ -202,9 +203,10 @@ void neuron_pdevs_update(uint32_t time, index_t neuron_index){
         spin1_callback_off(MC_PACKET_RECEIVED);
         spin1_callback_off(USER_EVENT); 
         spin1_delay_us(100);
-        simulation_handle_pause_resume(NULL);
-        simulation_ready_to_read();
-        spin1_exit(0);
+        // simulation_handle_pause_resume(NULL);
+        // simulation_ready_to_read();
+        // spin1_exit(0);
+        end_sim();
     }
  
 }

@@ -292,7 +292,12 @@ void mc_pkt_recvd_callback(uint key, uint payload) {
        
 }
 
-
+void end_sim(){
+    log_info("Inside end_sim");
+    simulation_handle_pause_resume(NULL);
+    simulation_ready_to_read();
+    spin1_exit(0);
+}
 
 
 //! \brief The entry point for this model.
