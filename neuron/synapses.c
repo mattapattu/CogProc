@@ -230,7 +230,7 @@ static inline bool process_fixed_synapses(
         
         uint32_t neuron_index = combined_synapse_neuron_index & 255;
         
-        time = time + delay;
+        time = payload + delay;
 
         log_info("New mc_pkt to neuron %u:  time = %u, delay = %u",  neuron_index, time,delay);
         
