@@ -259,13 +259,16 @@ uint16_t deltaInt(neuron_t * neuron,key_t key, uint32_t neuron_index, bool use_k
 }
 
 bool neuron_model_add_spike(neuron_t * neuron, uint32_t  spikeTime){
-   neuron->spikeCount++;
-   if(neuron->spikeCount > 10){
+   if(neuron->spikeCount == 10){
        log_error("spikeCount = %u, error storing new spike at time = %u. Exiting simulation", neuron->spikeCount, spikeTime);
        return FALSE;
-   }else if(spikeTime >= neuron->spike_times[neuron->spikeCount-1] ){
+   }else if(spikeTime == neuron->spike_times[neuron->spikeCount-1]){
+       log_info("Spiketime already present");
+       return true;
+   }else if(spikeTime > neuron->spike_times[neuron->spikeCount-1] ){
        //log_info("Adding new spike time = %f at the end of array", spikeTime);
        neuron->spike_times[neuron->spikeCount] = spikeTime;
+       neuron->spikeCount++;
        return TRUE;
    }else{
        uint32_t i;
@@ -281,6 +284,7 @@ bool neuron_model_add_spike(neuron_t * neuron, uint32_t  spikeTime){
            }
        }
        //log_info("Adding new spike at time = %f at index = %u", spikeTime,i);
+       neuron->spikeCount++;
        return TRUE;
    }
 }

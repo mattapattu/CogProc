@@ -234,10 +234,15 @@ static inline bool process_fixed_synapses(
 
         log_info("New mc_pkt to neuron %u:  time = %u, delay = %u",  neuron_index, time,delay);
         
+        
         time = neuron_update_spiketime(time,neuron_index);    
 
         log_info("Time after shifting  = %u",  time);
 
+
+        neuron_add_spike(time,neuron_index);
+
+        
         uint32_t ring_buffer_index = synapses_get_ring_buffer_index_combined(
         time, combined_synapse_neuron_index,
         synapse_type_index_bits);
