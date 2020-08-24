@@ -199,7 +199,7 @@ static inline void print_inputs(void) {
 //! be put into the ring buffer.
 //! \param[in] fixed_region_address: The fixed region of the synaptic matrix
 //! \param[in] time: The current simulation time
-static inline void process_fixed_synapses(
+static inline bool process_fixed_synapses(
     address_t fixed_region_address, uint32_t payload) {
 
     uint32_t time  = payload;  
@@ -213,9 +213,6 @@ static inline void process_fixed_synapses(
 
     num_fixed_pre_synaptic_events += fixed_synapse;
 
-    
-
-    
     for (; fixed_synapse > 0; fixed_synapse--) {
         // Get the next 32 bit word from the synaptic_row
         // (should auto increment pointer in single instruction)
@@ -233,7 +230,7 @@ static inline void process_fixed_synapses(
         
         uint32_t neuron_index = combined_synapse_neuron_index & 255;
         
-        time = time+delay;
+        time = time + delay;
         
         time = neuron_update_spiketime(time,neuron_index);    
 
@@ -259,17 +256,14 @@ static inline void process_fixed_synapses(
 
         // Store saturated value back in ring-buffer
         ring_buffers[ring_buffer_index] = accumulation;
-        neuron_pdevs_update(time, neuron_index);
         
-        
-        // Convert into ring buffer offset
-        
-      
-
+        if(!neuron_pdevs_update(time, neuron_index)){
+            return false;
+        }
     }
 
-    //neuron_sim_exit();
-    //spin1_schedule_callback(neuron_sim_exit, 0, 0, 1);
+    return true;
+
 }
 
 
@@ -367,40 +361,19 @@ uint32_t synapses_get_ring_buffer_input(uint32_t time, uint32_t neuron_index){
 bool synapses_process_synaptic_row(
         uint32_t payload, synaptic_row_t row) {
 
-   // uint32_t time = payload; 
-
-
-    // Get address of non-plastic region from row
     address_t fixed_region_address = synapse_row_fixed_region(row);
-
-    // **TODO** multiple optimised synaptic row formats
-    //if (plastic_tag(row) == 0) {
-    // If this row has a plastic region
-    // if (synapse_row_plastic_size(row) > 0) {
-    //     // Get region's address
-    //     address_t plastic_region_address = synapse_row_plastic_region(row);
-
-    //     // Process any plastic synapses
-    //     profiler_write_entry_disable_fiq(
-    //             PROFILER_ENTER | PROFILER_PROCESS_PLASTIC_SYNAPSES);
-    //     if (!synapse_dynamics_process_plastic_synapses(plastic_region_address,
-    //             fixed_region_address, ring_buffers, time)) {
-    //         return false;
-    //     }
-    //     profiler_write_entry_disable_fiq(
-    //             PROFILER_EXIT | PROFILER_PROCESS_PLASTIC_SYNAPSES);
-
-    //     // Perform DMA write back
-    //     *write_back = true;
-    // }
 
     // Process any fixed synapses
     // **NOTE** this is done after initiating DMA in an attempt
     // to hide cost of DMA behind this loop to improve the chance
     // that the DMA controller is ready to read next synaptic row afterwards
-    process_fixed_synapses(fixed_region_address, payload);
-    //}
-    return true;
+    if (process_fixed_synapses(fixed_region_address, payload));{
+        return true;
+    }else{
+        return false;
+    }
+
+    
 }
 
 //! \brief returns the number of times the synapses have saturated their

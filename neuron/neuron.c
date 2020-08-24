@@ -53,7 +53,7 @@ static uint32_t sim_exit_time = 0;
 
 //static bool endsim = false;
 
-extern void end_sim();
+
 
 //! parameters that reside in the neuron_parameter_data_region
 struct neuron_parameters {
@@ -186,7 +186,7 @@ void neuron_set_sim_exit_time(uint32_t time){
 }
 
 
-void neuron_pdevs_update(uint32_t time, index_t neuron_index){
+bool neuron_pdevs_update(uint32_t time, index_t neuron_index){
     input_t external_bias = 0;
     
     
@@ -202,12 +202,17 @@ void neuron_pdevs_update(uint32_t time, index_t neuron_index){
         spin1_callback_off(MCPL_PACKET_RECEIVED);
         spin1_callback_off(MC_PACKET_RECEIVED);
         spin1_callback_off(USER_EVENT); 
+        spin1_callback_off(DMA_TRANSFER_DONE);
         spin1_delay_us(100);
         // simulation_handle_pause_resume(NULL);
         // simulation_ready_to_read();
         // spin1_exit(0);
-        end_sim();
+        //end_sim();
+        return false;
+        
     }
+
+    return true;
  
 }
 

@@ -46,6 +46,8 @@ typedef struct dma_buffer {
 //! The number of DMA Buffers to use
 #define N_DMA_BUFFERS 2
 
+extern void end_sim();
+
 //! DMA tags
 enum spike_processing_dma_tags {
     //! Tag of a DMA read of a full synaptic row
@@ -202,6 +204,7 @@ static void setup_synaptic_dma_read(uint32_t *spiketime) {
     spike_t spike;
     dma_n_spikes = 0;
     dma_n_rewires = 0;
+    bool continueSim = true;
     
 
     // Keep looking if there is something to do until a DMA can be done
@@ -229,7 +232,7 @@ static void setup_synaptic_dma_read(uint32_t *spiketime) {
                     direct_synapses_get_direct_synapse(row_address);
             //bool write_back;
             time = *spiketime; //spiketime = payload = eit bit + time
-            synapses_process_synaptic_row(
+            continueSim = synapses_process_synaptic_row(
                     time, single_fixed_synapse);
             dma_n_rewires = 0;
             dma_n_spikes = 0;
@@ -252,12 +255,16 @@ static void setup_synaptic_dma_read(uint32_t *spiketime) {
         dma_buffer *current_buffer = &dma_buffers[current_buffer_index];
         
             time = *spiketime; //spiketime = payload = eit bit + time
-            synapses_process_synaptic_row(
+            continueSim = synapses_process_synaptic_row(
                     time, current_buffer->row);
         
         
     }
     
+    if(!continueSim){
+        spin1_delay_us(100);
+        end_sim();
+    }
     
 }
 
