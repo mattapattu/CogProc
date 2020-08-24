@@ -111,13 +111,13 @@ int32_t neuron_model_PDevs_sim(neuron_t * neuron,  uint32_t nextSpikeTime, key_t
     //Calling Basic DEVS
     if(neuron->tn <=  nextSpikeTime ){
         //Call deltaInt()
-        log_info("Neuron %u PHASE %u END at tn = %f",neuron_index, neuron->phase,  neuron->tn);
+        //log_info("Neuron %u PHASE %u END at tn = %f",neuron_index, neuron->phase,  neuron->tn);
         neuron_model_Devs_sim(neuron, 1,nextSpikeTime, key, neuron_index, input, use_key);
         
     }else if( nextSpikeTime < neuron->tn ){
         //Call deltaExt()
         neuron->waitCounter = 0;
-        log_info("Neuron %u: EXTERNAL INPUT at %u", neuron_index, nextSpikeTime);
+        //log_info("Neuron %u: EXTERNAL INPUT at %u", neuron_index, nextSpikeTime);
         if(neuron->tl <= nextSpikeTime|| neuron->tl == 0){
             neuron_model_Devs_sim(neuron, 2,nextSpikeTime,  key, neuron_index, input, use_key);
         }else if(neuron->tl > nextSpikeTime && neuron->phase == 3 ) {
@@ -139,7 +139,7 @@ int32_t neuron_model_PDevs_sim(neuron_t * neuron,  uint32_t nextSpikeTime, key_t
     //new pkts recvd, exit otherwise
 
     if(nextSpikeTime >= INFINITY && neuron->tn >= INFINITY){
-        log_info("Next events at INFINITY");
+        //log_info("Next events at INFINITY");
         return(0);
     }else{
         return(1);
