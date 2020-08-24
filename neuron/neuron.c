@@ -198,31 +198,36 @@ bool neuron_pdevs_update(){
 
     input_t external_bias = 0;
     
-    for(neuron )
-    
-    //log_info("Neuron %u update at time  = %u", neuron_index, time);
-    neuron_recording_setup_for_next_recording();
-    neuron_reset_spiked(neuron_index);
-    
-    bool continueSim = neuron_impl_neuron_update(time, neuron_index, external_bias,key,use_key);
+    for (index_t neuron_index = 0; neuron_index < n_neurons; neuron_index++) {
 
-    if(!continueSim){
-        log_info("Calling end_simulation");
-        log_info("Turning off all callbacks at time = %u",  time);
-        spin1_callback_off(MCPL_PACKET_RECEIVED);
-        spin1_callback_off(MC_PACKET_RECEIVED);
-        spin1_callback_off(USER_EVENT); 
-        spin1_callback_off(DMA_TRANSFER_DONE);
-        spin1_delay_us(100);
-        // simulation_handle_pause_resume(NULL);
-        // simulation_ready_to_read();
-        // spin1_exit(0);
-        //end_sim();
-        return false;
-        
-    }
+        if()
+
+        neuron_recording_setup_for_next_recording();
+        neuron_reset_spiked(neuron_index);
+    
+        bool continueSim = neuron_impl_neuron_update(time, neuron_index, external_bias,key,use_key);
+
+        if(!continueSim){
+            log_info("Calling end_simulation");
+            log_info("Turning off all callbacks at time = %u",  time);
+            spin1_callback_off(MCPL_PACKET_RECEIVED);
+            spin1_callback_off(MC_PACKET_RECEIVED);
+            spin1_callback_off(USER_EVENT); 
+            spin1_callback_off(DMA_TRANSFER_DONE);
+            spin1_delay_us(100);
+            // simulation_handle_pause_resume(NULL);
+            // simulation_ready_to_read();
+            // spin1_exit(0);
+            //end_sim();
+            return false;
+        }
 
     return true;
+
+    }
+    
+    //log_info("Neuron %u update at time  = %u", neuron_index, time);
+    
  
 }
 
