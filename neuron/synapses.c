@@ -256,7 +256,7 @@ static inline bool process_fixed_synapses(
 
         // Store saturated value back in ring-buffer
         ring_buffers[ring_buffer_index] = accumulation;
-        
+
         if(!neuron_pdevs_update(time, neuron_index)){
             return false;
         }
@@ -367,7 +367,7 @@ bool synapses_process_synaptic_row(
     // **NOTE** this is done after initiating DMA in an attempt
     // to hide cost of DMA behind this loop to improve the chance
     // that the DMA controller is ready to read next synaptic row afterwards
-    if (process_fixed_synapses(fixed_region_address, payload));{
+    if(process_fixed_synapses(fixed_region_address, payload)){
         return true;
     }else{
         return false;
