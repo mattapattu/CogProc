@@ -362,10 +362,7 @@ static void dma_complete_callback(uint unused, uint tag) {
     if(!neuron_pdevs_update()){
         end_sim();
     }
-        
-       
-
-
+ 
     uint32_t *spiketime = 0;
     setup_synaptic_dma_read(spiketime);
 
