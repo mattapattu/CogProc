@@ -120,7 +120,7 @@ int32_t neuron_model_PDevs_sim(neuron_t * neuron,  uint32_t nextSpikeTime, key_t
         //log_info("Neuron %u: EXTERNAL INPUT at %u", neuron_index, nextSpikeTime);
         if(neuron->tl <= nextSpikeTime|| neuron->tl == 0){
             neuron_model_Devs_sim(neuron, 2,nextSpikeTime,  key, neuron_index, input, use_key);
-        }else if(neuron->tl > nextSpikeTime && neuron->phase == 3 ) {
+        }else if(neuron->tl > nextSpikeTime && (neuron->tl - nextSpikeTime >=0.1) ) {
             log_info("Not considering as Causality Error as spike cannot be processed");
             neuron_model_Devs_sim(neuron, 2,nextSpikeTime,  key, neuron_index, input, use_key);
         }else{
