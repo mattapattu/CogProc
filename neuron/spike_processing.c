@@ -167,6 +167,7 @@ static inline bool is_something_to_do(
         // Enable interrupts while looking up in the master pop table,
         // as this can be slow
         //spin1_mode_restore(cpsr);
+        log_info("Getting next spike (%u,%u)", spike, *spiketime);
         if (population_table_get_first_address(
                 *spike, row_address, n_bytes_to_transfer)) {
             time = *spiketime;        
@@ -175,7 +176,7 @@ static inline bool is_something_to_do(
             return true;
         }
 
-        log_info("Getting next spike (%u,%u)", spike, *spiketime);
+        
         spin1_delay_us(100);
         // Disable interrupts before checking if there is another spike
         cpsr = spin1_int_disable();
@@ -266,19 +267,7 @@ static void setup_synaptic_dma_read(uint32_t *spiketime) {
     }
     //Process All Current Spikes Before Next DMA Access
     
-        if(lastSpikeTime != time){
-            log_info("PDEVS update for all current spikes before next DMA");
-            if(!neuron_pdevs_update()){
-                continueSim  = false;
-                lastSpikeTime = time;
-        }
-        if(!continueSim){
-            spin1_delay_us(100);
-            end_sim();
-        }
-    }
-   
-    
+           
 }
 
 uint32_t getSpikeProcessedCount(){
@@ -368,6 +357,15 @@ static void dma_complete_callback(uint unused, uint tag) {
     // count repeats of the current spike
     // uint32_t n_rewires = dma_n_rewires;
     // uint32_t n_spikes = dma_n_spikes;
+
+    
+    if(!neuron_pdevs_update()){
+        end_sim();
+    }
+        
+       
+
+
     uint32_t *spiketime = 0;
     setup_synaptic_dma_read(spiketime);
 
