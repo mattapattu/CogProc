@@ -205,7 +205,7 @@ static inline bool process_fixed_synapses(
     uint32_t time  = payload;  
     //uint8_t eit =   -1;
     
-    log_info("fixed_region_address  = %u",fixed_region_address);
+    //log_info("fixed_region_address  = %u",fixed_region_address);
     register uint32_t *synaptic_words =
             synapse_row_fixed_weight_controls(fixed_region_address);
     register uint32_t fixed_synapse =
