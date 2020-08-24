@@ -218,7 +218,7 @@ static inline bool process_fixed_synapses(
         // (should auto increment pointer in single instruction)
         uint32_t synaptic_word = *synaptic_words++;
 
-        log_info("synaptic_word  = %u, synapse_type_index_bits = %u", synaptic_word, synapse_type_index_bits);
+        //log_info("synaptic_word  = %u, synapse_type_index_bits = %u", synaptic_word, synapse_type_index_bits);
 
         // Extract components from this word
         uint32_t delay =
@@ -232,13 +232,15 @@ static inline bool process_fixed_synapses(
         
         time = payload + delay;
 
-        log_info("New mc_pkt to neuron %u:  time = %u, delay = %u",  neuron_index, time,delay);
+        
         
         
         time = neuron_update_spiketime(time,neuron_index);    
 
-        log_info("Time after shifting  = %u",  time);
 
+        log_info("New mc_pkt to neuron %u:  time = %u, delay = %u",  neuron_index, time,delay);
+
+        //log_info("Time after shifting  = %u",  time);
 
         if(!neuron_add_spike(time,neuron_index)){
             return false;
@@ -251,7 +253,7 @@ static inline bool process_fixed_synapses(
         //log_info("Setting ring_buffer_index  = %u for neuron_index = %u,  time = %u,  delay = %u, weight = %u", ring_buffer_index, neuron_index, time, delay, weight);
         //
         // Add weight to current ring buffer value
-        log_info("accumulation  = %u",  ring_buffers[ring_buffer_index]);
+        //log_info("accumulation  = %u",  ring_buffers[ring_buffer_index]);
         uint32_t accumulation = ring_buffers[ring_buffer_index] + weight;
         log_info("New accumulation  = %u",  accumulation);
 
