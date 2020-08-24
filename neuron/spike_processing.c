@@ -238,7 +238,7 @@ static void setup_synaptic_dma_read(uint32_t *spiketime) {
             dma_n_spikes = 0;
             
         } else {
-            log_info("Start DMA for mc_pkt. "); 
+            //log_info("Start DMA for mc_pkt. "); 
             // If the row is in SDRAM, set up the transfer and we are done
             do_dma_read(row_address, n_bytes_to_transfer, spike);
             setup_done = true;
