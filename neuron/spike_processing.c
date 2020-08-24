@@ -22,10 +22,11 @@
 #include "synapse_row.h"
 #include "synapses.h"
 #include "direct_synapses.h"
+#include "neuron.h"
 #include "structural_plasticity/synaptogenesis_dynamics.h"
 #include <simulation.h>
 #include <debug.h>
-#include <neuron.h>
+
 
 //! DMA buffer structure combines the row read from SDRAM with information
 //! about the read.
