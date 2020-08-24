@@ -96,6 +96,8 @@ static uint32_t spike_recvd_count = 0;
 //! The number of successful rewires
 static uint32_t n_successful_rewires = 0;
 
+static uint32_t lastSpikeTime = 0;
+
 /* PRIVATE FUNCTIONS - static for inlining */
 
 //! \brief Perform a DMA read of a synaptic row
@@ -263,14 +265,19 @@ static void setup_synaptic_dma_read(uint32_t *spiketime) {
         
     }
     //Process All Current Spikes Before Next DMA Access
-    log_info("PDEVS update for all current spikes before next DMA");
-    if(!neuron_pdevs_update()){
-            continueSim  = false;
+    
+        if(lastSpikeTime != time){
+            log_info("PDEVS update for all current spikes before next DMA");
+            if(!neuron_pdevs_update()){
+                continueSim  = false;
+                lastSpikeTime = time;
+        }
+        if(!continueSim){
+            spin1_delay_us(100);
+            end_sim();
+        }
     }
-    if(!continueSim){
-        spin1_delay_us(100);
-        end_sim();
-    }
+   
     
 }
 
