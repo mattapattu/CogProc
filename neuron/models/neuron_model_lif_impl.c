@@ -121,7 +121,7 @@ int32_t neuron_model_PDevs_sim(neuron_t * neuron,  uint32_t nextSpikeTime, key_t
         if(neuron->tl <= nextSpikeTime|| neuron->tl == 0){
             neuron_model_Devs_sim(neuron, 2,nextSpikeTime,  key, neuron_index, input, use_key);
         }else if(neuron->tl > nextSpikeTime && (neuron->tl - nextSpikeTime >=0.1) ) {
-            log_info("Not considering as Causality Error as spike cannot be processed");
+            log_info("Not considering as Causality Error as spike is not processed, phase = %u, tl = %f, nextSpikeTime = %u, tn = %f", neuron->phase, neuron->tl, nextSpikeTime, neuron->tn );
             neuron_model_Devs_sim(neuron, 2,nextSpikeTime,  key, neuron_index, input, use_key);
         }else{
             log_info("Causality Error: nextSpikeTime = %u, TL = %f in  neuron %u", nextSpikeTime, neuron->tl, neuron_index);
