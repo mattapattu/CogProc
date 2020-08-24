@@ -200,7 +200,7 @@ bool neuron_pdevs_update(){
     
     for (index_t neuron_index = 0; neuron_index < n_neurons; neuron_index++) {
 
-        log_info("Doing pdevs update for neuron = %u", neuron_index);
+        //log_info("Doing pdevs update for neuron = %u", neuron_index);
         neuron_recording_setup_for_next_recording();
         neuron_reset_spiked(neuron_index);
     
