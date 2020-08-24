@@ -263,7 +263,7 @@ static void setup_synaptic_dma_read(uint32_t *spiketime) {
         
     }
     //Process All Current Spikes Before Next DMA Access
-
+    log_info("PDEVS update for all current spikes before next DMA");
     if(!neuron_pdevs_update()){
             continueSim  = false;
     }
