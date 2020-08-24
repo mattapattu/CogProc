@@ -176,7 +176,7 @@ static inline bool is_something_to_do(
         log_info("Getting next spike (%u,%u)", spike, *spiketime);
 
         // Disable interrupts before checking if there is another spike
-        cpsr = spin1_int_disable();
+        //cpsr = spin1_int_disable();
     }
 
     // If nothing to do, the DMA is not busy
