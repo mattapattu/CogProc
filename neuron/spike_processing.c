@@ -156,7 +156,7 @@ static inline bool is_something_to_do(
         log_info("Getting next address (%u,%u)", spike, *spiketime);
         return true;
     }
-    //cpsr = spin1_int_disable();
+    cpsr = spin1_int_disable();
     // Are there any more spikes to process?
     //in_spiketimes_print_buffer();
     //in_spikes_print_buffer();
@@ -174,9 +174,9 @@ static inline bool is_something_to_do(
         }
 
         log_info("Getting next spike (%u,%u)", spike, *spiketime);
-
+        spin1_delay_us(100);
         // Disable interrupts before checking if there is another spike
-        //cpsr = spin1_int_disable();
+        cpsr = spin1_int_disable();
     }
 
     // If nothing to do, the DMA is not busy
