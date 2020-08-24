@@ -156,7 +156,7 @@ static inline bool is_something_to_do(
     if (population_table_get_next_address(
             spike, row_address, n_bytes_to_transfer)) {
         *n_process_spike += 1;
-        log_info("Getting next address (%u,%u)", spike, *spiketime);
+        log_info("Getting another row address %u", *row_address);
         return true;
     }
     cpsr = spin1_int_disable();
@@ -168,12 +168,12 @@ static inline bool is_something_to_do(
         // Enable interrupts while looking up in the master pop table,
         // as this can be slow
         //spin1_mode_restore(cpsr);
-        log_info("Getting next spike (%u,%u)", spike, *spiketime);
         if (population_table_get_first_address(
                 *spike, row_address, n_bytes_to_transfer)) {
             time = *spiketime;        
             synaptogenesis_spike_received(time, *spike);
             *n_process_spike += 1;
+            log_info("Getting row address %u", *row_address);
             return true;
         }
 
@@ -217,7 +217,7 @@ static void setup_synaptic_dma_read(uint32_t *spiketime) {
     bool setup_done = false;
     while (!setup_done && is_something_to_do(&row_address,
             &n_bytes_to_transfer, &spike, &dma_n_rewires, &dma_n_spikes, spiketime)) {
-        log_info("While loop: mc_pkt (%u,%u)", spike, *spiketime);        
+        log_info("While loop: mc_pkt (%u,%u) - row_address = %u", spike, *spiketime, row_address);        
         /* if (current_buffer != NULL &&
                 current_buffer->sdram_writeback_address == row_address) {
             // If we can reuse the row, add on what we can use it for
