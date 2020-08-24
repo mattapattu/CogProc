@@ -242,9 +242,7 @@ static inline bool process_fixed_synapses(
 
         //log_info("Time after shifting  = %u",  time);
 
-        if(!neuron_add_spike(time,neuron_index)){
-            return false;
-        }
+        neuron_add_spike(time,neuron_index);
 
         
         uint32_t ring_buffer_index = synapses_get_ring_buffer_index_combined(
