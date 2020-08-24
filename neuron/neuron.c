@@ -221,13 +221,9 @@ bool neuron_pdevs_update(){
             return false;
         }
 
-    return true;
-
     }
-    
-    //log_info("Neuron %u update at time  = %u", neuron_index, time);
-    
- 
+
+    return true;
 }
 
 
