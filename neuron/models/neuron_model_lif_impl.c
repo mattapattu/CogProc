@@ -86,7 +86,7 @@ static void lambda(neuron_t * neuron, key_t key, uint32_t neuron_index, bool use
     uint16_t currentState  = neuron->phase;
     uint32_t nextEventTime = (uint32_t) neuron->tn;
     //log_info("lambda: neuron %u currentState = %u, nextEventTime = %u",neuron_index,  currentState, nextEventTime );
-    log_info("Inside lambda");
+    //log_info("Inside lambda");
 
     if(currentState == 2){
         neuron->lastThresholdTime = nextEventTime;
@@ -94,7 +94,7 @@ static void lambda(neuron_t * neuron, key_t key, uint32_t neuron_index, bool use
     }
 
     if(use_key && nextEventTime < INFINITY){    
-        log_info("lambda: Neuron %u  sending spike at t = %u",neuron_index,  nextEventTime );
+        //log_info("lambda: Neuron %u  sending spike at t = %u",neuron_index,  nextEventTime );
         while (!spin1_send_mc_packet(
                     key | neuron_index, nextEventTime, WITH_PAYLOAD)) {
                 spin1_delay_us(1);
@@ -117,7 +117,7 @@ int32_t neuron_model_PDevs_sim(neuron_t * neuron,  uint32_t nextSpikeTime, key_t
     }else if( nextSpikeTime < neuron->tn ){
         //Call deltaExt()
         neuron->waitCounter = 0;
-        log_info("Neuron %u: EXTERNAL INPUT at %u", neuron_index, nextSpikeTime);
+        //log_info("Neuron %u: EXTERNAL INPUT at %u", neuron_index, nextSpikeTime);
         if(neuron->tl <= nextSpikeTime|| neuron->tl == 0){
             neuron_model_Devs_sim(neuron, 2,nextSpikeTime,  key, neuron_index, input, use_key);
         }else {
@@ -239,7 +239,7 @@ uint16_t deltaInt(neuron_t * neuron,key_t key, uint32_t neuron_index, bool use_k
         }
     }else if(neuron->phase == 2){
         lambda(neuron, key, neuron_index, use_key);
-        log_info("Neuron in phase 2, reset V_memb and change to phase 3");
+        //log_info("Neuron in phase 2, reset V_memb and change to phase 3");
         neuron->V_membrane = neuron->V_reset;
         return(3);
     }else if(neuron->phase == 3){

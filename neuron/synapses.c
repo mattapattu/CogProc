@@ -236,7 +236,7 @@ static inline bool process_fixed_synapses(
         
         time = neuron_update_spiketime(time,neuron_index);    
 
-        log_info("Time after shifting  = %u",  time);
+        //log_info("Time after shifting  = %u",  time);
 
         uint32_t ring_buffer_index = synapses_get_ring_buffer_index_combined(
         time, combined_synapse_neuron_index,
