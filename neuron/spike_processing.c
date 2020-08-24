@@ -122,6 +122,7 @@ static inline void do_dma_read(
         // Do Nothing
     }
     next_buffer_to_fill = (next_buffer_to_fill + 1) % N_DMA_BUFFERS;
+    log_info("buffer_being_read = %u", buffer_being_read);
 }
 
 //! \brief Check if there is anything to do. If not, DMA is not busy
