@@ -178,6 +178,14 @@ uint32_t neuron_update_spiketime(uint32_t time, index_t neuron_index){
     return(neuron_impl_update_spiketime(time, neuron_index));
 }
 
+bool neuron_add_spike(uint32_t time, index_t neuron_index){
+    if(!neuron_impl_add_spike(neuron_index, time)){
+            log_error("Unable to add spike to neuron %u at time = %u", neuron_index, time);
+            return false;
+    }
+    return true;
+}
+
 
 
 void neuron_set_sim_exit_time(uint32_t time){

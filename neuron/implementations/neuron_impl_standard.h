@@ -300,9 +300,7 @@ static bool  neuron_impl_neuron_update(uint32_t time, index_t neuron_index,
     // Get the neuron itself
     neuron_pointer_t neuron = &neuron_array[neuron_index];
 
-    if(!neuron_impl_add_spike(neuron_index, time)){
-            log_error("Unable to add spike to neuron %u at time = %u", neuron_index, time);
-    }
+    
     if(in_spiketimes_not_empty()){
         log_info("test: in_spiketimes is not empty");
     }

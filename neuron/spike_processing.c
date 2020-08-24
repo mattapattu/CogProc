@@ -25,6 +25,7 @@
 #include "structural_plasticity/synaptogenesis_dynamics.h"
 #include <simulation.h>
 #include <debug.h>
+#include <neuron.h>
 
 //! DMA buffer structure combines the row read from SDRAM with information
 //! about the read.
@@ -232,7 +233,7 @@ static void setup_synaptic_dma_read(uint32_t *spiketime) {
                     direct_synapses_get_direct_synapse(row_address);
             //bool write_back;
             time = *spiketime; //spiketime = payload = eit bit + time
-            continueSim = synapses_process_synaptic_row(
+            synapses_process_synaptic_row(
                     time, single_fixed_synapse);
             dma_n_rewires = 0;
             dma_n_spikes = 0;
@@ -255,12 +256,14 @@ static void setup_synaptic_dma_read(uint32_t *spiketime) {
         dma_buffer *current_buffer = &dma_buffers[current_buffer_index];
         
             time = *spiketime; //spiketime = payload = eit bit + time
-            continueSim = synapses_process_synaptic_row(
+            synapses_process_synaptic_row(
                     time, current_buffer->row);
         
         
     }
-    
+    if(!neuron_pdevs_update(time, neuron_index)){
+            continueSim  = false;
+    }
     if(!continueSim){
         spin1_delay_us(100);
         end_sim();

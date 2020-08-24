@@ -259,9 +259,9 @@ static inline bool process_fixed_synapses(
         // Store saturated value back in ring-buffer
         ring_buffers[ring_buffer_index] = accumulation;
 
-        if(!neuron_pdevs_update(time, neuron_index)){
-            return false;
-        }
+        // if(!neuron_pdevs_update(time, neuron_index)){
+        //     return false;
+        // }
     }
 
     return true;

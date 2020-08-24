@@ -116,6 +116,8 @@ bool neuron_get_lastThresholdTime(uint32_t neuron_index);
 
 void neuron_set_sim_exit_time(uint32_t time);
 
+bool neuron_add_spike(uint32_t time, index_t neuron_index);
+
 #endif
 
 #endif // _NEURON_H_
