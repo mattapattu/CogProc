@@ -316,7 +316,7 @@ static bool  neuron_impl_neuron_update(index_t neuron_index,
     //neuron_pointer_t neuron = &neuron_array[neuron_index];
 
     float nextSpikeTime = neuron->spike_times[0];
-    input_t input;
+    input_t *input;
     int32_t ret = 1;
     if(nextSpikeTime < INFINITY){
         input = synapses_get_ring_buffer_input(nextSpikeTime,neuron_index ); 

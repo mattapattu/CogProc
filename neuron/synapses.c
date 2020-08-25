@@ -347,7 +347,7 @@ bool synapses_initialise(
     return true;
 }
 
-uint32_t synapses_get_ring_buffer_input(uint32_t time, uint32_t neuron_index){
+uint32_t * synapses_get_ring_buffer_input(uint32_t time, uint32_t neuron_index){
 
     uint32_t state = spin1_irq_disable();
 
@@ -361,7 +361,7 @@ uint32_t synapses_get_ring_buffer_input(uint32_t time, uint32_t neuron_index){
     // Re-enable the interrupts
     spin1_mode_restore(state);
 
-    return(input);       
+    return(&input);       
 
 
 }
