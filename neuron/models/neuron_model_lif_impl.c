@@ -111,7 +111,7 @@ int32_t neuron_model_PDevs_sim(neuron_t * neuron,  uint32_t nextSpikeTime, key_t
     //Calling Basic DEVS
     if(neuron->tn <=  nextSpikeTime ){
         //Call deltaInt()
-        log_info("Neuron %u in PHASE %u, tl = %f, tn = %f",neuron_index, neuron->phase,  neuron->tl, neuron->tn);
+        //log_info("Neuron %u in PHASE %u, tl = %f, tn = %f",neuron_index, neuron->phase,  neuron->tl, neuron->tn);
         neuron_model_Devs_sim(neuron, 1,nextSpikeTime, key, neuron_index, input, use_key);
         
     }else if( nextSpikeTime < neuron->tn ){
@@ -121,7 +121,7 @@ int32_t neuron_model_PDevs_sim(neuron_t * neuron,  uint32_t nextSpikeTime, key_t
         if(neuron->tl <= nextSpikeTime|| neuron->tl == 0){
             neuron_model_Devs_sim(neuron, 2,nextSpikeTime,  key, neuron_index, input, use_key);
         }else if(neuron->tl > nextSpikeTime && (nextSpikeTime  =  neuron->lastProcessedSpikeTime) ) {
-            log_info("Neuron %u ext inp not a Causality Error,  phase = %u, tl = %f, nextSpikeTime = %u, tn = %f", neuron_index, neuron->phase, neuron->tl, nextSpikeTime, neuron->tn );
+            //log_info("Neuron %u ext inp not a Causality Error,  phase = %u, tl = %f, nextSpikeTime = %u, tn = %f", neuron_index, neuron->phase, neuron->tl, nextSpikeTime, neuron->tn );
             if(neuron->phase == 1){
                 neuron_model_Devs_sim(neuron, 2,nextSpikeTime,  key, neuron_index, input, use_key);
             }else if(neuron->phase == 0){
