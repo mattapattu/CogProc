@@ -302,9 +302,9 @@ static bool  neuron_impl_neuron_update(index_t neuron_index,
     neuron_pointer_t neuron = &neuron_array[neuron_index];
 
     
-    if(in_spiketimes_not_empty()){
-        log_info("test: in_spiketimes is not empty");
-    }
+    // if(in_spiketimes_not_empty()){
+    //     log_info("test: in_spiketimes is not empty");
+    // }
 
 
     // threshold_type_pointer_t threshold_type =
