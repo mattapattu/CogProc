@@ -178,7 +178,6 @@ static inline bool is_something_to_do(
         }
 
         
-        spin1_delay_us(100);
         // Disable interrupts before checking if there is another spike
         cpsr = spin1_int_disable();
     }
