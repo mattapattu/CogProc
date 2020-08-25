@@ -96,7 +96,7 @@ static uint32_t spike_recvd_count = 0;
 //! The number of successful rewires
 static uint32_t n_successful_rewires = 0;
 
-static uint32_t lastSpikeTime = 20000;
+//static uint32_t lastSpikeTime = 20000;
 
 /* PRIVATE FUNCTIONS - static for inlining */
 
@@ -209,7 +209,7 @@ static void setup_synaptic_dma_read(uint32_t *spiketime) {
     spike_t spike;
     dma_n_spikes = 0;
     dma_n_rewires = 0;
-    bool continueSim = true;
+    //bool continueSim = true;
     
 
     // Keep looking if there is something to do until a DMA can be done
