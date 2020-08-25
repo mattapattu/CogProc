@@ -117,7 +117,7 @@ int32_t neuron_model_PDevs_sim(neuron_t * neuron,  uint32_t nextSpikeTime, key_t
     }else if( nextSpikeTime < neuron->tn ){
         //Call deltaExt()
         neuron->waitCounter = 0;
-        //log_info("Neuron %u: EXTERNAL INPUT at %u", neuron_index, nextSpikeTime);
+        log_info("Neuron %u: EXTERNAL INPUT at %u", neuron_index, nextSpikeTime);
         if(neuron->tl <= nextSpikeTime|| neuron->tl == 0){
             neuron_model_Devs_sim(neuron, 2,nextSpikeTime,  key, neuron_index, input, use_key);
         }else if(neuron->tl > nextSpikeTime && (nextSpikeTime  =  neuron->lastProcessedSpikeTime) ) {
@@ -202,13 +202,17 @@ static inline void lif_update(float time, neuron_t * neuron, input_t input_this_
     float alpha = input_this_timestep * neuron->R_membrane + neuron->V_rest;
     //log_info("alpha = %u, time = %u, tl = %u",  alpha, time, neuron->tl);
     // update membrane voltage
-    float V_prev = neuron_model_update_membrane_voltage(time, neuron);
+    float V_prev = 0;
+    if(V_prev > neuron->V_rest){
+        V_prev = neuron_model_update_membrane_voltage(time, neuron);
+    }
+    
     //log_info("V_prev = %f",  V_prev);
     // if(V_prev < neuron->V_rest){
     //     V_prev = neuron->V_rest;
     // }
     neuron->V_membrane = alpha - (neuron->exp_TC * (alpha - V_prev));
-    log_info("V_membrane = %f",  neuron->V_membrane);
+    log_info("V_membrane = %f, V_prev = %f",  neuron->V_membrane, V_prev);
     
 
 }
