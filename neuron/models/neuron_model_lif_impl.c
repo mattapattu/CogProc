@@ -122,7 +122,13 @@ int32_t neuron_model_PDevs_sim(neuron_t * neuron,  uint32_t nextSpikeTime, key_t
             neuron_model_Devs_sim(neuron, 2,nextSpikeTime,  key, neuron_index, input, use_key);
         }else if(neuron->tl > nextSpikeTime && (nextSpikeTime  =  neuron->lastProcessedSpikeTime) ) {
             log_info("Neuron %u ext inp not a Causality Error,  phase = %u, tl = %f, nextSpikeTime = %u, tn = %f", neuron_index, neuron->phase, neuron->tl, nextSpikeTime, neuron->tn );
-            neuron_model_Devs_sim(neuron, 2,nextSpikeTime,  key, neuron_index, input, use_key);
+
+            if(neuron->phase == 1){
+                neuron_model_Devs_sim(neuron, 2,nextSpikeTime,  key, neuron_index, input, use_key);
+            }else if(neuron->phase == 0){
+                //Do No update: neuron has already spiked. 
+            }
+            
         }else{
             log_info("Causality Error: nextSpikeTime = %u, TL = %f in  neuron %u", nextSpikeTime, neuron->tl, neuron_index);
         }
@@ -165,7 +171,7 @@ void neuron_model_Devs_sim(neuron_t * neuron, int16_t event_type, uint32_t nextS
     else if(event_type == 2){
         neuron->phase = deltaExt(neuron, nextSpikeTime, input);
         if(nextSpikeTime == neuron->lastProcessedSpikeTime){
-            //Do not change TL
+            //Simultaneous spike - Do not change TL
         }else{
             neuron->tl = (float) nextSpikeTime + deltaT;//UPDATE TL
         }   
