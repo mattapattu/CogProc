@@ -212,7 +212,7 @@ static inline void lif_update(float time, neuron_t * neuron, input_t input_this_
     //     V_prev = neuron->V_rest;
     // }
     neuron->V_membrane = alpha - (neuron->exp_TC * (alpha - V_prev));
-    log_info("V_membrane = %f, V_prev = %f",  neuron->V_membrane, V_prev);
+    log_info("V_membrane = %f, input_this_timestep = %u",  neuron->V_membrane, input_this_timestep);
     
 
 }
