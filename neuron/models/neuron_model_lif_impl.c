@@ -326,7 +326,7 @@ void neuron_model_init(neuron_t *neuron){
     for(uint32_t i = 0; i < 10; i++){
         neuron->spike_times[i] = INFINITY;
     }
-    //log_info("Initializing neuron params,spikeCount = %u, tl = %f", neuron->spikeCount, neuron->tl);
+    log_info("Initializing neuron params,neuron->V_rest = %f", neuron->V_rest);
 
 }
 
