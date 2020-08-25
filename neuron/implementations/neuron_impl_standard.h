@@ -316,14 +316,14 @@ static bool  neuron_impl_neuron_update(index_t neuron_index,
     //neuron_pointer_t neuron = &neuron_array[neuron_index];
 
     float nextSpikeTime = neuron->spike_times[0];
-    input_t *input;
+    input_t input;
     int32_t ret = 1;
     if(nextSpikeTime < INFINITY){
         input = synapses_get_ring_buffer_input(nextSpikeTime,neuron_index ); 
         log_info("input1 = %u", input);
         input_type_t *input_types = &input_type_array[neuron_index];
         input_type_convert_excitatory_input_to_current(
-                input, input_types, 0);
+                &input, input_types, 0);
         log_info("input1 = %u", input);
         uint32_t nextInp = *input;        
         while(ret == 1){
