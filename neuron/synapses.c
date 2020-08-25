@@ -232,7 +232,7 @@ static inline bool process_fixed_synapses(
         
         time = payload + delay;
 
-        time = neuron_update_spiketime(time,neuron_index);    
+        //time = neuron_update_spiketime(time,neuron_index);    
 
 
         log_info("New mc_pkt to neuron %u:  time = %u, delay = %u",  neuron_index, time,delay);

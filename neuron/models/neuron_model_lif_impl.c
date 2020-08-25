@@ -120,9 +120,9 @@ int32_t neuron_model_PDevs_sim(neuron_t * neuron,  uint32_t nextSpikeTime, key_t
         //log_info("Neuron %u: EXTERNAL INPUT at %u", neuron_index, nextSpikeTime);
         if(neuron->tl <= nextSpikeTime|| neuron->tl == 0){
             neuron_model_Devs_sim(neuron, 2,nextSpikeTime,  key, neuron_index, input, use_key);
-        }else if(neuron->tl > nextSpikeTime && (neuron->tl - nextSpikeTime <=0.2) ) {
+        }else if(neuron->tl > nextSpikeTime && (nextSpikeTime  =  neuron->lastProcessedSpikeTime) ) {
             log_info("Neuron %u ext inp not a Causality Error,  phase = %u, tl = %f, nextSpikeTime = %u, tn = %f", neuron_index, neuron->phase, neuron->tl, nextSpikeTime, neuron->tn );
-            //neuron_model_Devs_sim(neuron, 2,nextSpikeTime,  key, neuron_index, input, use_key);
+            neuron_model_Devs_sim(neuron, 2,nextSpikeTime,  key, neuron_index, input, use_key);
         }else{
             log_info("Causality Error: nextSpikeTime = %u, TL = %f in  neuron %u", nextSpikeTime, neuron->tl, neuron_index);
         }
@@ -164,7 +164,12 @@ void neuron_model_Devs_sim(neuron_t * neuron, int16_t event_type, uint32_t nextS
     }//event_type 2 - External event
     else if(event_type == 2){
         neuron->phase = deltaExt(neuron, nextSpikeTime, input);
-        neuron->tl = (float) nextSpikeTime + deltaT;//UPDATE TL
+        if(nextSpikeTime == neuron->lastProcessedSpikeTime){
+            //Do not change TL
+        }else{
+            neuron->tl = (float) nextSpikeTime + deltaT;//UPDATE TL
+        }   
+        
         //log_info("Neuron %u NEW PHASE = %u, TL = %f after spike",neuron_index, neuron->phase, neuron->tl);
     }
 
