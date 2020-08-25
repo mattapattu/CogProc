@@ -235,7 +235,7 @@ static inline bool process_fixed_synapses(
         //time = neuron_update_spiketime(time,neuron_index);    
 
 
-        log_info("New mc_pkt to neuron %u:  time = %u, delay = %u, weight = %d",  neuron_index, time,delay, weight);
+        log_info("New mc_pkt to neuron %u:  time = %u, delay = %u, weight = %f",  neuron_index, time,delay, weight);
 
         //log_info("Time after shifting  = %u",  time);
 
