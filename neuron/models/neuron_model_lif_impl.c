@@ -111,7 +111,7 @@ int32_t neuron_model_PDevs_sim(neuron_t * neuron,  uint32_t nextSpikeTime, key_t
     //Calling Basic DEVS
     if(neuron->tn <=  nextSpikeTime ){
         //Call deltaInt()
-        //log_info("Neuron %u PHASE %u END at tn = %f",neuron_index, neuron->phase,  neuron->tn);
+        log_info("Neuron %u PHASE %u END at tn = %f",neuron_index, neuron->phase,  neuron->tn);
         neuron_model_Devs_sim(neuron, 1,nextSpikeTime, key, neuron_index, input, use_key);
         
     }else if( nextSpikeTime < neuron->tn ){
