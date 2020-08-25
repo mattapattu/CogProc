@@ -320,8 +320,9 @@ static bool  neuron_impl_neuron_update(index_t neuron_index,
     int32_t ret = 1;
     if(nextSpikeTime < INFINITY){
         input = synapses_get_ring_buffer_input(nextSpikeTime,neuron_index ); 
+        input_type_t *input_types = &input_type_array[neuron_index];
         input_type_convert_excitatory_input_to_current(
-                exc_input_values, input_types, soma_voltage);
+                exc_input_values, input_types, 0);
         while(ret == 1){
             //log_info("Calling neuron_model_PDevs_sim");
             nextSpikeTime = neuron->spike_times[0];
