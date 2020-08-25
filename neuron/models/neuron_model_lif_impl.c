@@ -322,11 +322,12 @@ void neuron_model_init(neuron_t *neuron){
     neuron->tn = INFINITY;
     neuron->phase = 0;
     neuron->waitCounter = 0;
-    neuron->V_membrane = neuron->V_rest;
+    neuron->V_membrane = -65;
+    neuron->V_rest = -65;
     for(uint32_t i = 0; i < 10; i++){
         neuron->spike_times[i] = INFINITY;
     }
-    log_info("Initializing neuron params,neuron->V_rest = %f", neuron->V_rest);
+    log_info("Initializing neuron params,neuron->exp_TC = %f", neuron->exp_TC);
 
 }
 
