@@ -28,18 +28,18 @@
 //! definition for LIF neuron parameters
 typedef struct neuron_t {
     //! membrane voltage [mV]
-    REAL     V_membrane;
+    float     V_membrane;
 
     //! membrane resting voltage [mV]
-    REAL     V_rest;
+    float     V_rest;
 
     //! membrane resistance [MOhm]
-    REAL     R_membrane;
+    float     R_membrane;
 
     //! 'fixed' computation parameter - time constant multiplier for
     //! closed-form solution
     //! exp(-(machine time step in ms)/(R * C)) [.]
-    REAL     exp_TC;
+    float     exp_TC;
 
     //! offset current [nA]
     REAL     I_offset;
@@ -48,7 +48,7 @@ typedef struct neuron_t {
     //int32_t  refract_timer;
 
     //! post-spike reset membrane voltage [mV]
-    REAL     V_reset;
+    float     V_reset;
 
     //! refractory time of neuron [timesteps]
     uint32_t  T_refract;
