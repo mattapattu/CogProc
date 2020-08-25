@@ -261,7 +261,7 @@ static uint32_t neuron_impl_update_spiketime(uint32_t time, index_t neuron_index
     neuron_pointer_t neuron = &neuron_array[neuron_index];
     if(time - neuron->lastProcessedSpikeTime  < deltaT){
         time = neuron->lastProcessedSpikeTime + deltaT;
-        log_info("Changing neuron %u ext. inp to time = %u", neuron_index,time);
+        log_info("Changing neuron %u ext. inp to time = %u, lastProcessedSpikeTime = %u", neuron_index,time,neuron->lastProcessedSpikeTime);
     }
     return(time);
 }

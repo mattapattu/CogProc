@@ -232,9 +232,6 @@ static inline bool process_fixed_synapses(
         
         time = payload + delay;
 
-        
-        
-        
         time = neuron_update_spiketime(time,neuron_index);    
 
 
