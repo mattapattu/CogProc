@@ -457,13 +457,13 @@ inline void neuron_impl_print_synapse_parameters(uint32_t n_neurons) {
     }
     log_debug("-------------------------------------\n");
 }
-
+#endif // LOG_LEVEL >= LOG_DEBUG
 //! \brief Get the synapse type character for a synapse type
 //! \param[in] synapse_type: The synapse type
 //! \return The descriptor character (sometimes two characters)
 inline const char *neuron_impl_get_synapse_type_char(uint32_t synapse_type) {
     return synapse_types_get_type_char(synapse_type);
 }
-#endif // LOG_LEVEL >= LOG_DEBUG
+
 
 #endif // _NEURON_IMPL_STANDARD_H_
