@@ -78,14 +78,14 @@ static uint32_t synapse_type_mask;
 
 /* PRIVATE FUNCTIONS */
 
-#if LOG_LEVEL >= LOG_DEBUG
+//#if LOG_LEVEL >= LOG_DEBUG
 //! \brief get the synapse type character
 //! \param[in] synapse_type: the synapse type
 //! \return a single character string describing the synapse type
 static inline const char *get_type_char(uint32_t synapse_type) {
     return neuron_get_synapse_type_char(synapse_type);
 }
-#endif // LOG_LEVEL >= LOG_DEBUG
+//#endif // LOG_LEVEL >= LOG_DEBUG
 
 //! \brief Print a synaptic row.
 //!
@@ -387,7 +387,7 @@ bool synapses_process_synaptic_row(
 
 
     print_synaptic_row(row);
-    
+
     address_t fixed_region_address = synapse_row_fixed_region(row);
 
     // Process any fixed synapses
