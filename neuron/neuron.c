@@ -244,8 +244,8 @@ void neuron_print_inputs(void) { // EXPORTED
 void neuron_print_synapse_parameters(void) { // EXPORTED
     neuron_impl_print_synapse_parameters(n_neurons);
 }
-
+#endif // LOG_LEVEL >= LOG_DEBUG
 const char *neuron_get_synapse_type_char(uint32_t synapse_type) { // EXPORTED
     return neuron_impl_get_synapse_type_char(synapse_type);
 }
-#endif // LOG_LEVEL >= LOG_DEBUG
+
