@@ -196,6 +196,7 @@ void neuron_set_sim_exit_time(uint32_t time){
 static void mc_pkt_ignore(uint key, uint payload) {
     use(payload);
     use(payload);
+    log_info("Ignore pkt");
   
 }
 
@@ -215,7 +216,7 @@ bool neuron_pdevs_update(){
             log_info("Calling end_simulation");
             //log_info("Turning off all callbacks at time = %u",  time);
             spin1_callback_off(MCPL_PACKET_RECEIVED);
-            spin1_callback_on(MCPL_PACKET_RECEIVED, mc_pkt_ignore, 0);
+            spin1_callback_on(MCPL_PACKET_RECEIVED, mc_pkt_ignore, 1);
             spin1_callback_off(MC_PACKET_RECEIVED);
             spin1_callback_off(USER_EVENT); 
             spin1_callback_off(DMA_TRANSFER_DONE);
@@ -223,7 +224,7 @@ bool neuron_pdevs_update(){
             neuron_send_terminate_sig(sim_exit_time);
             // simulation_handle_pause_resume(NULL);
             // simulation_ready_to_read();
-            // spin1_exit(0);
+            //spin1_exit(0);
             //end_sim();
             return false;
         }
