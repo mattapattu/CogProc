@@ -106,7 +106,6 @@ static void lambda(neuron_t * neuron, key_t key, uint32_t neuron_index, bool use
                     key | neuron_index, nextEventTime, WITH_PAYLOAD)) {
                 spin1_delay_us(1);
             }
-            spin1_delay_us(500);
     }
     
 }

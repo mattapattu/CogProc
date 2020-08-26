@@ -358,7 +358,7 @@ static void dma_complete_callback(uint unused, uint tag) {
     // uint32_t n_rewires = dma_n_rewires;
     // uint32_t n_spikes = dma_n_spikes;
 
-    
+    spin1_delay_us(100);
     if(!neuron_pdevs_update()){
         end_sim();
     }else{
