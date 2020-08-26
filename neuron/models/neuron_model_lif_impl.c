@@ -80,7 +80,7 @@ static float neuron_model_update_membrane_voltage(float time, neuron_t *neuron) 
                     loopIdx --;
                 }  
             neuron->V_membrane = neuron->V_membrane * (2 - exp_factor); //Membrane potential is always less than 0, so decay factor > 1 : -45*(2-0.9) = -49.5 
-            //log_info("Expired V_membrane = %f, delta = %f, loopIdx = %u, exp_TC = %f,  exp_factor = %f", neuron->V_membrane, delta, loopIdx, neuron->exp_TC, exp_factor);
+            log_info("Expired V_membrane = %f, delta = %f, loopIdx = %u, exp_TC = %f,  exp_factor = %f", neuron->V_membrane, delta, loopIdx, neuron->exp_TC, exp_factor);
         }
    
     
