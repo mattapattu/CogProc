@@ -218,10 +218,10 @@ bool population_table_initialise(
             n_address_list_bytes);
 
     // Store the base address
-    log_info("the stored synaptic matrix base address is located at: 0x%08x",
-            synapse_rows_address);
-    log_info("the direct synaptic matrix base address is located at: 0x%08x",
-            direct_rows_address);
+    //log_info("the stored synaptic matrix base address is located at: 0x%08x",
+    //        synapse_rows_address);
+    //log_info("the direct synaptic matrix base address is located at: 0x%08x",
+    //        direct_rows_address);
     synaptic_rows_base_address = synapse_rows_address;
     direct_rows_base_address = (uint32_t) direct_rows_address;
 
@@ -250,8 +250,8 @@ bool population_table_get_first_address(
 
     master_population_table_entry entry = master_population_table[position];
     if (entry.count == 0) {
-        log_info("spike %u (= %x): population found in master population"
-                "table but count is 0", spike, spike);
+        //log_info("spike %u (= %x): population found in master population"
+        //        "table but count is 0", spike, spike);
     }
 
     log_debug("about to try to find neuron id");
@@ -283,8 +283,8 @@ bool population_table_get_first_address(
     items_to_go = entry.count;
     last_spike = spike;
 
-    log_info("spike = %08x, entry_index = %u, start = %u, count = %u",
-            spike, position, next_item, items_to_go);
+    // log_info("spike = %08x, entry_index = %u, start = %u, count = %u",
+    //         spike, position, next_item, items_to_go);
 
     // A local address is used here as the interface requires something
     // to be passed in but using the address of an argument is odd!
@@ -352,7 +352,7 @@ bool population_table_get_next_address(
 
                 *row_address = (address_t) (block_address + neuron_offset);
                 *n_bytes_to_transfer = stride * sizeof(uint32_t);
-                log_info(
+                log_debug(
                     "neuron_id = %u, block_address = 0x%.8x,"
                     "row_length = %u, row_address = 0x%.8x, n_bytes = %u",
                     last_neuron_id, block_address, row_length, *row_address,

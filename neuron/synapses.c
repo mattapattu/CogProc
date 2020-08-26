@@ -92,13 +92,13 @@ static inline const char *get_type_char(uint32_t synapse_type) {
 //! Only does anything when debugging.
 //! \param[in] synaptic_row: The synaptic row to print
 static inline void print_synaptic_row(synaptic_row_t synaptic_row) {
-#if LOG_LEVEL >= LOG_DEBUG
-    log_debug("Synaptic row, at address %08x Num plastic words:%u\n",
+//#if LOG_LEVEL >= LOG_DEBUG
+    log_info("Synaptic row, at address %08x Num plastic words:%u\n",
             (uint32_t) synaptic_row, synapse_row_plastic_size(synaptic_row));
     if (synaptic_row == NULL) {
         return;
     }
-    log_debug("----------------------------------------\n");
+    log_info("----------------------------------------\n");
 
     // Get details of fixed region
     address_t fixed_region_address = synapse_row_fixed_region(synaptic_row);
@@ -106,7 +106,7 @@ static inline void print_synaptic_row(synaptic_row_t synaptic_row) {
             synapse_row_fixed_weight_controls(fixed_region_address);
     size_t n_fixed_synapses =
             synapse_row_num_fixed_synapses(fixed_region_address);
-    log_debug("Fixed region %u fixed synapses (%u plastic control words):\n",
+    log_info("Fixed region %u fixed synapses (%u plastic control words):\n",
             n_fixed_synapses,
             synapse_row_num_plastic_controls(fixed_region_address));
 
@@ -115,11 +115,11 @@ static inline void print_synaptic_row(synaptic_row_t synaptic_row) {
         uint32_t synapse_type = synapse_row_sparse_type(
                 synapse, synapse_index_bits, synapse_type_mask);
 
-        log_debug("%08x [%3d: (w: %5u (=",
+        log_info("%08x [%3d: (w: %5u (=",
                 synapse, i, synapse_row_sparse_weight(synapse));
         synapses_print_weight(synapse_row_sparse_weight(synapse),
                 ring_buffer_to_input_left_shifts[synapse_type]);
-        log_debug(
+        log_info(
                 "nA) d: %2u, %s, n = %3u)] - {%08x %08x}\n",
                 synapse_row_sparse_delay(synapse, synapse_type_index_bits),
                 get_type_char(synapse_type),
@@ -129,7 +129,7 @@ static inline void print_synaptic_row(synaptic_row_t synaptic_row) {
 
     // If there's a plastic region
     if (synapse_row_plastic_size(synaptic_row) > 0) {
-        log_debug("----------------------------------------\n");
+        log_info("----------------------------------------\n");
         address_t plastic_region_address =
                 synapse_row_plastic_region(synaptic_row);
         synapse_dynamics_print_plastic_synapses(
@@ -137,10 +137,10 @@ static inline void print_synaptic_row(synaptic_row_t synaptic_row) {
                 ring_buffer_to_input_left_shifts);
     }
 
-    log_debug("----------------------------------------\n");
-#else
+    log_info("----------------------------------------\n");
+//#else
     use(synaptic_row);
-#endif // LOG_LEVEL >= LOG_DEBUG
+//#endif // LOG_LEVEL >= LOG_DEBUG
 }
 
 //! \brief Print the contents of the ring buffers.
@@ -224,10 +224,10 @@ static inline bool process_fixed_synapses(
         // (should auto increment pointer in single instruction)
         uint32_t synaptic_word = *synaptic_words++;
 
-        if(synaptic_word ==0 || synaptic_word == 65535){
-            log_info("Wrong synaptic_word = %u", synaptic_word);
-            continue;
-        }
+        // if(synaptic_word ==0 || synaptic_word == 65535){
+        //     log_info("Wrong synaptic_word = %u", synaptic_word);
+        //     continue;
+        // }
 
         log_info("synaptic_word  = %u, synapse_type_index_bits = %u", synaptic_word, synapse_type_index_bits);
 
