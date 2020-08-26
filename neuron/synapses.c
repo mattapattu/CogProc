@@ -240,7 +240,7 @@ static inline bool process_fixed_synapses(
         //         synapse_row_sparse_index(synapse, synapse_index_mask),
         //         SYNAPSE_DELAY_MASK, synapse_type_index_bits);
 
-        log_info("synaptic_word  = %u, synapse_type_index_bits = %u", synaptic_word, synapse_type_index_bits);
+        log_info("synapse  = %u, synapse_type_index_bits = %u", synapse, synapse_type_index_bits);
 
         // Extract components from this word
         uint32_t delay =
@@ -289,7 +289,7 @@ static inline bool process_fixed_synapses(
     }
 
 
-    for (; fixed_synapse > 0; fixed_synapse--) {
+    /* for (; fixed_synapse > 0; fixed_synapse--) {
 
         uint32_t synapse_type = synapse_row_sparse_type(
                 fixed_synapse, synapse_index_bits, synapse_type_mask);
@@ -353,7 +353,7 @@ static inline bool process_fixed_synapses(
         // if(!neuron_pdevs_update(time, neuron_index)){
         //     return false;
         // }
-    }
+    } */
 
     return true;
 
@@ -460,7 +460,7 @@ bool synapses_process_synaptic_row(
     // log_info("nbPlasticElms = %u", nbPlasticElms);        
 
 
-    print_synaptic_row(row);
+    //print_synaptic_row(row);
 
     address_t fixed_region_address = synapse_row_fixed_region(row);
 
