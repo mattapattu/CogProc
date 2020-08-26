@@ -303,7 +303,7 @@ void end_sim(){
     neuron_recording_finalise();
     spin1_delay_us(100);
     simulation_ready_to_read();
-    spin1_exit(0);
+    //spin1_exit(0);
 }
 
 
