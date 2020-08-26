@@ -106,7 +106,7 @@ static void lambda(neuron_t * neuron, key_t key, uint32_t neuron_index, bool use
                     key | neuron_index, nextEventTime, WITH_PAYLOAD)) {
                 spin1_delay_us(1);
             }
-            spin1_delay_us(20);
+            spin1_delay_us(50);
     }
     
 }
@@ -129,7 +129,6 @@ int32_t neuron_model_PDevs_sim(neuron_t * neuron,  uint32_t nextSpikeTime, key_t
             //log_info("Neuron %u: EXTERNAL INPUT at %u", neuron_index, nextSpikeTime);
             neuron_model_Devs_sim(neuron, 2,nextSpikeTime,  key, neuron_index, input, use_key);
         }else if(neuron->tl > nextSpikeTime && (nextSpikeTime  =  neuron->lastProcessedSpikeTime) ) {
-            log_info("Neuron %u ext inp not a Causality Error,  phase = %u, tl = %f, nextSpikeTime = %u, tn = %f", neuron_index, neuron->phase, neuron->tl, nextSpikeTime, neuron->tn );
             if(neuron->phase == 1){
                 //log_info("Neuron %u: EXTERNAL INPUT at %u", neuron_index, nextSpikeTime);
                 neuron_model_Devs_sim(neuron, 2,nextSpikeTime,  key, neuron_index, input, use_key);
