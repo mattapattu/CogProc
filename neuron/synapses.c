@@ -240,7 +240,7 @@ static inline bool process_fixed_synapses(
         //         synapse_row_sparse_index(synapse, synapse_index_mask),
         //         SYNAPSE_DELAY_MASK, synapse_type_index_bits);
 
-        log_info("synapse  = %u, synapse_type_index_bits = %u", synapse, synapse_type_index_bits);
+        //log_info("synapse  = %u, synapse_type_index_bits = %u", synapse, synapse_type_index_bits);
 
         // Extract components from this word
         uint32_t delay =
@@ -257,7 +257,7 @@ static inline bool process_fixed_synapses(
         //time = neuron_update_spiketime(time,neuron_index);    
 
 
-        log_info("New mc_pkt to neuron %u:  time = %u, delay = %u, weight = %f, synapse_type = %u",  neuron_index, time,delay, weight, synapse_type);
+        log_info("New mc_pkt to neuron %u:  time = %u, delay = %u, weight = %f, synapse  = %u, synapse_type = %u",  neuron_index, time,delay, weight, synapse, synapse_type);
 
         //log_info("Time after shifting  = %u",  time);
 
