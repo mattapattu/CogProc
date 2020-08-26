@@ -247,7 +247,7 @@ void neuron_send_terminate_sig(uint32_t time){
     for (index_t neuron_index = 0; neuron_index < n_neurons; neuron_index++) {
         // call the implementation function (boolean for spike)
         if(use_key){
-            log_info("Sending terminate spike (%u, %u)", key | neuron_index, time);
+            log_info("Sending terminate spike (%u, %u), recv_end_sig= %u", key | neuron_index, time, recv_end_sig);
             while (!spin1_send_mc_packet(
                             key | neuron_index, time, WITH_PAYLOAD)) {
                         spin1_delay_us(1);
