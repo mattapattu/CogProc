@@ -206,9 +206,9 @@ static inline bool process_fixed_synapses(
     //uint8_t eit =   -1;
     
     //log_info("fixed_region_address  = %u",fixed_region_address);
-    register uint32_t *synaptic_words =
+    uint32_t *synaptic_words =
             synapse_row_fixed_weight_controls(fixed_region_address);
-    register uint32_t fixed_synapse =
+    uint32_t fixed_synapse =
             synapse_row_num_fixed_synapses(fixed_region_address);
 
     num_fixed_pre_synaptic_events += fixed_synapse;
