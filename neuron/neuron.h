@@ -116,6 +116,9 @@ void neuron_set_sim_exit_time(uint32_t time);
 
 bool neuron_add_spike(uint32_t time, index_t neuron_index);
 
+void neuron_send_terminate_sig(uint32_t time);
+
+
 #endif
 
 #endif // _NEURON_H_

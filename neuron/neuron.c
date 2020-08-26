@@ -214,7 +214,7 @@ bool neuron_pdevs_update(){
             spin1_callback_off(USER_EVENT); 
             spin1_callback_off(DMA_TRANSFER_DONE);
             spin1_delay_us(100);
-            neuron_send_terminate_sig();
+            neuron_send_terminate_sig(sim_exit_time);
             // simulation_handle_pause_resume(NULL);
             // simulation_ready_to_read();
             // spin1_exit(0);
@@ -228,8 +228,17 @@ bool neuron_pdevs_update(){
 }
 
 
-void neuron_send_terminate_sig(){
-    neuron_impl_terminate_sig();
+void neuron_send_terminate_sig(uint32_t time){
+
+    for (index_t neuron_index = 0; neuron_index < n_neurons; neuron_index++) {
+        // call the implementation function (boolean for spike)
+        if(use_key){
+            while (!spin1_send_mc_packet(
+                            key | neuron_index, time, WITH_PAYLOAD)) {
+                        spin1_delay_us(1);
+            }
+        }
+     }       
 }
 
 void neuron_add_inputs( // EXPORTED

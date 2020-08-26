@@ -199,6 +199,7 @@ void neuron_model_Devs_sim(neuron_t * neuron, int16_t event_type, uint32_t nextS
 
 }
 
+
 void neuron_set_simulation_ticks(uint32_t time){
     log_info("simulation_ticks = %u", time);
     simulation_ticks = time;
