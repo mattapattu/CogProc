@@ -101,7 +101,7 @@ static void lambda(neuron_t * neuron, key_t key, uint32_t neuron_index, bool use
     }
 
     if(use_key && nextEventTime < INFINITY){    
-        log_info("lambda: Neuron %u  sending spike (%u,%u)",neuron_index, key | neuron_index,  nextEventTime );
+        //log_info("lambda: Neuron %u  sending spike (%u,%u)",neuron_index, key | neuron_index,  nextEventTime );
         while (!spin1_send_mc_packet(
                     key | neuron_index, nextEventTime, WITH_PAYLOAD)) {
                 spin1_delay_us(1);
@@ -119,22 +119,22 @@ int32_t neuron_model_PDevs_sim(neuron_t * neuron,  uint32_t nextSpikeTime, key_t
     //Calling Basic DEVS
     if(neuron->tn <=  nextSpikeTime ){
         //Call deltaInt()
-        log_info("Neuron %u in PHASE %u, tl = %f, tn = %f",neuron_index, neuron->phase,  neuron->tl, neuron->tn);
+        //log_info("Neuron %u in PHASE %u, tl = %f, tn = %f",neuron_index, neuron->phase,  neuron->tl, neuron->tn);
         neuron_model_Devs_sim(neuron, 1,nextSpikeTime, key, neuron_index, input, use_key);
         
     }else if( nextSpikeTime < neuron->tn ){
         //Call deltaExt()
         neuron->waitCounter = 0;
         if(neuron->tl <= nextSpikeTime|| neuron->tl == 0){
-            log_info("Neuron %u: EXTERNAL INPUT at %u", neuron_index, nextSpikeTime);
+            //log_info("Neuron %u: EXTERNAL INPUT at %u", neuron_index, nextSpikeTime);
             neuron_model_Devs_sim(neuron, 2,nextSpikeTime,  key, neuron_index, input, use_key);
         }else if(neuron->tl > nextSpikeTime && (nextSpikeTime  =  neuron->lastProcessedSpikeTime) ) {
             log_info("Neuron %u ext inp not a Causality Error,  phase = %u, tl = %f, nextSpikeTime = %u, tn = %f", neuron_index, neuron->phase, neuron->tl, nextSpikeTime, neuron->tn );
             if(neuron->phase == 1){
-                log_info("Neuron %u: EXTERNAL INPUT at %u", neuron_index, nextSpikeTime);
+                //log_info("Neuron %u: EXTERNAL INPUT at %u", neuron_index, nextSpikeTime);
                 neuron_model_Devs_sim(neuron, 2,nextSpikeTime,  key, neuron_index, input, use_key);
             }else if(neuron->phase == 0){
-                log_info("Neuron %u: IGNORED EXTERNAL INPUT at %u", neuron_index, nextSpikeTime);
+                //log_info("Neuron %u: IGNORED EXTERNAL INPUT at %u", neuron_index, nextSpikeTime);
                 //Do No update: neuron has already spiked. 
             }
             
@@ -223,7 +223,7 @@ static inline void lif_update(float time, neuron_t * neuron, input_t input_this_
     //     V_prev = neuron->V_rest;
     // }
     neuron->V_membrane = alpha - (neuron->exp_TC * (alpha - V_prev));
-    log_info("V_membrane = %f, input_this_timestep = %f",  neuron->V_membrane, input_this_timestep);
+    //log_info("V_membrane = %f, input_this_timestep = %f",  neuron->V_membrane, input_this_timestep);
     
 
 }
