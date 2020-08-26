@@ -51,6 +51,7 @@ static volatile uint32_t exitCounter = 0;
 
 static uint32_t sim_exit_time = 0;
 
+static bool recv_end_sig = false;
 //static bool endsim = false;
 
 
@@ -221,7 +222,10 @@ bool neuron_pdevs_update(){
             spin1_callback_off(USER_EVENT); 
             spin1_callback_off(DMA_TRANSFER_DONE);
             spin1_delay_us(100);
-            neuron_send_terminate_sig(sim_exit_time);
+            if(!recv_end_sig){
+                neuron_send_terminate_sig(sim_exit_time);
+            }
+            
             // simulation_handle_pause_resume(NULL);
             // simulation_ready_to_read();
             //spin1_exit(0);
@@ -234,6 +238,9 @@ bool neuron_pdevs_update(){
     return true;
 }
 
+void neuron_set_recvd_end_sig(){
+    recv_end_sig = true;
+}
 
 void neuron_send_terminate_sig(uint32_t time){
 

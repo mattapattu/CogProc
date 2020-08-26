@@ -118,6 +118,8 @@ bool neuron_add_spike(uint32_t time, index_t neuron_index);
 
 void neuron_send_terminate_sig(uint32_t time);
 
+void neuron_set_recvd_end_sig();
+
 
 #endif
 

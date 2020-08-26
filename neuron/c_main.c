@@ -287,7 +287,9 @@ void mc_pkt_recvd_callback(uint key, uint payload) {
     //     spin1_callback_off(MC_PACKET_RECEIVED);
     // } 
     
-    
+    if(payload == simulation_ticks){
+        neuron_set_recvd_end_sig();
+    }
     multicast_packet_received_callback(key, payload);
        
 }
