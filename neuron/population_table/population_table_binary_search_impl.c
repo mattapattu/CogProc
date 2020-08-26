@@ -250,7 +250,7 @@ bool population_table_get_first_address(
 
     master_population_table_entry entry = master_population_table[position];
     if (entry.count == 0) {
-        log_debug("spike %u (= %x): population found in master population"
+        log_info("spike %u (= %x): population found in master population"
                 "table but count is 0", spike, spike);
     }
 
@@ -283,7 +283,7 @@ bool population_table_get_first_address(
     items_to_go = entry.count;
     last_spike = spike;
 
-    log_debug("spike = %08x, entry_index = %u, start = %u, count = %u",
+    log_info("spike = %08x, entry_index = %u, start = %u, count = %u",
             spike, position, next_item, items_to_go);
 
     // A local address is used here as the interface requires something

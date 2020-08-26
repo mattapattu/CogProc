@@ -173,7 +173,7 @@ static inline bool is_something_to_do(
             time = *spiketime;        
             synaptogenesis_spike_received(time, *spike);
             *n_process_spike += 1;
-            log_info("Getting row address %u for spike = %u", *row_address, time);
+            //log_info("Getting row address %u for spike = %u", *row_address, time);
             return true;
         }
 
@@ -256,8 +256,8 @@ static void setup_synaptic_dma_read(uint32_t *spiketime) {
         //log_info("spike_processing_count = %u", spike_processing_count);
         // synaptic_row_t single_fixed_synapse =
         //             direct_synapses_get_direct_synapse(row_address);
-        uint32_t current_buffer_index = buffer_being_read;
-        dma_buffer *current_buffer = &dma_buffers[current_buffer_index];
+        //uint32_t current_buffer_index = buffer_being_read;
+        dma_buffer *current_buffer = &dma_buffers[buffer_being_read];
         
             time = *spiketime; //spiketime = payload = eit bit + time
             synapses_process_synaptic_row(
