@@ -59,7 +59,7 @@
 #include <neuron/neuron_recording.h>
 #define INFINITY  2147483646
 #define deltaT 1 // deltaT = 1000ms
-#define WEIGHT 1
+#define WEIGHT 2
 
 
 //! Array of neuron states
