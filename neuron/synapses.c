@@ -289,72 +289,6 @@ static inline bool process_fixed_synapses(
     }
 
 
-    /* for (; fixed_synapse > 0; fixed_synapse--) {
-
-        uint32_t synapse_type = synapse_row_sparse_type(
-                fixed_synapse, synapse_index_bits, synapse_type_mask);
-        
-        // Get the next 32 bit word from the synaptic_row
-        // (should auto increment pointer in single instruction)
-        uint32_t synaptic_word = *synaptic_words++;
-
-        // if(synaptic_word ==0 || synaptic_word == 65535){
-        //     log_info("Wrong synaptic_word = %u", synaptic_word);
-        //     continue;
-        // }
-
-        // log_info("synaptic_word  = %u, synapse_type_index_bits = %u", synaptic_word, synapse_type_index_bits);
-
-        // // Extract components from this word
-        // uint32_t delay =
-        //         synapse_row_sparse_delay(synaptic_word, synapse_type_index_bits);
-        // uint32_t combined_synapse_neuron_index = synapse_row_sparse_type_index(
-        //         synaptic_word, synapse_type_index_mask);
-        // uint32_t weight = synapse_row_sparse_weight(synaptic_word);
-   
-        
-        // uint32_t neuron_index = combined_synapse_neuron_index & 255;
-        
-        // time = payload + delay;
-
-        // //time = neuron_update_spiketime(time,neuron_index);    
-
-
-        // log_info("New mc_pkt to neuron %u:  time = %u, delay = %u, weight = %f, synapse_type = %u",  neuron_index, time,delay, weight, synapse_type);
-
-        // //log_info("Time after shifting  = %u",  time);
-
-        // neuron_add_spike(time,neuron_index);
-
-        
-        // uint32_t ring_buffer_index = synapses_get_ring_buffer_index_combined(
-        //                                     time, combined_synapse_neuron_index,
-        //                                     synapse_type_index_bits);
-        // //log_info("Setting ring_buffer_index  = %u for neuron_index = %u,  time = %u,  delay = %u, weight = %u", ring_buffer_index, neuron_index, time, delay, weight);
-        // //
-        // // Add weight to current ring buffer value
-        // //log_info("accumulation  = %u",  ring_buffers[ring_buffer_index]);
-        // uint32_t accumulation = ring_buffers[ring_buffer_index] + weight;
-        // //log_info("New accumulation  = %u",  accumulation);
-
-        // // If 17th bit is set, saturate accumulator at UINT16_MAX (0xFFFF)
-        // // **NOTE** 0x10000 can be expressed as an ARM literal,
-        // //          but 0xFFFF cannot.  Therefore, we use (0x10000 - 1)
-        // //          to obtain this value
-        // uint32_t sat_test = accumulation & 0x10000;
-        // if (sat_test) {
-        //     accumulation = sat_test - 1;
-        //     saturation_count++;
-        // }
-
-        // // Store saturated value back in ring-buffer
-        // ring_buffers[ring_buffer_index] = accumulation;
-
-        // if(!neuron_pdevs_update(time, neuron_index)){
-        //     return false;
-        // }
-    } */
-
     return true;
 
 }
@@ -461,7 +395,8 @@ bool synapses_process_synaptic_row(
 
 
     print_synaptic_row(row);
-
+    spin1_delay_us(500);
+    
     address_t fixed_region_address = synapse_row_fixed_region(row);
 
     // Process any fixed synapses
