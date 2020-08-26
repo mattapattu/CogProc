@@ -214,6 +214,8 @@ static inline bool process_fixed_synapses(
     num_fixed_pre_synaptic_events += fixed_synapse;
 
     for (; fixed_synapse > 0; fixed_synapse--) {
+
+        
         // Get the next 32 bit word from the synaptic_row
         // (should auto increment pointer in single instruction)
         uint32_t synaptic_word = *synaptic_words++;
@@ -350,12 +352,13 @@ bool synapses_initialise(
 uint32_t synapses_get_ring_buffer_input(uint32_t time, uint32_t neuron_index){
 
     //uint32_t state = spin1_irq_disable();
-
+    uint32_t synapse_type = synapse_row_sparse_type(
+                synapse, synapse_index_bits, synapse_type_mask);
     uint32_t ring_buffer_index = synapses_get_ring_buffer_index(time, 0, neuron_index,
                     synapse_type_index_bits, synapse_index_bits);
     uint32_t input = synapses_convert_weight_to_input(
                             ring_buffers[ring_buffer_index],
-                            ring_buffer_to_input_left_shifts[0]);
+                            ring_buffer_to_input_left_shifts[synapse_type]);
     ring_buffers[ring_buffer_index] = 0;                                        
     //log_info("Fetching ring_buffer_index = %u, input = %u",ring_buffer_index, input );
     // Re-enable the interrupts
