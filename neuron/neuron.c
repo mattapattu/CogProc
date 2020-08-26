@@ -222,9 +222,7 @@ bool neuron_pdevs_update(){
             spin1_callback_off(USER_EVENT); 
             spin1_callback_off(DMA_TRANSFER_DONE);
             spin1_delay_us(100);
-            if(recvd_end_sig){
-                neuron_send_terminate_sig(sim_exit_time);
-            }
+            neuron_send_terminate_sig(sim_exit_time);
             
             // simulation_handle_pause_resume(NULL);
             // simulation_ready_to_read();
