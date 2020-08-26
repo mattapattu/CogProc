@@ -283,9 +283,7 @@ void mc_pkt_recvd_callback(uint key, uint payload) {
     log_info("Received mc_pkt (%u,%u)", key, payload);
     
     
-    if(payload == simulation_ticks){
-        neuron_set_recvd_end_sig();
-    }
+    neuron_set_recvd_end_sig(payload);
     multicast_packet_received_callback(key, payload);
        
 }

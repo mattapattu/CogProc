@@ -238,14 +238,17 @@ bool neuron_pdevs_update(){
     return true;
 }
 
-void neuron_set_recvd_end_sig(){
-    log_info("Setting recvd_end_sig = %u",recvd_end_sig);
-    recvd_end_sig = true;
+void neuron_set_recvd_end_sig(uint32_t time){
+    if(time == sim_exit_time){
+        log_info("Setting recvd_end_sig = %u",recvd_end_sig);
+        recvd_end_sig = true;
+    }
+    
 }
 
 void neuron_send_terminate_sig(uint32_t time){
 
-    for (index_t neuron_index = 0; neuron_index < n_neurons; neuron_index++) {
+    for (index_t neuron_index = 0; neuron_index < 1; neuron_index++) {
         // call the implementation function (boolean for spike)
         if(use_key){
             log_info("Sending terminate spike (%u, %u), recvd_end_sig= %u", key | neuron_index, time, recvd_end_sig);
