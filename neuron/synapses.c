@@ -222,6 +222,11 @@ static inline bool process_fixed_synapses(
         // (should auto increment pointer in single instruction)
         uint32_t synaptic_word = *synaptic_words++;
 
+        if(synaptic_word ==0 || synaptic_word == 65535){
+            log_info("Wrong synaptic_word = %u", synaptic_word);
+            continue;
+        }
+
         log_info("synaptic_word  = %u, synapse_type_index_bits = %u", synaptic_word, synapse_type_index_bits);
 
         // Extract components from this word
