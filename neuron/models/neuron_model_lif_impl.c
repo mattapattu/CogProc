@@ -65,18 +65,20 @@ static float neuron_model_update_membrane_voltage(float time, neuron_t *neuron) 
     
     //Check this again!!!! -> Do we update neuron membrane voltage after every state transition ( at t= tl) ?????
 
-    float delta_t = time - neuron->tl;
+    float delta = time - neuron->tl;
     uint32_t simulation_timestep = 1000; //Redo later to read from PyNN
-    uint32_t loopMax = (uint32_t) delta_t/simulation_timestep;
+    uint32_t loopIdx = (uint32_t) delta/simulation_timestep;
     float exp_factor = neuron->exp_TC;
 
+    
     if(neuron->V_membrane > neuron->V_rest) {
-          for(uint32_t k = loopMax; k > 1; k--){
- 	            exp_factor = exp_factor * neuron->exp_TC;
-           }  
-          //log_info("exp_factor = %f, V_membrane = %f", exp_factor, neuron->V_membrane); 
-          neuron->V_membrane = neuron->V_membrane * (2-exp_factor); //Membrane potential is always less than 0, so decay factor > 1 : -45*(2-0.9) = -49.5 
-          log_info("Expired V_membrane = %f, delta_t = %u, loopMax = %u,exp_TC = %f,  exp_factor = %f", neuron->V_membrane, delta_t, loopMax, neuron->exp_TC, exp_factor);
+        log_info("loopIdx = %u, exp_TC = %f,  exp_factor = %f", loopIdx, neuron->exp_TC, exp_factor);
+            while(loopIdx > 1 ){
+                exp_factor = exp_factor * neuron->exp_TC;
+                loopIdx --;
+            }  
+          neuron->V_membrane = neuron->V_membrane * (2 - exp_factor); //Membrane potential is always less than 0, so decay factor > 1 : -45*(2-0.9) = -49.5 
+          log_info("Expired V_membrane = %f, delta = %f, loopIdx = %u, exp_TC = %f,  exp_factor = %f", neuron->V_membrane, delta, loopIdx, neuron->exp_TC, exp_factor);
     }
    
     return(neuron->V_membrane);
