@@ -381,6 +381,10 @@ uint32_t synapses_get_ring_buffer_input(uint32_t time, uint32_t neuron_index){
 bool synapses_process_synaptic_row(
         uint32_t payload, synaptic_row_t row) {
 
+    uint32_t nbPlasticElms = synapse_row_plastic_size(row);
+          
+    log_info("nbPlasticElms = %u", nbPlasticElms);        
+
     address_t fixed_region_address = synapse_row_fixed_region(row);
 
     // Process any fixed synapses
