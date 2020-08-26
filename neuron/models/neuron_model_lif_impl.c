@@ -72,11 +72,11 @@ static float neuron_model_update_membrane_voltage(float time, neuron_t *neuron) 
 
     if(neuron->V_membrane > neuron->V_rest) {
           for(uint32_t k = loopMax; k > 1; k--){
- 	            exp_factor = exp_factor*neuron->exp_TC;
+ 	            exp_factor = exp_factor * neuron->exp_TC;
            }  
           //log_info("exp_factor = %f, V_membrane = %f", exp_factor, neuron->V_membrane); 
           neuron->V_membrane = neuron->V_membrane * (2-exp_factor); //Membrane potential is always less than 0, so decay factor > 1 : -45*(2-0.9) = -49.5 
-          log_info("Expired V_membrane = %f, delta_t = %u, exp_factor = %f", neuron->V_membrane, delta_t, exp_factor);
+          log_info("Expired V_membrane = %f, delta_t = %u, loopMax = %u,exp_TC = %f,  exp_factor = %f", neuron->V_membrane, delta_t, loopMax, neuron->exp_TC, exp_factor);
     }
    
     return(neuron->V_membrane);
@@ -330,7 +330,7 @@ void neuron_model_init(neuron_t *neuron){
     for(uint32_t i = 0; i < 10; i++){
         neuron->spike_times[i] = INFINITY;
     }
-    //log_info("Initializing neuron params,neuron->exp_TC = %f", neuron->exp_TC);
+    log_info("Initializing neuron params,neuron->exp_TC = %f", neuron->exp_TC);
 
 }
 
