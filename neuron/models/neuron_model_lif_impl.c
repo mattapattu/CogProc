@@ -66,21 +66,26 @@ static float neuron_model_update_membrane_voltage(float time, neuron_t *neuron) 
     //Check this again!!!! -> Do we update neuron membrane voltage after every state transition ( at t= tl) ?????
 
     float delta = time - neuron->tl;
-    uint32_t simulation_timestep = 1000; //Redo later to read from PyNN
-    uint32_t loopIdx = (uint32_t) delta/simulation_timestep;
-    float exp_factor = neuron->exp_TC;
+    if(delta > 0){  // Otherwise input is simulatanous spike/overlapping
 
-    
-    if(neuron->V_membrane > neuron->V_rest) {
-        log_info("loopIdx = %u, exp_TC = %f,  exp_factor = %f", loopIdx, neuron->exp_TC, exp_factor);
-            while(loopIdx > 1 ){
-                exp_factor = exp_factor * neuron->exp_TC;
-                loopIdx --;
-            }  
-          neuron->V_membrane = neuron->V_membrane * (2 - exp_factor); //Membrane potential is always less than 0, so decay factor > 1 : -45*(2-0.9) = -49.5 
-          log_info("Expired V_membrane = %f, delta = %f, loopIdx = %u, exp_TC = %f,  exp_factor = %f", neuron->V_membrane, delta, loopIdx, neuron->exp_TC, exp_factor);
-    }
+        uint32_t simulation_timestep = 1000; //Redo later to read from PyNN
+        uint32_t loopIdx = (uint32_t) delta/simulation_timestep;
+        float exp_factor = neuron->exp_TC;
+
+        
+        if(neuron->V_membrane > neuron->V_rest) {
+            //log_info("loopIdx = %u, exp_TC = %f,  exp_factor = %f", loopIdx, neuron->exp_TC, exp_factor);
+                while(loopIdx > 1 ){
+                    exp_factor = exp_factor * neuron->exp_TC;
+                    loopIdx --;
+                }  
+            neuron->V_membrane = neuron->V_membrane * (2 - exp_factor); //Membrane potential is always less than 0, so decay factor > 1 : -45*(2-0.9) = -49.5 
+            log_info("Expired V_membrane = %f, delta = %f, loopIdx = %u, exp_TC = %f,  exp_factor = %f", neuron->V_membrane, delta, loopIdx, neuron->exp_TC, exp_factor);
+        }
    
+    
+    }
+    
     return(neuron->V_membrane);
 }
 
@@ -113,13 +118,13 @@ int32_t neuron_model_PDevs_sim(neuron_t * neuron,  uint32_t nextSpikeTime, key_t
     //Calling Basic DEVS
     if(neuron->tn <=  nextSpikeTime ){
         //Call deltaInt()
-        log_info("Neuron %u in PHASE %u, tl = %f, tn = %f",neuron_index, neuron->phase,  neuron->tl, neuron->tn);
+        //log_info("Neuron %u in PHASE %u, tl = %f, tn = %f",neuron_index, neuron->phase,  neuron->tl, neuron->tn);
         neuron_model_Devs_sim(neuron, 1,nextSpikeTime, key, neuron_index, input, use_key);
         
     }else if( nextSpikeTime < neuron->tn ){
         //Call deltaExt()
         neuron->waitCounter = 0;
-        log_info("Neuron %u: EXTERNAL INPUT at %u", neuron_index, nextSpikeTime);
+        //log_info("Neuron %u: EXTERNAL INPUT at %u", neuron_index, nextSpikeTime);
         if(neuron->tl <= nextSpikeTime|| neuron->tl == 0){
             neuron_model_Devs_sim(neuron, 2,nextSpikeTime,  key, neuron_index, input, use_key);
         }else if(neuron->tl > nextSpikeTime && (nextSpikeTime  =  neuron->lastProcessedSpikeTime) ) {
