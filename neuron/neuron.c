@@ -193,6 +193,11 @@ void neuron_set_sim_exit_time(uint32_t time){
     neuron_set_simulation_ticks(time);
 }
 
+static void mc_pkt_ignore(uint key, uint payload) {
+    use(payload);
+    use(payload);
+  
+}
 
 bool neuron_pdevs_update(){
 
