@@ -173,7 +173,7 @@ static inline bool is_something_to_do(
             time = *spiketime;        
             synaptogenesis_spike_received(time, *spike);
             *n_process_spike += 1;
-            log_info("Getting row address %u for spike = %u", *row_address, time);
+            //log_info("Getting row address %u for spike = %u", *row_address, time);
             return true;
         }
 
