@@ -215,6 +215,8 @@ static inline bool process_fixed_synapses(
 
     for (; fixed_synapse > 0; fixed_synapse--) {
 
+        uint32_t synapse_type = synapse_row_sparse_type(
+                fixed_synapse, synapse_index_bits, synapse_type_mask);
         
         // Get the next 32 bit word from the synaptic_row
         // (should auto increment pointer in single instruction)
@@ -237,7 +239,7 @@ static inline bool process_fixed_synapses(
         //time = neuron_update_spiketime(time,neuron_index);    
 
 
-        log_info("New mc_pkt to neuron %u:  time = %u, delay = %u, weight = %f",  neuron_index, time,delay, weight);
+        log_info("New mc_pkt to neuron %u:  time = %u, delay = %u, weight = %f, synapse_type = %u",  neuron_index, time,delay, weight, synapse_type);
 
         //log_info("Time after shifting  = %u",  time);
 
