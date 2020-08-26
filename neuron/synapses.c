@@ -92,7 +92,7 @@ static inline const char *get_type_char(uint32_t synapse_type) {
 //! Only does anything when debugging.
 //! \param[in] synaptic_row: The synaptic row to print
 static inline void print_synaptic_row(synaptic_row_t synaptic_row) {
-#if LOG_LEVEL >= LOG_DEBUG
+//#if LOG_LEVEL >= LOG_DEBUG
     log_info("Synaptic row, at address %08x Num plastic words:%u\n",
             (uint32_t) synaptic_row, synapse_row_plastic_size(synaptic_row));
     if (synaptic_row == NULL) {
@@ -138,9 +138,9 @@ static inline void print_synaptic_row(synaptic_row_t synaptic_row) {
     }
 
     log_info("----------------------------------------\n");
-#else
+//#else
     use(synaptic_row);
-#endif // LOG_LEVEL >= LOG_DEBUG
+//#endif // LOG_LEVEL >= LOG_DEBUG
 }
 
 //! \brief Print the contents of the ring buffers.
@@ -460,7 +460,7 @@ bool synapses_process_synaptic_row(
     // log_info("nbPlasticElms = %u", nbPlasticElms);        
 
 
-    //print_synaptic_row(row);
+    print_synaptic_row(row);
 
     address_t fixed_region_address = synapse_row_fixed_region(row);
 
