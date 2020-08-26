@@ -186,7 +186,7 @@ static inline bool is_something_to_do(
     dma_busy = false;
 
     // Restore interrupts
-    //spin1_mode_restore(cpsr);
+    spin1_mode_restore(cpsr);
     return false;
 }
 
