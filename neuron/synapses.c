@@ -213,6 +213,8 @@ static inline bool process_fixed_synapses(
 
     num_fixed_pre_synaptic_events += fixed_synapse;
 
+    log_info("fixed_synapse  = %u", fixed_synapse);
+
     for (; fixed_synapse > 0; fixed_synapse--) {
 
         uint32_t synapse_type = synapse_row_sparse_type(
