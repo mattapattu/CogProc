@@ -220,9 +220,9 @@ static inline bool process_fixed_synapses(
             synapse_row_fixed_weight_controls(fixed_region_address);
     size_t n_fixed_synapses =
             synapse_row_num_fixed_synapses(fixed_region_address);
-    log_info("Fixed region %u fixed synapses (%u plastic control words):\n",
-            n_fixed_synapses,
-            synapse_row_num_plastic_controls(fixed_region_address));
+    // log_info("Fixed region %u fixed synapses (%u plastic control words):\n",
+    //         n_fixed_synapses,
+    //         synapse_row_num_plastic_controls(fixed_region_address));
 
     for (uint32_t i = 0; i < n_fixed_synapses; i++) {
         uint32_t synapse = fixed_synapses[i];
