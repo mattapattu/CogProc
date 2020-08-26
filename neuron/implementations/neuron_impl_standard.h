@@ -59,6 +59,7 @@
 #include <neuron/neuron_recording.h>
 #define INFINITY  2147483646
 #define deltaT 1 // deltaT = 1000ms
+#define WEIGHT 1
 
 
 //! Array of neuron states
@@ -320,6 +321,7 @@ static bool  neuron_impl_neuron_update(index_t neuron_index,
     int32_t ret = 1;
     if(nextSpikeTime < INFINITY){
         input = synapses_get_ring_buffer_input(nextSpikeTime,neuron_index ); 
+        input = input * WEIGHT;
         // log_info("input1 = %f", input);
         // input_type_t *input_types = &input_type_array[neuron_index];
         // input_type_convert_excitatory_input_to_current(
