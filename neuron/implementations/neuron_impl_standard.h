@@ -358,6 +358,10 @@ static bool  neuron_impl_neuron_update(index_t neuron_index,
 }
 
 
+static void neuron_impl_terminate_sig(){
+    
+}
+
 
 // static uint16_t neuron_impl_get_phase(uint32_t neuron_index){
 //     neuron_pointer_t neuron = &neuron_array[neuron_index];
