@@ -292,6 +292,25 @@ void mc_pkt_recvd_callback(uint key, uint payload) {
        
 }
 
+void mc_pkt_ignore(uint key, uint payload) {
+    use(payload);
+    use(payload);
+
+   // uint32_t time = payload &  2147483647;
+    log_info("Received mc_pkt (%u,%u)", key, payload);
+    // if(time > simulation_ticks){
+    //     log_info("Turning off mc callback at time = %u",  time);
+    //     spin1_callback_off(MCPL_PACKET_RECEIVED);
+    //     spin1_callback_off(MC_PACKET_RECEIVED);
+    // } 
+    
+    
+    ..multicast_packet_received_callback(key, payload);
+       
+}
+
+
+
 void end_sim(){
     log_info("Inside end_sim");
     simulation_handle_pause_resume(NULL);
