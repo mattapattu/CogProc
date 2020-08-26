@@ -241,8 +241,8 @@ bool neuron_pdevs_update(){
 void neuron_set_recvd_end_sig(uint32_t time){
     if((time < sim_exit_time) &&  (time + 15 >= sim_exit_time )){
 
-        log_info("Setting recvd_end_sig = %u",recvd_end_sig);
         recvd_end_sig = true;
+        log_info("Setting recvd_end_sig = %u at time = %u",recvd_end_sig, time);
     }
     
 }
