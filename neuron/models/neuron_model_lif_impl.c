@@ -363,7 +363,7 @@ bool neuron_model_check_sim_continue(neuron_pointer_t neuron){
         //log_info("neuron TL = %f < simulation_ticks, continue",neuron->tl);
         return true;
     }else{
-        //log_info("neuron TL = %f > simulation_ticks, exit",neuron->tl);
+        log_info("neuron TL = %f > simulation_ticks, exit",neuron->tl);
         return false;
     }
 }
