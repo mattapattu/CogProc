@@ -167,7 +167,7 @@ static inline bool is_something_to_do(
         //log_info("Get next from buffer: spike = %u, spiketime = %u", *spike, *spiketime);
         // Enable interrupts while looking up in the master pop table,
         // as this can be slow
-        //spin1_mode_restore(cpsr);
+        spin1_mode_restore(cpsr);
         if (population_table_get_first_address(
                 *spike, row_address, n_bytes_to_transfer)) {
             time = *spiketime;        
