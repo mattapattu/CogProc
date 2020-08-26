@@ -68,7 +68,7 @@ static volatile bool dma_busy;
 static dma_buffer dma_buffers[N_DMA_BUFFERS];
 
 //! The index of the next buffer to be filled by a DMA
-static uint32_t next_buffer_to_fill;
+static uint32_t next_buffer_to_fill = 0;
 
 //! The index of the buffer currently being filled by a DMA read
 static uint32_t buffer_being_read;
@@ -121,7 +121,7 @@ static inline void do_dma_read(
             n_bytes_to_transfer)) {
         // Do Nothing
     }
-    next_buffer_to_fill = (next_buffer_to_fill + 1) % N_DMA_BUFFERS;
+    //next_buffer_to_fill = (next_buffer_to_fill + 1) % N_DMA_BUFFERS;
     //log_info("buffer_being_read = %u", buffer_being_read);
 }
 
