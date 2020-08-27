@@ -201,6 +201,10 @@ static void mc_pkt_ignore(uint key, uint payload) {
   
 }
 
+static uint32_t neuron_get_tl(index_t neuron_index){
+    return(neuron_impl_get_tl(neuron_index));
+}
+
 bool neuron_pdevs_update(){
 
     input_t external_bias = 0;
@@ -222,7 +226,8 @@ bool neuron_pdevs_update(){
             spin1_callback_off(USER_EVENT); 
             spin1_callback_off(DMA_TRANSFER_DONE);
             spin1_delay_us(100);
-            neuron_send_terminate_sig(sim_exit_time);
+            uint32_t exitTime = neuron_get_tl(neuron_index);
+            neuron_send_terminate_sig(exitTime);
             spin1_delay_us(100);
             
             // simulation_handle_pause_resume(NULL);

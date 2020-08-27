@@ -298,6 +298,11 @@ static bool neuron_impl_add_spike(index_t neuron_index, uint32_t time) {
     return(neuron_model_add_spike(neuron, time));
 }
 
+static uint32_t neuron_impl_get_tl(index_t neuron_index) {
+    neuron_pointer_t neuron = &neuron_array[neuron_index];
+    return((uint32_t )neuron->tl);
+}
+
 SOMETIMES_UNUSED
 static bool  neuron_impl_neuron_update(index_t neuron_index,
         input_t external_bias, key_t key, bool use_key) {
