@@ -231,7 +231,7 @@ bool neuron_pdevs_update(){
                 neuron_send_terminate_sig(exitTime);
             }
             
-            spin1_delay_us(100);
+            
             
             // simulation_handle_pause_resume(NULL);
             // simulation_ready_to_read();
@@ -264,6 +264,7 @@ void neuron_send_terminate_sig(uint32_t time){
                             key | neuron_index, time, WITH_PAYLOAD)) {
                         spin1_delay_us(1);
             }
+            spin1_delay_us(100);
         }
      }       
 }
