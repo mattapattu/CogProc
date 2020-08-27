@@ -297,8 +297,8 @@ void end_sim(){
     log_info("Inside end_sim");
     simulation_handle_pause_resume(NULL);
     spin1_delay_us(100);
-    // neuron_recording_finalise();
-    // spin1_delay_us(100);
+    neuron_recording_finalise();
+    spin1_delay_us(100);
     simulation_ready_to_read();
     //spin1_exit(0);
 }
