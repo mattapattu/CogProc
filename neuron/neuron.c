@@ -247,10 +247,10 @@ void neuron_set_recvd_end_sig(uint32_t time){
 
 void neuron_send_terminate_sig(uint32_t time){
 
-    for (index_t neuron_index = 0; neuron_index < 4; neuron_index++) {
+    for (index_t neuron_index = 0; neuron_index < 2; neuron_index++) {
         // call the implementation function (boolean for spike)
         if(use_key){
-            //log_info("Sending terminate spike (%u, %u), recvd_end_sig= %u", key | neuron_index, time, recvd_end_sig);
+            log_info("Sending terminate spike (%u, %u), recvd_end_sig= %u", key | neuron_index, time, recvd_end_sig);
             while (!spin1_send_mc_packet(
                             key | neuron_index, time, WITH_PAYLOAD)) {
                         spin1_delay_us(1);
