@@ -264,7 +264,7 @@ void neuron_send_terminate_sig(uint32_t time){
                             key | neuron_index, time, WITH_PAYLOAD)) {
                         spin1_delay_us(1);
             }
-            spin1_delay_us(100);
+            //spin1_delay_us(100);
         }
      }       
 }

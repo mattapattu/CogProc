@@ -279,7 +279,7 @@ void resume_callback(void) {
 void mc_pkt_recvd_callback(uint key, uint payload) {
     //use(payload);
 
-    spin1_delay_us(100);
+    //spin1_delay_us(100);
    // uint32_t time = payload &  2147483647;
     log_info("Received mc_pkt (%u,%u)", key, payload);
     
