@@ -396,6 +396,7 @@ bool synapses_process_synaptic_row(
 
     print_synaptic_row(row);
     //spin1_delay_us(500);
+    spin1_delay_us(100);
     
     address_t fixed_region_address = synapse_row_fixed_region(row);
 
