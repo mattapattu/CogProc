@@ -216,7 +216,7 @@ static void setup_synaptic_dma_read(uint32_t *spiketime) {
     bool setup_done = false;
     while (!setup_done && is_something_to_do(&row_address,
             &n_bytes_to_transfer, &spike, &dma_n_rewires, &dma_n_spikes, spiketime)) {
-        log_info("While loop: mc_pkt (%u,%u)", spike, *spiketime);        
+        //log_info("While loop: mc_pkt (%u,%u)", spike, *spiketime);        
         /* if (current_buffer != NULL &&
                 current_buffer->sdram_writeback_address == row_address) {
             // If we can reuse the row, add on what we can use it for
@@ -310,7 +310,7 @@ static inline void setup_synaptic_dma_write(
 void multicast_packet_received_callback(uint key, uint payload) {
     //use(payload);
     
-    log_info("Adding mc_pkt (%u,%u) to buffer", key, payload);
+    //log_info("Adding mc_pkt (%u,%u) to buffer", key, payload);
      // If there was space to add spike to incoming spike queue
     if (in_spikes_add_spike(key) && in_spiketimes_add_spiketime(payload)) {
         // If we're not already processing synaptic DMAs,
