@@ -218,7 +218,7 @@ bool neuron_pdevs_update(){
             //log_info("Turning off all callbacks at time = %u",  time);
             spin1_callback_off(MCPL_PACKET_RECEIVED);
             //spin1_callback_on(MCPL_PACKET_RECEIVED, mc_pkt_ignore, 1);
-            spin1_callback_off(MC_PACKET_RECEIVED);
+            //spin1_callback_off(MC_PACKET_RECEIVED);
             spin1_callback_off(USER_EVENT); 
             spin1_callback_off(DMA_TRANSFER_DONE);
             spin1_delay_us(100);
