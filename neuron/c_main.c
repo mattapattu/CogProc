@@ -281,7 +281,7 @@ void mc_pkt_recvd_callback(uint key, uint payload) {
 
     spin1_delay_us(100);
    // uint32_t time = payload &  2147483647;
-    //log_info("Received mc_pkt (%u,%u)", key, payload);
+    log_info("Received mc_pkt (%u,%u)", key, payload);
     
     
     neuron_set_recvd_end_sig(payload);
