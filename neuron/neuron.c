@@ -227,7 +227,7 @@ bool neuron_pdevs_update(){
             spin1_callback_off(DMA_TRANSFER_DONE);
             spin1_delay_us(100);
             uint32_t exitTime = neuron_get_tl(neuron_index);
-            if(exitTime < sim_exit_time + 30){
+            if(exitTime < sim_exit_time + 150){
                 neuron_send_terminate_sig(exitTime);
             }
             
