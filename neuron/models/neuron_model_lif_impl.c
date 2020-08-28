@@ -46,7 +46,7 @@ state_t neuron_model_state_update(
 		input_t external_bias, neuron_t *restrict neuron) {
 	log_debug("Exc 1: %12.6k, Exc 2: %12.6k", exc_input[0], exc_input[1]);
 	log_debug("Inh 1: %12.6k, Inh 2: %12.6k", inh_input[0], inh_input[1]);
-        log_info("Exc 1: %12.6k", exc_input[0]);
+        //log_info("Exc 1: %12.6k", exc_input[0]);
     // If outside of the refractory period
     if (neuron->refract_timer <= 0) {
 		REAL total_exc = 0;
